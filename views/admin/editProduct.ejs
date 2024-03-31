@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Nest Dashboard</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="" />
+        <meta property="og:type" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:image" content="" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/favicon.svg" />
+        <!-- Template CSS -->
+        <link href="/public/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" href="./pintura/pintura.css" />
+        <script src="./pintura/pintura-iife.js"></script>
+        
+
+    </head>
+    <body>
+        <section class="content-main">
+            <div class="container">
+                <div class="row justify-content-center">
+                   <div class="col-md-8">
+                    <div>
+                        <h2 class="content-title card-title">Products List</h2>
+                        <!-- <p>Lorem ipsum dolor sit amet.</p> -->
+                    </div>
+
+                    <form action="/admin/updateProduct" method="POST" enctype="multipart/form-data">
+                        <% if(productById) { %> 
+                            <% console.log('editprdcrrttt>>>>>>>>',productById) %>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="hidden" id="<%= productById._id %>" value="<%= productById._id %>">
+                            <input type="text" class="form-control" id="name" name="name" value="<%= productById.name %>">
+                        </div>
+                        <div class="form-group">
+                           <label for="price">Price</label>
+                           <input type="number" class="form-control" id="price" name="price" value="<%= productById.price %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="images">Existing Images</label>
+                            <div id="existingImages">
+                              <% productById.image.forEach((image, index) => { %>
+                                <div class="existing-image-container">
+                                  <img src="/productImages/<%= image %>" 
+                                  alt="Existing Image" class="existing-image">
+                                  <input type="checkbox" name="deleteImage[]" value="<%= index %>"> Delete
+                                </div>
+                              <% }); %>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                           <label for="category">Category</label>
+                           <input type="text" class="form-control" id="category" name="category" value="<%= productById.categoryId.categoryName %>">
+                        </div>
+                        <div class="form-group">
+                           <label for="quantity">Quantity</label>
+                           <input type="number" class="form-control" id="quantity" name="quantity" value="<%= productById.quantity %>">
+                        </div>
+                        <div class="form-group">
+                           <label for="description">Description</label>
+                           <textarea class="form-control" id="description" name="description"><%= productById.description %></textarea>
+                        </div>
+                        <input type="hidden" name="_id" value="<%= productById._id %>">
+                        <button type="submit" class="btn btn-primary">Update Product</button>
+                    </form>
+                    <% } %>
+
+                   </div>
+                </div>
+               </div>
+        </section>
+
+        <script>
+            document.querySelector('#image').addEventListener('change', function() {
+                if (!this.files.length) return;
+            
+                const editor = openDefaultEditor({
+                    imageCropAspectRatio: 1,
+                    src: this.files[0],
+                });
+            
+                editor.on('process', function(event) {
+                    const imageState = event.detail;
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(imageState.dest);
+                    this.files = dataTransfer.files;
+                });
+            });
+            </script>            
+    </body>
+    </html>

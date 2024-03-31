@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OTP Verification</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">OTP Verification</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/verify" method="post">
+                        <div class="mb-3">
+                            <label for="otp" class="form-label">Enter OTP</label>
+                            <input type="text" class="form-control" id="otp" name="otp" required>
+                        </div>
+                        <div id="timer" class="mb-3 text-center">00:00</div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Verify OTP</button>
+                        </div>
+                    </form>
+                    <div id="resend-container" class="text-center mt-3">
+                        <button id="resend-btn" class="btn btn-link">Resend OTP</button>
+                    </div>
+                    <h5 style="text-align: center; color: red;"><%= locals.message %></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Timer functionality
+    let timerElement = document.getElementById('timer');
+    let timerDuration = 60; // Timer duration in seconds
+
+    function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        // console.log("hahahaha", timer);
+        let intervalId = setInterval(function () {
+            minutes = Math.floor(timer / 60);
+            seconds = Math.floor(timer % 60);
+            // console.log("kakakaka", minutes);
+            // console.log("seconds.....", seconds);
+
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            timerElement.textContent = minutes + ':' + seconds;
+
+            if (--timer < 0) {
+                clearInterval(intervalId);
+                timerElement.textContent = "00:00";
+            }
+        }, 1000);
+    }
+
+    startTimer(timerDuration);
+
+    // Resend OTP functionality
+    let resendButton = document.getElementById('resend-btn');
+    resendButton.addEventListener('click', function () {
+        // Implement resend OTP logic here
+        startTimer(timerDuration);
+    });
+</script>
+</body>
+</html>
