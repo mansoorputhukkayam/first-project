@@ -99,7 +99,7 @@
                             <div class="col-md-3">
                                 <form action="/admin/editcategory/<%= categorybyid._id %>" method="post">
                                     <% if(categorybyid) { %>
-                                       
+                                       <h5 class="text-danger"><%= msg  %></h5>
                                     <div class="mb-4">
                                         <label for="product_category" class="form-label">Category Name</label>
                                         <input type="hidden" name="_id" value="<%= categorybyid._id %>">
@@ -164,6 +164,10 @@
                 </div>
             </footer>
         </main>
+        <script>
+
+        </script>
+
         <script src="/public/assets/js/vendors/jquery-3.6.0.min.js"></script>
         <script src="/public/assets/js/vendors/bootstrap.bundle.min.js"></script>
         <script src="/public/assets/js/vendors/select2.min.js"></script>

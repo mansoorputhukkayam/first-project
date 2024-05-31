@@ -5,9 +5,9 @@ const mongoose = require('mongoose');
 
 const loadCategory = async(req,res)=>{
     try {
-        console.log('edknnddd')
+
         const category = await Category.find({});
-        res.render('categories',{catego:category,})
+        res.render('categories',{catego:category})
     } catch (error) {
         console.log(error.message);
     }
@@ -15,23 +15,24 @@ const loadCategory = async(req,res)=>{
 
 const addCategory = async(req,res)=>{
     try {
-        const value = await Category.find({categoryName : new RegExp(req.body.category,'i')});
+        const value = await Category.findOne({categoryName : new RegExp(req.body.category,'i')});
         const {category,description} = req.body
         // const categ = req.body.category;
         // const description = req.body.description;
-        if(value.length === 0){
+        if(!value){
         const catego = new Category({
             categoryName:category,
             description:description 
         });
-        console.log('hhhh',description)
+        // console.log('hhhh',description)
         const userData = await catego.save();
-        console.log(userData);
+        console.log('successfully added....');
             res.status(200).redirect('/admin/category');
         }
         else {
                 // Send a JSON response indicating the category already exists
-                res.status(400).json({ message: "The category already exists...!!" });
+                console.log('its working....already item added....>>>>>>');
+                res.json({ message: "The category already exists...!!" });
             }
     } catch (error) {
         console.log(error.message);
@@ -50,7 +51,8 @@ const editCategory = async(req,res)=>{
         //    console.log("iam the catergory by id ", fetchCategoryById);
         //    console.log("iam the catergory all ", fetchAllCategory);
            if (fetchCategoryById && fetchAllCategory) {
-               res.render('edit-category', { categorylist:fetchAllCategory, categorybyid:fetchCategoryById });
+            const msg=req.flash('msg');
+               res.render('edit-category', { categorylist:fetchAllCategory, categorybyid:fetchCategoryById,msg });
            }else{
             
            return res.status(404).send('Category not found');
@@ -66,6 +68,12 @@ const updateCategory = async (req,res)=>{
        
         const categoryId = req.body._id;
         const { categoryName, description } = req.body;
+
+        const existingCategory = await Category.findOne({ categoryName ,_id: { $ne: categoryId } });
+        if (existingCategory) {
+        req.flash('msg','category already exist');
+        return res.redirect(`/admin/editCategory?id=${categoryId}`);
+        }
 
         // // Update the category
         const updatedCategory = await Category.findByIdAndUpdate(categoryId,
@@ -84,7 +92,7 @@ const updateCategory = async (req,res)=>{
 
 const catBlock = async (req, res) => {
     try {
-        console.log('blockil keeri...')
+        // console.log('blockil keeri...')
         // const userId = req.session.user_id;
         // const user = await User.findById(userId);
         // console.log('testinhhhhh',user);

@@ -19,7 +19,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.all.min.js"></script>
 
-
     </head>
 
     <body>
@@ -209,7 +208,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <form action="/admin/addcat" method="post">
+                                <form action="/admin/addcat" method="POST">
                                     <div class="mb-4">
                                         <label for="product_category" class="form-label">Category Name</label>
                                         <input type="text" name="category" placeholder="Type here" class="form-control" id="category_name" />
@@ -292,8 +291,7 @@
         <script src="/public/assets/js/main.js?v=1.1" type="text/javascript"></script>
 
     </script>  
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.js"></script>
+    
 <script>
 $(document).ready(function() {
     $('form').on('submit', function(e) {
@@ -306,8 +304,8 @@ $(document).ready(function() {
                 if (response.message) {
                     // Display SweetAlert popup if the category already exists
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
+                        icon: 'warning',
+                        title: 'നടക്കൂല മോനെ ',
                         text: response.message,
                     });
                 } else {
@@ -320,5 +318,5 @@ $(document).ready(function() {
 });
 </script>
           
-    </body>
+</body>
 </html>

@@ -1,182 +1,199 @@
 <%- include('../layouts/header.ejs') %>
 
-<!-- Your Navbar -->
-<nav class="custom-navbar navbar navbar-expand-md navbar-dark bg-dark" aria-label="Furni navigation bar">
-    <div class="container">
-        <a class="navbar-brand" href="">Furni<span>.</span></a>
+    <!-- Your Navbar -->
+    <nav class="custom-navbar navbar navbar-expand-md navbar-dark bg-dark" aria-label="Furni navigation bar">
+        <div class="container">
+            <a class="navbar-brand" href="">Furni<span>.</span></a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
+                aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarsFurni">
-            <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li><a class="nav-link" href="/shop">Shop</a></li>
-                <li><a class="nav-link" href="/about">About us</a></li>
-                <li><a class="nav-link" href="/services">Services</a></li>
-                <li><a class="nav-link" href="/blog">Blog</a></li>
-                <li><a class="nav-link" href="/contact">Contact us</a></li>
-            </ul>
+            <div class="collapse navbar-collapse" id="navbarsFurni">
+                <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li><a class="nav-link" href="/shop">Shop</a></li>
+                    <li><a class="nav-link" href="/about">About us</a></li>
+                    <li><a class="nav-link" href="/services">Services</a></li>
+                    <li><a class="nav-link" href="/blog">Blog</a></li>
+                    <li><a class="nav-link" href="/contact">Contact us</a></li>
+                </ul>
 
-            <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-                <li><a class="nav-link" href="/user"><img src="/public/images/user.svg"></a></li>
-                <li><a class="nav-link" href="/cart"><img src="/public/images/cart.svg"></a></li>
-            </ul>
-        </div>
-    </div>
-    <!-- Navbar content -->
-</nav>
-
-<!-- Breadcrumbs -->
-<nav aria-label="breadcrumb">
- <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Product Name</li>
- </ol>
-</nav>
-
-<!-- Product Details -->
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <!-- Product Image with Zoom -->
-            <div class="product-image-zoom">
-                <img src="/public/images/product-2.png" class="img-fluid" alt="Product Image">
-            </div>
-        </div>
-        <div class="col-md-6">
-            <h2><%= product._id.name %></h2>
-            <p class="price">$99.99</p>
-            <p class="quantity">Quantity: 1</p>
-            <p class="ratings">Ratings: ⭐⭐⭐⭐⭐</p>
-            <p>Product Description...</p>
-            <button class="btn btn-primary">Add to Cart</button>
-        </div>
-    </div>
-</div>
-
-<!-- Your Footer -->
-<footer class="footer-section">
-    <!-- Footer content -->
-    <div class="container relative">
-
-        <div class="sofa-img">
-            <img src="/public/images/sofa.png" alt="Image" class="img-fluid">
-        </div>
-
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="subscription-form">
-                    <h3 class="d-flex align-items-center"><span class="me-1"><img src="/public/images/envelope-outline.svg" alt="Image" class="img-fluid"></span><span>Subscribe to Newsletter</span></h3>
-
-                    <form action="#" class="row g-3">
-                        <div class="col-auto">
-                            <input type="text" class="form-control" placeholder="Enter your name">
-                        </div>
-                        <div class="col-auto">
-                            <input type="email" class="form-control" placeholder="Enter your email">
-                        </div>
-                        <div class="col-auto">
-                            <button class="btn btn-primary">
-                                <span class="fa fa-paper-plane"></span>
-                            </button>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="row g-5 mb-5">
-            <div class="col-lg-4">
-                <div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Furni<span>.</span></a></div>
-                <p class="mb-4">Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. Pellentesque habitant</p>
-
-                <ul class="list-unstyled custom-social">
-                    <li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
-                    <li><a href="#"><span class="fa fa-brands fa-twitter"></span></a></li>
-                    <li><a href="#"><span class="fa fa-brands fa-instagram"></span></a></li>
-                    <li><a href="#"><span class="fa fa-brands fa-linkedin"></span></a></li>
+                <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+                    <li><a class="nav-link" href="/user"><img src="/public/images/user.svg"></a></li>
+                    <li><a class="nav-link" href="/cart"><img src="/public/images/cart.svg"></a></li>
                 </ul>
             </div>
+        </div>
+        <!-- Navbar content -->
+    </nav>
 
-            <div class="col-lg-8">
-                <div class="row links-wrap">
-                    <div class="col-6 col-sm-6 col-md-3">
-                        <ul class="list-unstyled">
-                            <li><a href="#">About us</a></li>
-                            <li><a href="#">Services</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Contact us</a></li>
-                        </ul>
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <%= product.name %>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Product Details -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Product Image with Zoom -->
+                <div class="product-image-zoom">
+                    <img src="/public/productImages/<%= product.image[0] %>" class="img-fluid" alt="Product Image">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2>
+                    <%= product.name %>
+                </h2>
+                <p class="price">$<%= product.price %>
+                </p>
+                <p class="quantity">Available Quantity:<%= product.quantity %>
+                </p>
+                <p class="ratings">Ratings: ⭐⭐⭐⭐⭐</p>
+                <p>
+                    <%= product.description %>
+                </p>
+
+                <button type="button"
+                    onclick="addToCart('<%= product._id%>', '<%= product.name%>', '<%= product.image[0]%>', '<%= product.price%>', '<%= 1%>')"
+                    class="btn btn-primary">Add to Cart</button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Your Footer -->
+    <footer class="footer-section">
+        <!-- Footer content -->
+        <div class="container relative">
+
+            <!-- <div class="sofa-img">
+            <img src="/public/images/sofa.png" alt="Image" class="img-fluid">
+        </div> -->
+        
+            <div class="row g-5 mb-5">
+                <div class="col-lg-4">
+                    <div class="mb-4 footer-logo-wrap"><a href="/" class="footer-logo">Furni<span>.</span></a></div>
+                    <p class="mb-4">Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus
+                        malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.
+                        Pellentesque habitant</p>
+
+                    <ul class="list-unstyled custom-social">
+                        <li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
+                        <li><a href="#"><span class="fa fa-brands fa-twitter"></span></a></li>
+                        <li><a href="#"><span class="fa fa-brands fa-instagram"></span></a></li>
+                        <li><a href="#"><span class="fa fa-brands fa-linkedin"></span></a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="row links-wrap">
+                        <div class="col-6 col-sm-6 col-md-3">
+                            <ul class="list-unstyled">
+                                <li><a href="#">About us</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Blog</a></li>
+                                <li><a href="#">Contact us</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-6 col-sm-6 col-md-3">
+                            <ul class="list-unstyled">
+                                <li><a href="#">Support</a></li>
+                                <li><a href="#">Knowledge base</a></li>
+                                <li><a href="#">Live chat</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-6 col-sm-6 col-md-3">
+                            <ul class="list-unstyled">
+                                <li><a href="#">Jobs</a></li>
+                                <li><a href="#">Our team</a></li>
+                                <li><a href="#">Leadership</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-6 col-sm-6 col-md-3">
+                            <ul class="list-unstyled">
+                                <li><a href="#">Nordic Chair</a></li>
+                                <li><a href="#">Kruzo Aero</a></li>
+                                <li><a href="#">Ergonomic Chair</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border-top copyright">
+                <div class="row pt-4">
+                    <div class="col-lg-6">
+                        <p class="mb-2 text-center text-lg-start">Copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash;
+                            Designed with love by <a href="https://untree.co">Untree.co</a> Distributed By <a
+                                hreff="https://themewagon.com">ThemeWagon</a>
+                            <!-- License information: https://untree.co/license/ -->
+                        </p>
                     </div>
 
-                    <div class="col-6 col-sm-6 col-md-3">
-                        <ul class="list-unstyled">
-                            <li><a href="#">Support</a></li>
-                            <li><a href="#">Knowledge base</a></li>
-                            <li><a href="#">Live chat</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-6 col-sm-6 col-md-3">
-                        <ul class="list-unstyled">
-                            <li><a href="#">Jobs</a></li>
-                            <li><a href="#">Our team</a></li>
-                            <li><a href="#">Leadership</a></li>
+                    <div class="col-lg-6 text-center text-lg-end">
+                        <ul class="list-unstyled d-inline-flex ms-auto">
+                            <li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
                             <li><a href="#">Privacy Policy</a></li>
                         </ul>
                     </div>
 
-                    <div class="col-6 col-sm-6 col-md-3">
-                        <ul class="list-unstyled">
-                            <li><a href="#">Nordic Chair</a></li>
-                            <li><a href="#">Kruzo Aero</a></li>
-                            <li><a href="#">Ergonomic Chair</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
 
         </div>
+    </footer>
+    <script>
+        function addToCart(productId, productName, image, price, quantity) {
+            console.log(productId, productName, image, price, quantity)
+            const data = {productId, productName, image, price, quantity};
+            fetch('/addToCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Set content type to JSON
+                },
+                body: JSON.stringify(data)
+            }).then((res => res.json()))
+            .then((data) => {
+                if(data.success) {
+             swal("Success!", "successfully added to cart", "success");
+                   
+                }
 
-        <div class="border-top copyright">
-            <div class="row pt-4">
-                <div class="col-lg-6">
-                    <p class="mb-2 text-center text-lg-start">Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; Designed with love by <a href="https://untree.co">Untree.co</a> Distributed By <a hreff="https://themewagon.com">ThemeWagon</a>  <!-- License information: https://untree.co/license/ -->
-    </p>
-                </div>
+            })
+        }
+    </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
-                <div class="col-lg-6 text-center text-lg-end">
-                    <ul class="list-unstyled d-inline-flex ms-auto">
-                        <li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Include Custom JS for Image Zooming -->
+    <script src="zoom.js"></script>
+    <!-- Include Magnific Popup CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
 
-            </div>
-        </div>
-
-    </div>
-</footer>
-
-<!-- Include Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Include Custom JS for Image Zooming -->
-<script src="zoom.js"></script>
-<!-- Include Magnific Popup CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
-
-<!-- Include Magnific Popup JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <!-- Include Magnific Popup JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
 
 
-<script src="/public/js/bootstrap.bundle.min.js"></script>
-<script src="/public/js/tiny-slider.js"></script>
-<script src="/public/js/custom.js"></script>
+    <script src="/public/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/js/tiny-slider.js"></script>
+    <script src="/public/js/custom.js"></script>
 
-<%- include('../layouts/footer.ejs') %>
+    <%- include('../layouts/footer.ejs') %>

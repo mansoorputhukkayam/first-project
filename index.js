@@ -9,6 +9,7 @@ const authRoute = require('./routes/auth');
 // const cookieSession = require('cookie-session');
 const passportStrategy = require('./passport');
 const session = require('express-session');
+const flash = require('express-flash');
 const config = require('./config/config');
 const app = express();
 const morgan = require('morgan');
@@ -29,17 +30,17 @@ function setDynamicViews(req, res, next) {
 
 app.use(setDynamicViews);
 
-app.set('view engine','ejs');
+app.set('view engine', 'ejs');
 app.use(express.json());
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
 
 app.use(session({
-    secret : config.sessionSecret,
-    resave:false,
-    saveUninitialized:true,
-    cookie:{
-        secure:false,
-        httpOnly:true,
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false,
+        httpOnly: true,
         // expires : new Date( Date.now() + 300000 )
     }
 }));
@@ -55,18 +56,19 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/auth,",authRoute);
+app.use(flash())
+app.use("/auth,", authRoute);
 
 app.use(nocache());
 // app.use(morgan('dev'));
-app.use('/',userRouter);
+app.use('/', userRouter);
 
-app.use('/admin',adminRouter);
-app.use('/public',express.static(path.join(__dirname,'/public')));
+app.use('/admin', adminRouter);
+app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use('/productImages', express.static('public/productImages'));
 
 // app.locals.formData = {};
 
-app.listen(3000,()=>{
+app.listen(3000, () => {
     console.log('server is running...')
 })

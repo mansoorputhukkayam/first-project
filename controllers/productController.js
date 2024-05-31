@@ -12,8 +12,9 @@ const loadProduct = async (req, res) => {
     }
 }
 
-const uploadProduct = async (req, res) => {
+const insertProduct = async (req, res) => {
     try {
+        console.log('jjjj')
 
         if (!req.files || !req.files.length === 0) {
             return res.status(400).send('No files were uploaded.');
@@ -46,7 +47,7 @@ const uploadProduct = async (req, res) => {
     }
    };
    
-   const addProduct = async(req,res)=>{
+   const loadAddProduct = async(req,res)=>{
     try {
         const categories = await Category.find({})
         res.render('addProduct',{categories});
@@ -100,15 +101,19 @@ const uploadProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const productId = req.body._id;
-        console.log("body : ",req.body);
         console.log("files : ",req.files);
+        console.log("body : ",req.body);
         console.log('pppp>>>>>>>>>>',productId);
+
+        // const imageUrls = await uploadImages(req.files);
+
         const updatedProduct = {
             name: req.body.name,
             price: req.body.price,
             description: req.body.description,
             quantity: req.body.quantity,
-            category: req.body.category
+            category: req.body.category,
+            // image:imageUrls
             
         };
 
@@ -117,7 +122,7 @@ const updateProduct = async (req, res) => {
             const deleteIndexes = req.body.deleteImage.map(index => parseInt(index));
             deleteIndexes.sort((a, b) => b - a); // Sort indexes in descending order to avoid index shifting
             deleteIndexes.forEach(index => {
-                updatedProduct.image.splice(index, 1);
+               updatedProduct.image.splice(index, 1);
             });
         }
 
@@ -145,7 +150,7 @@ const filterProducts = async(req,res) =>{
                 break;
             case 'priceAsc':
                 products = sortByPriceAsc(products);
-                break;
+                break; 
             case 'priceDesc':
                 products = sortByPriceDesc(products);
                 break;
@@ -180,14 +185,77 @@ function sortByPriceAsc(products) {
     return products.sort((a, b) => a.price - b.price);
 }
 
+// const lowhigh = async (req, res) => {
+//     try {
+//         console.log('loading low-high filtering');
+//         const userId = req.session.user_id
+//         console.log('userID', userId);
 
+//         const userData = await User.findById(userId)
+//         console.log('userData', userData);
+
+//         const products = await Product.find().sort({ price: 1 })
+//         res.render('shop', { products: products, user: userData })
+
+//     } catch (error) {
+//         console.log('error loading low-high filtering');
+//         console.log(error.message);
+//     }
+// }
+
+const lowHigh = async(req,res)=>{
+    try {
+        const categories = await Category.find()
+        const display = await Product.find().sort({price:1});
+        res.render('filter',{categories,display});
+    } catch (error) {
+        console.log(error.message);
+        res.json('error')
+    }
+}
+
+const highLow = async(req,res) =>{
+    try {
+        const categories = await Category.find()
+        const display = await Product.find().sort({price:-1});
+        res.render('filter',{categories,display});
+    } catch (error) {
+        console.log(error.message);
+        res.json('error')
+    }
+}
+
+const nameAscending = async(req,res)=>{
+    try {
+        const categories = await Category.find();
+        const display = await Product.find().sort({name:1});
+        res.render('filter',{categories,display});
+    } catch (error) {
+        console.log(error.message);
+        res.json('error');
+    }
+}
+
+const nameDescending = async(req,res) =>{
+    try {
+        const categories = await Category.find();
+        const display = await Product.find().sort({name:-1});
+        res.render('filter',{categories,display});
+    } catch (error) {
+       console.log(error.message);
+       res.json('error') 
+    }
+}
 module.exports = {
     loadProduct,
-    uploadProduct,
-    addProduct,
+    insertProduct,
+    loadAddProduct,
     productUnlistAndList,
     editProduct,
     updateProduct,
-    filterProducts
-
+    filterProducts,
+    lowHigh,
+    highLow,
+    nameAscending,
+    nameDescending,
 } 

@@ -129,3 +129,407 @@
 
 </body>
 </html>
+
+
+
+
+Your content will go here
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+          <div class="col-md-6">
+            <img src="/public/images/person_1.jpg" class="img-fluid" alt="User Image">
+            </div>
+            <h2 class="mt-3"><%= userProfile.name %></h2>
+            <h5>Mob :<%= userProfile.mobile %></h5>
+            <h5>Email : <%= userProfile.email %></h5>
+        </div>
+        <div class="col-md-8">
+            <!-- Profile details and other sections will go here -->
+
+            <div class="container mt-5">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="true">Orders</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="wishlist-tab" data-bs-toggle="tab" href="#wishlist" role="tab" aria-controls="wishlist" aria-selected="false">Address</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="false">Wishlist</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="password-tab" data-bs-toggle="tab" href="#password" role="tab" aria-controls="password" aria-selected="false">Password</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="home-tab" href="/" role="tab" aria-controls="home" aria-selected="false">Home</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="logout-tab" href="/logout" role="tab" aria-controls="logout" aria-selected="false">Logout</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <!-- Tab panes will go here -->
+
+                    <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                        <!-- Orders content goes here -->
+                        <h1>Orders..list</h1>
+                    </div>
+                    <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
+                        <!-- Wishlist content goes here -->
+                        
+                        <form action="/addAddress" method="post">
+                            <div class="form-row">
+                              <div class="form-group col-md-6">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name">
+                              </div>
+                              <div class="form-group col-md-6">
+                                <label for="mobile">Mobile</label>
+                                <input type="text" class="form-control" id="mobile" placeholder="mobile">
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress">Address</label>
+                              <input type="text" class="form-control" id="inputAddress" placeholder="address">
+                            </div>
+                            <div class="form-row">
+                              <div class="form-group col-md-6">
+                                <label for="inputCity">City/Town</label>
+                                <input type="text" class="form-control" id="inputCity" placeholder="locality">
+                              </div>
+                              <div class="form-group col-md-4">
+                                <label for="inputState">State</label>
+                                <select id="inputState" class="form-control">
+                                  <option selected>Select Your State...</option>
+                                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                  <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                  <option value="Assam">Assam</option>
+                                  <option value="Bihar">Bihar</option>
+                                  <option value="Chandigarh">Chandigarh</option>
+                                  <option value="Chhattisgarh">Chhattisgarh</option>
+                                  <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                                  <option value="Daman and Diu">Daman and Diu</option>
+                                  <option value="Delhi">Delhi</option>
+                                  <option value="Lakshadweep">Lakshadweep</option>
+                                  <option value="Puducherry">Puducherry</option>
+                                  <option value="Goa">Goa</option>
+                                  <option value="Gujarat">Gujarat</option>
+                                  <option value="Haryana">Haryana</option>
+                                  <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                  <option value="Jharkhand">Jharkhand</option>
+                                  <option value="Karnataka">Karnataka</option>
+                                  <option value="Kerala">Kerala</option>
+                                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                  <option value="Maharashtra">Maharashtra</option>
+                                  <option value="Manipur">Manipur</option>
+                                  <option value="Meghalaya">Meghalaya</option>
+                                  <option value="Mizoram">Mizoram</option>
+                                  <option value="Nagaland">Nagaland</option>
+                                  <option value="Odisha">Odisha</option>
+                                  <option value="Punjab">Punjab</option>
+                                  <option value="Rajasthan">Rajasthan</option>
+                                  <option value="Sikkim">Sikkim</option>
+                                  <option value="Tamil Nadu">Tamil Nadu</option>
+                                  <option value="Telangana">Telangana</option>
+                                  <option value="Tripura">Tripura</option>
+                                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                  <option value="Uttarakhand">Uttarakhand</option>
+                                  <option value="West Bengal">West Bengal</option>
+                          
+                                </select>
+                              </div>
+                              <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="Post">Post</label>
+                                    <input type="text" class="form-control" id="post">
+                                  </div>
+                                <div class="form-group col-md-2">
+                                <label for="pincode">Pin code</label>
+                                <input type="text" class="form-control" id="pincode">
+                              </div>
+                            </div>
+                            </div>
+                          
+                            <br>
+                            <button type="submit" class="btn btn-primary">Save </button>
+                          </form>
+
+
+                    </div>
+                    
+                    <div class="tab-pane fade" id="address-tab" role="tabpanel" aria-labelledby="address-tab">
+                        <!-- address contents -->
+                        <form>
+                            <div class="form-row">
+                              <div class="form-group col-md-6">
+                                <label for="inputEmail4">Email</label>
+                                <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                              </div>
+                              <div class="form-group col-md-6">
+                                <label for="inputPassword4">Password</label>
+                                <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress">Address</label>
+                              <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Address 2</label>
+                              <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                            </div>
+                            <div class="form-row">
+                              <div class="form-group col-md-6">
+                                <label for="inputCity">City</label>
+                                <input type="text" class="form-control" id="inputCity">
+                              </div>
+                              <div class="form-group col-md-4">
+                                <label for="inputState">State</label>
+                                <select id="inputState" class="form-control">
+                                  <option selected>Choose...</option>
+                                  <option>...</option>
+                                </select>
+                              </div>
+                              <div class="form-group col-md-2">
+                                <label for="inputZip">Zip</label>
+                                <input type="text" class="form-control" id="inputZip">
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gridCheck">
+                                <label class="form-check-label" for="gridCheck">
+                                  Check me out
+                                </label>
+                              </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Sign in</button>
+                          </form>
+                        
+                    </div>
+                    <!-- Add other tab panes similarly -->
+
+                    <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                      <!-- Orders content goes here -->
+                      <h1>Orders..list</h1>
+                  </div>
+
+
+                    <div class="tab-pane fade" id="logout" role="tabpanel" aria-labelledby="logout-tab">
+                        <form action="" method="post">
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+<!-- end heere                 -->
+        </div>
+    </div>
+</div>  
+
+
+
+<!-- start addresssss checking original working add addresss -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="">
+  <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="/public/css/tiny-slider.css" rel="stylesheet">
+  <link href="/public/css/style.css" rel="stylesheet">
+  <title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+</head>
+
+<body>
+  <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark " arial-label="Furni navigation bar">
+
+    <div class="container ">
+      <a class="navbar-brand mx-auto" href="/">Furni<span>.</span></a>
+    </div>
+
+  </nav>
+  <!-- End Header/Navigation -->
+
+
+  <body>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-3">
+          <!-- Tab navs -->
+          <div class="nav flex-column nav-pills text-center" id="v-pills-tab" role="tablist"
+            aria-orientation="vertical">
+            <a data-mdb-pill-init class="nav-link active" id="v-pills-home-tab" href="#v-pills-home" role="tab"
+              aria-controls="v-pills-home" data-bs-toggle="pill" aria-selected="true">Home</a>
+            <a data-mdb-pill-init class="nav-link" id="v-pills-profile-tab" href="#v-pills-profile" role="tab"
+              aria-controls="v-pills-profile" data-bs-toggle="pill" aria-selected="false">Profile</a>
+            <a data-mdb-pill-init class="nav-link" id="v-pills-address-tab" href="#v-pills-address" role="tab"
+              aria-controls="v-pills-address" data-bs-toggle="pill" aria-selected="false">Address</a>
+            <a data-mdb-pill-init class="nav-link" id="v-pills-addAddress-tab" href="#v-pills-addAddress" role="tab"
+              aria-controls="v-pills-addAddress" data-bs-toggle="pill" aria-selected="false">Add Address</a>
+            <a data-mdb-pill-init class="nav-link" id="v-pills-messages-tab" href="#v-pills-messages" role="tab"
+              aria-controls="v-pills-messages" data-bs-toggle="pill" aria-selected="false">Messages</a>
+            <a data-mdb-pill-init class="nav-link" id="v-pills-logout-tab" href="/logout" role="tab"
+              aria-controls="v-pills-logout" aria-selected="false">Logout</a>
+            <a data-mdb-pill-init class="nav-link" id="v-pills-hhh-tab" href="/" role="tab" aria-controls="v-pills-hhh"
+              aria-selected="false">Hhh</a>
+          </div>
+          <!-- Tab navs -->
+        </div>
+
+        <div class="col-9">
+          <!-- Tab content -->
+          <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+              Home content
+            </div>
+            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+              <!-- Add profile content -->
+              <div class="col-md-4">
+                <div class="col-md-6">
+                  <img src="/public/images/person_1.jpg" class="img-fluid" alt="User Image">
+                </div>
+                <h2 class="mt-3">
+                  <%= userProfile.name %>
+                </h2>
+                <h5>Mob :<%= userProfile.mobile %>
+                </h5>
+                <h5>Email : <%= userProfile.email %>
+                </h5>
+              </div>
+            </div>
+            <!-- address  start-->
+            <div class="tab-pane fade" id="v-pills-address" role="tabpanel" aria-labelledby="v-pills-address-tab">
+              <div class="card" style="width: 18rem;">
+                <% viewAddress.forEach(function(address){ %>
+                <div class="card-body">
+                  <h5 class="card-title"><%= address.name %></h5>
+                  <p class="card-text"><%= address.address %></p>
+                  <p class="card-text"><strong>State :</strong> <%= address.state %></p>
+                  <p class="card-text"><strong>Mobile :</strong> <%= address.mobile %></p>
+                  <a href="#" class="btn btn-primary editButton" data-bs-toggle="modal" data-bs-target="#editModal<%= address._id %>">Edit</a>
+                  <hr>
+                </div>
+                <% }) %>
+              </div>
+            </div>
+            <!-- addrress end  -->
+            
+            <!-- add address start -->
+            <div class="tab-pane fade" id="v-pills-addAddress" role="tabpanel" aria-labelledby="v-pills-addAddress-tab">
+              <div>
+                <form action="/addAddress" method="post">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="name">Name</label>
+                      <input type="text" class="form-control" name="name" id="name" placeholder="Name" required minlength="5">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="mobile">Mobile</label>
+                      <input type="text" class="form-control" name="mobile" id="mobile" placeholder="mobile" required pattern="\d{10}" title="Mobile number must be 10 digits">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputAddress">Address</label>
+                    <input type="text" class="form-control" name="address" id="inputAddress" placeholder="address" required>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputCity">City/Town</label>
+                      <input type="text" class="form-control" id="inputCity" name="locality" placeholder="locality" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="inputState">State</label>
+                      <select id="inputState" name="state" class="form-control" required>
+                        <option selected>Select Your State...</option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                        <option value="Daman and Diu">Daman and Diu</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Lakshadweep">Lakshadweep</option>
+                        <option value="Puducherry">Puducherry</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+
+                      </select>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="Post">Post</label>
+                        <input type="text" class="form-control" name="post" id="post" required>
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="pincode">Pin code</label>
+                        <input type="text" class="form-control" name="pincode" id="pincode" required pattern="\d{6}" title="Pin code must be 6 digits">
+                      </div>
+                    </div>
+                  </div>
+
+                  <br>
+                  <button type="submit" class="btn btn-primary">Save </button>
+                </form>
+              </div>
+            </div>
+            <!-- add address end -->
+
+            <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+              Messages content
+            </div>
+
+          </div>
+          <!-- Tab content -->
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+  </body>
+</body>
+
+</html>

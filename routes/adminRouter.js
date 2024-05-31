@@ -29,25 +29,22 @@ const auth = require('../middleware/adminAuth');
 adminRouter.get('/',auth.isLogout,adminController.loadLogin);
 adminRouter.get('/login',auth.isLogout,adminController.loadLogin);
 adminRouter.get('/logout',adminController.loadLogout);
-adminRouter.get('/category',auth.isLogin,categoryController.loadCategory);
+adminRouter.get('/category',categoryController.loadCategory);
 adminRouter.get('/products',productController.loadProduct);
-adminRouter.get('/editcategory',auth.isLogin,categoryController.editCategory);
-adminRouter.get('/customers',auth.isLogin,adminController.loadCustomers);
-adminRouter.get('/blockUnblock',auth.isLogin,adminController.userBlock);
-adminRouter.get('/home',auth.isLogin,adminController.loadHome);
-adminRouter.get('/add-product',auth.isLogin,productController.addProduct);
-adminRouter.get('/catBlockUnblock',auth.isLogin,categoryController.catBlock);
-adminRouter.get('/productUnlistAndList',auth.isLogin,productController.productUnlistAndList);
+adminRouter.get('/editcategory',categoryController.editCategory);
+adminRouter.get('/customers',adminController.loadCustomers);
+adminRouter.get('/blockUnblock',adminController.userBlock);
+adminRouter.get('/home',adminController.loadHome);
+adminRouter.get('/add-product',productController.loadAddProduct);
+adminRouter.get('/catBlockUnblock',categoryController.catBlock);
+adminRouter.get('/productUnlistAndList',productController.productUnlistAndList);
 adminRouter.get('/editProduct/:productId',productController.editProduct);
 
-adminRouter.post('/upload-product',upload.array('images'),productController.uploadProduct);
+adminRouter.post('/add-product',upload.array('images'),productController.insertProduct);
 adminRouter.post('/editcategory/:categorybyid',categoryController.updateCategory);
 adminRouter.post('/updateProduct',upload.array('images'),productController.updateProduct);
 
 adminRouter.post('/login',adminController.verifyLogin);
-adminRouter.post('/addcat',categoryController.addCategory);
- 
-
-
+adminRouter.post('/addcat',categoryController.addCategory); 
    
 module.exports = adminRouter;
