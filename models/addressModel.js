@@ -3,7 +3,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const addressSchema = new mongoose.Schema({
     userId:{
         type:ObjectId,
-        ref:'Users'
+        ref:'User'
     },
     name:{
         type:String,

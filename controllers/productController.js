@@ -3,10 +3,23 @@ const Category = require('../models/categoryModel');
 const Product = require('../models/productModel');
 const mongoose = require('mongoose');
 
-const loadProduct = async (req, res) => {
+const loadProductList = async (req, res) => {
     try {
         const savedProducts = await Product.find().populate('categoryId').exec();
         res.render('products', { savedProducts: savedProducts });
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const loadProducts = async (req, res) => {
+    try {
+        console.log(req.query.id)
+        const product = await Product.findOne({ _id: req.query.id })
+        console.log(product,'kiytyyy')
+        const msg = req.flash('msg');
+        res.render('product', { product: product,msg})
     } catch (error) {
         console.log(error.message);
     }
@@ -16,7 +29,7 @@ const insertProduct = async (req, res) => {
     try {
         console.log('jjjj')
 
-        if (!req.files || !req.files.length === 0) {
+        if (!req.files || req.files.length === 0) {
             return res.status(400).send('No files were uploaded.');
           }
       
@@ -64,14 +77,14 @@ const insertProduct = async (req, res) => {
         // console.log('testinhhhhh',user);
 
         const productId = req.query.id;
-        console.log('prrrrrrrr',productId);
+        // console.log('prrrrrrrr',productId);
 
       const productData = await Product.findById(productId);
-      console.log('bloccccc',productData)
+    //   console.log('bloccccc',productData)
       
       const update = await Product.updateOne({_id:productData._id},{$set:{is_Unlisted:!productData.is_Unlisted}});
       res.redirect('/admin/products');
-      console.log('pppppppp>>>>>',update);
+    //   console.log('pppppppp>>>>>',update);
     //   res.json({isBlocked:userData.is_blocked});
   
     } catch (error) {
@@ -247,7 +260,7 @@ const nameDescending = async(req,res) =>{
     }
 }
 module.exports = {
-    loadProduct,
+    loadProductList,
     insertProduct,
     loadAddProduct,
     productUnlistAndList,
@@ -258,4 +271,5 @@ module.exports = {
     highLow,
     nameAscending,
     nameDescending,
+    loadProducts,
 } 

@@ -5,17 +5,19 @@ const Product = require('../models/productModel');
 // const auth = require('../middleware/auth');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId
+const ObjectId = mongoose.Types.ObjectId;
+const Order = require('../models/orderModel');
+const Address = require('../models/addressModel');
 
-const securePassword = async (password)=>{
+const securePassword = async (password) => {
     try {
-        const passwordHash = await bcrypt.hash(password,10);
+        const passwordHash = await bcrypt.hash(password, 10);
         return passwordHash;
     } catch (error) {
         console.log(error.message);
     }
 }
-const loadLogin = async (req,res)=>{
+const loadLogin = async (req, res) => {
     try {
         // if (req.body.email.trim() == "" || req.body.password.trim() == "") {
         //     res.render("login", { message: "field cant be empty" });
@@ -26,36 +28,36 @@ const loadLogin = async (req,res)=>{
     }
 }
 
-const verifyLogin = async(req,res)=>{
+const verifyLogin = async (req, res) => {
     try {
         const email = req.body.email;
         const password = await securePassword(req.body.password)
         // console.log(email,password)
-        const adminData = await Admin.findOne({email:email});
-        if(adminData){
+        const adminData = await Admin.findOne({ email: email });
+        if (adminData) {
             // console.log('user ddda',adminData);
-            const passwordMatch = await bcrypt.compare(adminData.password,password);
-            console.log('password match',passwordMatch);
-            if(passwordMatch){
-                req.session.user_id= adminData._id;
+            const passwordMatch = await bcrypt.compare(adminData.password, password);
+            console.log('password match', passwordMatch);
+            if (passwordMatch) {
+                req.session.user_id = adminData._id;
                 // console.log('its workinnnn')
-                    return res.redirect('/admin/home')
-            } 
-            else{
-            console.log('pwd errror...')
-           return res.redirect('/admin')
+                return res.redirect('/admin/home')
+            }
+            else {
+                console.log('pwd errror...')
+                return res.redirect('/admin')
             }
         }
-        else{
+        else {
             console.log('its worked else')
-           return res.redirect('/admin');
+            return res.redirect('/admin');
         }
     } catch (error) {
         console.log(error.message);
     }
 }
 
-const loadHome = async (req,res)=>{
+const loadHome = async (req, res) => {
     try {
         res.render('home');
     } catch (error) {
@@ -65,14 +67,14 @@ const loadHome = async (req,res)=>{
 
 
 
-const loadCustomers = async(req,res)=>{
+const loadCustomers = async (req, res) => {
     try {
-        const users = await User.find({})   
+        const users = await User.find({})
         // console.log('loaaaddddd',users);
-        res.render('customers',{users:users});
+        res.render('customers', { users: users });
     } catch (error) {
         console.log(error.message);
-    }  
+    }
 }
 
 const userBlock = async (req, res) => {
@@ -83,24 +85,24 @@ const userBlock = async (req, res) => {
         // console.log('testinhhhhh',user);
 
         const user_id = req.query.id;
-        console.log('fffff',user_id);
+        console.log('fffff', user_id);
 
-      const userData = await User.findById(user_id);
-      console.log('bloccccc',userData)
-      
-      const update = await User.updateOne({_id:userData._id},{$set:{is_blocked:!userData.is_blocked}});
-      res.redirect('/admin/customers');
-      console.log('hhhhh',update);
-    //   res.json({isBlocked:userData.is_blocked});
-  
+        const userData = await User.findById(user_id);
+        console.log('bloccccc', userData)
+
+        const update = await User.updateOne({ _id: userData._id }, { $set: { is_blocked: !userData.is_blocked } });
+        res.redirect('/admin/customers');
+        console.log('hhhhh', update);
+        //   res.json({isBlocked:userData.is_blocked});
+
     } catch (error) {
-      console.log('error changing blocking status');
-      console.log(error);
-      res.status(500).json({ res: false, error: 'Internal server error' });
+        console.log('error changing blocking status');
+        console.log(error);
+        res.status(500).json({ res: false, error: 'Internal server error' });
     }
-  }
-  
-const loadLogout = async(req,res)=>{
+}
+
+const loadLogout = async (req, res) => {
     try {
         req.session.user_id = null;
         res.redirect('/admin');
@@ -109,8 +111,41 @@ const loadLogout = async(req,res)=>{
     }
 }
 
+const loadAdminOrders = async (req, res) => {
+    try {
+        console.log('hi order admin');
+        const userId = req.session.user_id;
+        const orderData = await Order.find({}).populate('deliveryAddress').populate('userId').exec();
+        // console.log(orderData,'orderDattasa');
+        res.render('orders', { orderData: orderData })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
+const changeOrderStatus = async (req, res) => {
+    try {
+        console.log('hey it is working');
+        const {productId,status}= req.body;
+        console.log('ProductId:', productId, 'Status:', status);
+        const product = new mongoose.Types.ObjectId(productId);
 
+        const result = await Order.findOneAndUpdate(
+            { 'orderedItems._id': product },
+            { $set: { 'orderedItems.$.status': status } },
+            { new: true }
+        );
+        console.log('result', result);
+        if(result){
+            res.json({ success: true, message: 'Status updated successfully' });
+        } else {
+            res.json({ success: false, message: 'Order not found or not updated successfully' });
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json('error')
+    }
+}
 
 module.exports = {
     loadLogin,
@@ -119,6 +154,8 @@ module.exports = {
     loadLogout,
     loadHome,
     userBlock,
+    loadAdminOrders,
+    changeOrderStatus,
     // loadCategory,
     // addCategory,
     // loadProduct,

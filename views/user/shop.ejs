@@ -1,36 +1,54 @@
 <%- include('../layouts/header.ejs') %>
 
 	<!-- Start Header/Navigation -->
-	<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" aria-label="Furni navigation bar">
+    <div class="container">
+        <a class="navbar-brand" href="/">Furni<span>.</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
+            aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsFurni">
+            <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="active"><a class="nav-link" href="/shop">Shop</a></li>
+                <li><a class="nav-link" href="/about">About us</a></li>
+                <li><a class="nav-link" href="/contact">Contact us</a></li>
+            </ul>
 
-		<div class="container">
-			<a class="navbar-brand" href="/">Furni<span>.</span></a>
+			<div>
+				<form id="searchForm" class="d-flex ms-auto" action="/search" method="post">
+					<input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" id="searchInput">
+					<button class="btn btn-outline-primary" type="submit">Search</button>
+				</form>
+			</div>
 
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
-				aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-
-			<div class="collapse navbar-collapse" id="navbarsFurni">
-				<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-					<li class="nav-item ">
-						<a class="nav-link" href="/">Home</a>
-					</li>
-					<li class="active"><a class="nav-link" href="">Shop</a></li>
-					<li><a class="nav-link" href="/about">About us</a></li>
-					<li><a class="nav-link" href="/services">Services</a></li>
-					<li><a class="nav-link" href="/blog">Blog</a></li>
-					<li><a class="nav-link" href="/contact">Contact us</a></li>
-				</ul>
-
-				<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-					<li><a class="nav-link" href="/user"><img src="/public/images/user.svg"></a></li>
-					<li><a class="nav-link" href="/cart"><img src="/public/images/cart.svg"></a></li>
+			<div class="col-auto ms-1">
+				<button class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button" aria-expanded="false">
+					Sort
+					<span class="visually-hidden">Toggle Dropdown</span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a class="dropdown-item" href="">popularity</a></li>
+					<li><a class="dropdown-item" href="/loadpricehigh">Price Ascending</a></li>
+					<li><a class="dropdown-item" href="/loadpricelow">Price Descending</a></li>
+					<li><a class="dropdown-item" href="/nameAscending">Name Ascending</a></li>
+					<li><a class="dropdown-item" href="/nameDescending">Name Descending</a></li>
+					<li><a class="dropdown-item" href="">New Arrivals</a></li>
+					<li><a class="dropdown-item" href="">Average Ratings</a></li>
+					<li><a class="dropdown-item" href="">Featured</a></li>
 				</ul>
 			</div>
-		</div>
-
-	</nav>
+           
+            <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-3">
+                <li><a class="nav-link" href="/user"><img src="/public/images/user.svg"></a></li>
+                <li><a class="nav-link" href="/cart"><img src="/public/images/cart.svg"></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 	<!-- End Header/Navigation -->
 
 
@@ -44,7 +62,7 @@
 					</div>
 				</div>
 				<!-- starting filter  -->
-				<div class="col-md-3" style="margin-bottom: 20px;">
+				<!-- <div class="col-md-3" style="margin-bottom: 20px;">
 					<div class="col-auto">
 						<br>
 						<button class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
@@ -63,38 +81,37 @@
 							<li><a class="dropdown-item" href="">Featured</a></li>
 						</ul>
 					</div>
-				</div>
+				</div> -->
 				<!-- end filter -->
 
-				<!-- start search -->
-				<!-- <div class="col-md-3">
-					<div class="input-group">
-						<div class="form-outline" data-mdb-input-init>
-							<input type="search" id="form1" class="form-control" />
-							<label class="form-label" for="form1">Search</label>
-						</div> -->
-						<!-- <button type="button" class="btn btn-primary" data-mdb-ripple-init> -->
-							<!-- <i class="fas fa-search"></i> -->
-						<!-- </button> -->
-					<!-- </div> -->
-				<!-- </div> --> 
-				<!-- end search -->
-
 				<!-- strt searchhh -->
-				<div class="col-md-11 text-md-end">
-				<div class="grid">
-					<form action="/search" method="post" class="form login">
-					  <div class="form__field">
-						  <input type="text" name="search" class="form__input" placeholder="Search Product name">
-						  
-					  </div>
-					  <div class="form__field">
-						<input type="submit" value="Search" style="background-color: rgb(11, 121, 11);">
-					  </div>
-					</form>
-				  </div>
-				</div>
+				<!-- <div class="col-md-11 text-md-end">
+					<div class="grid">
+						<form action="/search" method="post" class="form login">
+							<div class="form__field">
+								<input type="text" name="search" class="form__input" placeholder="Search Product name">
+
+							</div>
+							<div class="form__field">
+								<input type="submit" value="Search" style="background-color: rgb(11, 121, 11);">
+							</div>
+						</form>
+					</div>
+				</div> -->
+
+				
+				
 				<!-- ended searchhh -->
+				<!-- <form class="d-flex ms-auto" action="/search" method="post">
+					<div class="input-group">
+						<input class="form-control" type="search" name="search" placeholder="Search" aria-label="Search">
+						<button class="btn btn-outline-light" type="submit">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
+				</form> -->
+
+
 			</div>
 		</div>
 	</div>
@@ -120,78 +137,19 @@
 	<div class="untree_co-section product-section before-footer-section">
 		<div class="container">
 			<div class="row">
-				<% display.forEach(function(product) { %>
-
-					<!-- Start Column 1 -->
-					<div class="col-12 col-md-4 col-lg-3 mb-5">
-						<input type="hidden" name="id" value="<%= product._id %>">
-						<a class="product-item" href="/product?id=<%= product._id %>">
-
-							<img src="/productImages/<%= product.image[0] %>" alt="Product-image"
-								class="img-fluid product-thumbnail">
-							<h3 class="product-title">
-								<%= product.name %>
-							</h3>
-							<strong class="product-price">$<%= product.price %></strong>
-
-							<span class="icon-cross">
-								<img src="/public/images/cross.svg" class="img-fluid">
-							</span>
-						</a>
-					</div>
-					<!-- End Column 1 -->
-
-					<% }) %>
-						<!-- Start Column 2 -->
-						<div class="col-12 col-md-4 col-lg-3 mb-5">
-							<a class="product-item" href="/product">
-								<img src="/public/images/product-1.png" class="img-fluid product-thumbnail">
-								<h3 class="product-title">Nordic Chair</h3>
-								<strong class="product-price">$50.00</strong>
-
-								<span class="icon-cross">
-									<img src="/public/images/cross.svg" class="img-fluid">
-								</span>
-							</a>
-						</div>
-						<!-- End Column 2 -->
-
-						<!-- Start Column 3 -->
-						<div class="col-12 col-md-4 col-lg-3 mb-5">
-							<a class="product-item" href="/product">
-								<img src="/public/images/product-2.png" class="img-fluid product-thumbnail">
-								<h3 class="product-title">Kruzo Aero Chair</h3>
-								<strong class="product-price">$78.00</strong>
-
-								<span class="icon-cross">
-									<img src="/public/images/cross.svg" class="img-fluid">
-								</span>
-							</a>
-						</div>
-						<!-- End Column 3 -->
-
-						<!-- Start Column 4 -->
-						<div class="col-12 col-md-4 col-lg-3 mb-5">
-							<a class="product-item" href="/product">
-								<img src="/public/images/product-2.png" class="img-fluid product-thumbnail">
-								<h3 class="product-title">Ergonomic Chair</h3>
-								<strong class="product-price">$43.00</strong>
-
-								<span class="icon-cross">
-									<img src="/public/images/cross.svg" class="img-fluid">
-								</span>
-							</a>
-						</div>
-						<!-- End Column 4 -->
-
+				<% if(display && display.length> 0) { %>
+					<% display.forEach(function(product) { %>
 
 						<!-- Start Column 1 -->
 						<div class="col-12 col-md-4 col-lg-3 mb-5">
-							<a class="product-item" href="/product">
-								<img src="/public/images/product-3.png" class="img-fluid product-thumbnail">
-								<h3 class="product-title">Nordic Chair</h3>
-								<strong class="product-price">$50.00</strong>
-
+							<input type="hidden" name="id" value="<%= product._id %>">
+							<a class="product-item" href="/product?id=<%= product._id %>">
+								<img src="/productImages/<%= product.image[0] %>" alt="Product-image"
+									class="img-fluid product-thumbnail">
+								<h3 class="product-title">
+									<%= product.name %>
+								</h3>
+								<strong class="product-price">$<%= product.price %></strong>
 								<span class="icon-cross">
 									<img src="/public/images/cross.svg" class="img-fluid">
 								</span>
@@ -199,47 +157,116 @@
 						</div>
 						<!-- End Column 1 -->
 
-						<!-- Start Column 2 -->
-						<div class="col-12 col-md-4 col-lg-3 mb-5">
-							<a class="product-item" href="/product">
-								<img src="/public/images/product-1.png" class="img-fluid product-thumbnail">
-								<h3 class="product-title">Nordic Chair</h3>
-								<strong class="product-price">$50.00</strong>
+						<% }) %>
+							<% } else { %>
+								<div class="col-12 text-center text-danger">
+									<h3>
+										<%= typeof message !=='undefined' ? message : 'No Products found for ' +
+											searchTerm  %>
+									</h3>
+								</div>
+								<% } %>
+			
+<!-- 3 div close aakan ind ta marakkalle.... -->
 
-								<span class="icon-cross">
-									<img src="/public/images/cross.svg" class="img-fluid">
-								</span>
-							</a>
-						</div>
-						<!-- End Column 2 -->
+									<!-- Start Column 2 -->
+									<div class="col-12 col-md-4 col-lg-3 mb-5">
+										<a class="product-item" href="/product">
+											<img src="/public/images/product-1.png" class="img-fluid product-thumbnail">
+											<h3 class="product-title">Nordic Chair</h3>
+											<strong class="product-price">$50.00</strong>
 
-						<!-- Start Column 3 -->
-						<div class="col-12 col-md-4 col-lg-3 mb-5">
-							<a class="product-item" href="/product">
-								<img src="/public/images/sofa.png" class="img-fluid product-thumbnail">
-								<h3 class="product-title">Kruzo Aero Chair</h3>
-								<strong class="product-price">$78.00</strong>
+											<span class="icon-cross">
+												<img src="/public/images/cross.svg" class="img-fluid">
+											</span>
+										</a>
+									</div>
+									<!-- End Column 2 -->
 
-								<span class="icon-cross">
-									<img src="/public/images/cross.svg" class="img-fluid">
-								</span>
-							</a>
-						</div>
-						<!-- End Column 3 -->
+									<!-- Start Column 3 -->
+									<div class="col-12 col-md-4 col-lg-3 mb-5">
+										<a class="product-item" href="/product">
+											<img src="/public/images/product-2.png" class="img-fluid product-thumbnail">
+											<h3 class="product-title">Kruzo Aero Chair</h3>
+											<strong class="product-price">$78.00</strong>
 
-						<!-- Start Column 4 -->
-						<div class="col-12 col-md-4 col-lg-3 mb-5">
-							<a class="product-item" href="/product">
-								<img src="/public/images/product-2.png" class="img-fluid product-thumbnail">
-								<h3 class="product-title">Ergonomic Chair</h3>
-								<strong class="product-price">$43.00</strong>
+											<span class="icon-cross">
+												<img src="/public/images/cross.svg" class="img-fluid">
+											</span>
+										</a>
+									</div>
+									<!-- End Column 3 -->
 
-								<span class="icon-cross">
-									<img src="/public/images/cross.svg" class="img-fluid">
-								</span>
-							</a>
-						</div>
-						<!-- End Column 4 -->
+									<!-- Start Column 4 -->
+									<div class="col-12 col-md-4 col-lg-3 mb-5">
+										<a class="product-item" href="/product">
+											<img src="/public/images/product-2.png" class="img-fluid product-thumbnail">
+											<h3 class="product-title">Ergonomic Chair</h3>
+											<strong class="product-price">$43.00</strong>
+
+											<span class="icon-cross">
+												<img src="/public/images/cross.svg" class="img-fluid">
+											</span>
+										</a>
+									</div>
+									<!-- End Column 4 -->
+
+
+									<!-- Start Column 1 -->
+									<div class="col-12 col-md-4 col-lg-3 mb-5">
+										<a class="product-item" href="/product">
+											<img src="/public/images/product-3.png" class="img-fluid product-thumbnail">
+											<h3 class="product-title">Nordic Chair</h3>
+											<strong class="product-price">$50.00</strong>
+
+											<span class="icon-cross">
+												<img src="/public/images/cross.svg" class="img-fluid">
+											</span>
+										</a>
+									</div>
+									<!-- End Column 1 -->
+
+									<!-- Start Column 2 -->
+									<div class="col-12 col-md-4 col-lg-3 mb-5">
+										<a class="product-item" href="/product">
+											<img src="/public/images/product-1.png" class="img-fluid product-thumbnail">
+											<h3 class="product-title">Nordic Chair</h3>
+											<strong class="product-price">$50.00</strong>
+
+											<span class="icon-cross">
+												<img src="/public/images/cross.svg" class="img-fluid">
+											</span>
+										</a>
+									</div>
+									<!-- End Column 2 -->
+
+									<!-- Start Column 3 -->
+									<div class="col-12 col-md-4 col-lg-3 mb-5">
+										<a class="product-item" href="/product">
+											<img src="/public/images/sofa.png" class="img-fluid product-thumbnail">
+											<h3 class="product-title">Kruzo Aero Chair</h3>
+											<strong class="product-price">$78.00</strong>
+
+											<span class="icon-cross">
+												<img src="/public/images/cross.svg" class="img-fluid">
+											</span>
+										</a>
+									</div>
+									<!-- End Column 3 -->
+
+									<!-- Start Column 4 -->
+									<div class="col-12 col-md-4 col-lg-3 mb-5">
+										<a class="product-item" href="/product">
+											<img src="/public/images/product-2.png" class="img-fluid product-thumbnail">
+											<h3 class="product-title">Ergonomic Chair</h3>
+											<strong class="product-price">$43.00</strong>
+
+											<span class="icon-cross">
+												<img src="/public/images/cross.svg" class="img-fluid">
+											</span>
+										</a>
+									</div>
+									<!-- End Column 4 -->
 
 			</div>
 		</div>

@@ -65,16 +65,11 @@
                         </a>
                     </li>
 
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-orders-1.html">
+                    <li class="menu-item">
+                        <a class="menu-link" href="/admin/adminOrders">
                             <i class="icon material-icons md-shopping_cart"></i>
                             <span class="text">Orders</span>
                         </a>
-                        <div class="submenu">
-                            <a href="page-orders-1.html">Order list 1</a>
-                            <a href="page-orders-2.html">Order list 2</a>
-                            <a href="page-orders-detail.html">Order detail</a>
-                        </div>
                     </li>
                     
                     <li class="menu-item has-submenu">
@@ -226,9 +221,9 @@
                                         </td>
                                         <td>
                                             <% if (product.is_Unlisted === true){ %>
-                                                <a class="btn btn-danger" href="/admin/productUnlistAndList?id=<%= product._id %>">Unlist</a>
-                                               <% } else { %> 
                                                 <a class="btn btn-success" href="/admin/productUnlistAndList?id=<%= product._id %>">List</a>
+                                               <% } else { %> 
+                                                <a class="btn btn-danger" href="/admin/productUnlistAndList?id=<%= product._id %>">Unlist</a>
                                                 <% } %>
                                         </td>
                                     </tr>
@@ -247,9 +242,9 @@
                             </li> -->
                             <li class="page-item active"><a class="page-link" href="#">1</a></li>
                             <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <!-- <li class="page-item"><a class="page-link" href="#">3</a></li> -->
                             <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
+                            <li class="page-item"><a class="page-link" href="#">6</a></li>
                             <li class="page-item">
                                 <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
                             </li>

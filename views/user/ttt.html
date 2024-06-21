@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" aria-label="Furni navigation bar">
+        <div class="container">
+            <a class="navbar-brand" href="/">Furni<span>.</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
+                aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsFurni">
+                <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="active"><a class="nav-link" href="/shop">Shop</a></li>
+                    <li><a class="nav-link" href="/about">About us</a></li>
+                    <li><a class="nav-link" href="/contact">Contact us</a></li>
+                </ul>
+
+                <div>
+                    <form id="searchForm" class="d-flex ms-auto" action="/search" method="post">
+                        <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" id="searchInput">
+                        <button class="btn btn-outline-primary" type="submit">Search</button>
+                    </form>
+                </div>
+
+                <div class="col-auto ms-1">
+                    <button class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button" aria-expanded="false">
+                        Sort
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="">Popularity</a></li>
+                        <li><a class="dropdown-item" href="/loadpricehigh">Price Ascending</a></li>
+                        <li><a class="dropdown-item" href="/loadpricelow">Price Descending</a></li>
+                        <li><a class="dropdown-item" href="/nameAscending">Name Ascending</a></li>
+                        <li><a class="dropdown-item" href="/nameDescending">Name Descending</a></li>
+                        <li><a class="dropdown-item" href="">New Arrivals</a></li>
+                        <li><a class="dropdown-item" href="">Average Ratings</a></li>
+                        <li><a class="dropdown-item" href="">Featured</a></li>
+                    </ul>
+                </div>
+               
+                <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-3">
+                    <li><a class="nav-link" href="/user"><img src="/public/images/user.svg"></a></li>
+                    <li><a class="nav-link" href="/cart"><img src="/public/images/cart.svg"></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="intro-excerpt">
+                        <h1>Shop</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Sidebar for Categories -->
+            <div class="col-md-3">
+                <div class="btn-group-vertical w-100">
+                    <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button"
+                        aria-expanded="false">
+                        Categories
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <% categories.forEach(function(category){ %>
+                            <li><a class="dropdown-item category-filter" href="#" data-category-id="<%= category._id %>">
+                                    <%= category.categoryName %>
+                                </a></li>
+                        <% }) %>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content for Products -->
+            <div class="col-md-9" id="product-list">
+                <!-- This section will be dynamically loaded with products based on the category selected -->
+                <div class="row">
+                    <% products.forEach(function(product) { %>
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <img src="<%= product.imageUrl %>" class="card-img-top" alt="<%= product.name %>">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= product.name %></h5>
+                                    <p class="card-text">$<%= product.price %></p>
+                                    <a href="/product/<%= product._id %>" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+                <!-- Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <% if (currentPage > 1) { %>
+                        <li class="page-item"><a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a></li>
+                        <% } %>
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= currentPage === i ? 'active' : '' %>"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li>
+                        <% } %>
+                        <% if (currentPage < totalPages) { %>
+                        <li class="page-item"><a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a></li>
+                        <% } %>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle category filter clicks
+            const categoryFilters = document.querySelectorAll('.category-filter');
+            categoryFilters.forEach(filter => {
+                filter.addEventListener('click', async (event) => {
+                    event.preventDefault();
+                    const categoryId = event.target.getAttribute('data-category-id');
+
+                    try {
+                        const response = await axios.post('/filterCategory', { categoryId });
+                        const productList = response.data.products;
+                        const productContainer = document.getElementById('product-list');
+
+                        // Clear current product list
+                        productContainer.innerHTML = '';
+
+                        // Populate new product list
+                        productList.forEach(product => {
+                            const productCard = `
+                                <div class="col-md-4">
+                                    <div class="card mb-4">
+                                        <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${product.name}</h5>
+                                            <p class="card-text">$${product.price}</p>
+                                            <a href="/product/${product._id}" class="btn btn-primary">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            productContainer.innerHTML += productCard;
+                        });
+                    } catch (error) {
+                        console.error('Error loading products:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+<!-- card type displaying products in shop page  -->
+<div class="container mt-5">
+    <div class="row">
+        <!-- sidebar for categoruies -->
+         <div class="col-md-3">
+             <div class="btn-group-vertical w-100">
+                 <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button"
+                     aria-expanded="false">
+                     Categories
+                     <span class="visually-hidden">Toggle Dropdown</span>
+                 </button>
+                 <ul class="dropdown-menu">
+                     <% categories.forEach(function(category){ %>
+                         <li><a class="dropdown-item category-filter" href="/shop/<%= category._id %>">
+                                 <%= category.categoryName %>
+                             </a></li>
+                         <% }) %>
+                 </ul>
+         </div>
+    </div>
+
+    <!-- main contents for products -->
+     <div class="col-md-9" id="product-list">
+
+        <div class="row">
+            <% display.forEach(function(product) { %>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="/productImages/<%= product.image[0] %>" class="card-img-top" alt="Product-image">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= product.name %></h5>
+                            <p class="card-text">$<%= product.price %></p>
+                            <a href="/product/<%= product._id %>" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+
+     </div>
+</div>
+
+    <!-- <br> -->
+</div>

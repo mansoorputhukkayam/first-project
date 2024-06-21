@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<!-- start order history -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderHistoryModal">
+    View Order History
+  </button>
+  
+  <!-- Order History Modal -->
+  <div class="modal fade" id="orderHistoryModal" tabindex="-1" role="dialog" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="orderHistoryModalLabel">Order History</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#12345</td>
+                  <td>June 10, 2024</td>
+                  <td>$99.99</td>
+                  <td><span class="badge badge-success">Delivered</span></td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#orderDetailsModal">
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+                <!-- Add more order rows here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- end history here -->
+
+
+<!-- Product Details Modal -->
+<div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productDetailsModalLabel">Product Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <img src="https://via.placeholder.com/400x300" class="img-fluid" alt="Product Image">
+          </div>
+          <div class="col-md-6">
+            <h4>Product Name</h4>
+            <p>Product Description goes here...</p>
+            <p><strong>Price:</strong> $99.99</p>
+            <p><strong>Category:</strong> Electronics</p>
+            <p><strong>Brand:</strong> Apple</p>
+            <p><strong>Stock:</strong> 10 units</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    
+</body>
+</html>

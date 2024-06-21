@@ -4,13 +4,13 @@ const orderSchema = new mongoose.Schema(
     {
     userId:{
         type:Objectid,
-        ref:"users",
+        ref:"User",
         required:true,
     },
     deliveryAddress : {
         type: Objectid,
         required: true,
-        ref: "address",
+        ref: "Address",
     },
     payment : {
         type: String,
@@ -38,5 +38,5 @@ const orderSchema = new mongoose.Schema(
 }
 );
 
-const orderModel = mongoose.model("order",orderSchema);
+const orderModel = mongoose.model("Order",orderSchema);
 module.exports = orderModel;

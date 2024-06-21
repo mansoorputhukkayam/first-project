@@ -8,6 +8,8 @@ const OTP = require('../models/signUpOtp')
 const Product = require('../models/productModel');
 const Cart = require('../models/cartModel');
 const Category = require('../models/categoryModel')
+const Order = require('../models/orderModel');
+const mongoose = require('mongoose');
 
 function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -55,17 +57,6 @@ const sendVerifyMail = async (name, email, user_id, otp) => {
 const loginLoad = async (req, res) => {
     try {
         res.render('login')
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
-const loadProduct = async (req, res) => {
-    try {
-        console.log(req.query.id)
-        const product = await Product.findOne({ _id: req.query.id })
-        console.log(product)
-        res.render('product', { product: product })
     } catch (error) {
         console.log(error.message);
     }
@@ -199,8 +190,10 @@ const loadProfile = async (req, res) => {
     try {
         const userId = req.session.user_id;
         const userProfile = await User.findById(userId);
-        const viewAddress = await Address.find();
-        res.render('user', { userProfile: userProfile, viewAddress });
+        const viewAddress = await Address.find({ userId });
+        const orderData = await Order.find({ userId }).populate('deliveryAddress').exec();
+        // console.log('order',orderData,'order');
+        res.render('user', { userProfile: userProfile, viewAddress, orderData });
     } catch (error) {
         console.log(error.message);
     }
@@ -249,32 +242,7 @@ const verifyLogin = async (req, res) => {
         console.log(error.message);
     }
 }
-const loadShop = async (req, res) => {
-    try {
-        let category = req.params.id;
-        const categories = await Category.find({})
-        // console.log("category : ",category);
-        // var search = '';
-        // if (req.query.search) {
-        //     search = req.query.search;
-        // }
-        // const searchRegex = new RegExp('.*' + search + '.*', 'i');
 
-        // const productData = await Product.find({
-        //     name:searchRegex
-        // });
-        // res.render('dashboard',{users:userData});  
-
-        if (!category)
-            var displayProducts = await Product.find();
-        else
-            var displayProducts = await Product.find({ categoryId: category });
-        console.log("displayProducts", displayProducts);
-        res.render('shop', { display: displayProducts, categories: categories });
-    } catch (error) {
-        console.log(error.message)
-    }
-}
 const loadAbout = async (req, res) => {
     try {
         res.render('about');
@@ -339,7 +307,11 @@ const loadLogout = async (req, res) => {
 
 const loadCheckout = async (req, res) => {
     try {
-        res.render('checkout')
+        const userId = req.session.user_id;
+        const userCartData = await Cart.find({ userId });
+        const addressData = await Address.find({ userId });
+        const userCartTotal = userCartData.reduce((total, cart) => total + cart.total, 0);
+        res.render('checkout', { userCartData: userCartData, userCartTotal, addressData });
     } catch (error) {
         console.log(error.message)
     }
@@ -398,7 +370,7 @@ const changeUserPassword = async (req, res) => {
 const forgotPassword = async (req, res) => {
     try {
         const messge = req.flash('msg');
-        res.render('forgotPassword',{messge});
+        res.render('forgotPassword', { messge });
     } catch (error) {
         console.log(error.message);
         res.json('error');
@@ -411,16 +383,16 @@ const updateForgotPassword = async (req, res) => {
         // console.log(email);
         req.session.email = email;
         // console.log(req.session.email,'emailsession')
-        const userData = await User.findOne({email:email});
+        const userData = await User.findOne({ email: email });
         // console.log(userData);
-        if(userData){
+        if (userData) {
             const otp = generateOTP();
             saveOTP(req.body.email, otp)
-            console.log('otp isssss',otp)
+            console.log('otp isssss', otp)
             res.render('forgotOtp');
         }
-        else{
-            req.flash('msg','Email Id is not Registered....');
+        else {
+            req.flash('msg', 'Email Id is not Registered....');
             res.redirect('/forgotPassword');
         }
         // sendVerifyMail(req.body.name, req.body.email, userData._id, otp);
@@ -432,24 +404,24 @@ const updateForgotPassword = async (req, res) => {
     }
 }
 
-const verifyForgotPassword = async (req,res)=>{
+const verifyForgotPassword = async (req, res) => {
     try {
         const enteredOtp = req.body.otp.join('');
         const userOtp = await OTP.findOne({});
-        const userData = await User.findOne({email:userOtp.email});
+        const userData = await User.findOne({ email: userOtp.email });
         // console.log(req.session.email,'dssdinlkd')
         // console.log(userData)
-        console.log('uuuuuuuuuu',enteredOtp);
+        console.log('uuuuuuuuuu', enteredOtp);
         // console.log(typeof(userOtp.otp),'userotp');
         // console.log(typeof(enteredOtp),'enteredOtp')
-        if(userOtp.otp === enteredOtp){
+        if (userOtp.otp === enteredOtp) {
             // req.session.user_id = userData._id;
             // console.log(req.session.user_id)
             res.render('changePassword');
 
         }
-        else{
-            req.flash('msg','Enter correct Otp...')
+        else {
+            req.flash('msg', 'Enter correct Otp...')
             res.redirect('/forgotPassword');
         }
         // console.log(typeof(enteredOtp));
@@ -459,30 +431,97 @@ const verifyForgotPassword = async (req,res)=>{
     }
 }
 
-const updateForgotNewPassword = async (req,res)=>{
+const updateForgotNewPassword = async (req, res) => {
     try {
         console.log('hey');
         let newpwd = req.body.newpwd;
         let cnfpwd = req.body.cnfnewpwd;
-        const userData = await User.findOne({email:req.session.email});
+        const userData = await User.findOne({ email: req.session.email });
         console.log(userData);
         // console.log(req.session.email,'mmmmsssiondn')
-        if(newpwd === cnfpwd){
+        if (newpwd === cnfpwd) {
             console.log('matched');
-            let newpw = await securePassword(newpwd); 
-            console.log('newpw',newpw);
-            const updatePwd = await User.findByIdAndUpdate(userData._id,{password:newpw});
+            let newpw = await securePassword(newpwd);
+            console.log('newpw', newpw);
+            const updatePwd = await User.findByIdAndUpdate(userData._id, { password: newpw });
             req.session.user_id = userData._id;
             res.redirect('/')
-        }else{
-            req.flash('msg','new password && confirm password should be same');
+        } else {
+            req.flash('msg', 'new password && confirm password should be same');
             res.redirect('/forgotPassword');
         }
     } catch (error) {
-       console.log(error.message);
-       res.json('error'); 
+        console.log(error.message);
+        res.json('error');
     }
-} 
+}
+
+const loadShop = async (req, res) => {
+    try {
+        let category = req.params.id;
+        const categories = await Category.find({ is_blocked: false })
+
+        let displayProducts;
+        if (!category)
+            displayProducts = await Product.find({ is_Unlisted: false });
+        else
+            displayProducts = await Product.find({ categoryId: category, is_Unlisted: false });
+
+        res.render('shop', { display: displayProducts, categories: categories });
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const loadSearch = async (req, res) => {
+    const searchData = req.body.search;
+    console.log('searchData', searchData);
+    try {
+        const categories = await Category.find({ is_blocked: false });
+        const productData = await Product.find({
+            name: { $regex: searchData, $options: 'i' },
+            is_Unlisted: false
+        });
+
+        if (productData.length > 0) {
+            res.render('shop', { display: productData, categories: categories, searchTerm: searchData });
+        } else {
+            res.render('shop', { display: [], categories: categories, searchTerm: searchData, message: `NO Products Found For ${searchData}`  });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error searching for products', error });
+    }
+}
+
+// const loadOrderedProducts = async (req, res) => {
+//     try {
+
+//         res.redirect('/user');
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
+
+const cancelProducts = async (req, res) => {
+    try {
+        const productId = req.query.productId;
+        console.log(productId);
+        const result = await Order.findOneAndUpdate(
+            { 'orderedItems._id': new mongoose.Types.ObjectId(productId) },
+            { $set: { "orderedItems.$.status": 'cancelled' } },
+            { new: true }
+        );
+        console.log('result',result);
+        if (result) {
+            res.json({ success: true })
+        } else {
+            res.json({ success: false })
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ success: false, error: error.message })
+    }
+}
 
 module.exports = {
     loginLoad,
@@ -498,7 +537,6 @@ module.exports = {
     loadServices,
     loadBlog,
     loadContact,
-    loadProduct,
     loadProfile,
     loadLogout,
     loadCheckout,
@@ -508,4 +546,7 @@ module.exports = {
     updateForgotPassword,
     verifyForgotPassword,
     updateForgotNewPassword,
+    loadSearch,
+    // loadOrderedProducts,
+    cancelProducts,
 }

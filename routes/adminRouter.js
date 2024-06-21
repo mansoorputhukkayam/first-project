@@ -18,7 +18,10 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({storage:storage});
+
+const upload = multer({
+    storage:storage
+});
 
 const bodyParser = require('body-parser');
 adminRouter.use(bodyParser.json());
@@ -30,7 +33,7 @@ adminRouter.get('/',auth.isLogout,adminController.loadLogin);
 adminRouter.get('/login',auth.isLogout,adminController.loadLogin);
 adminRouter.get('/logout',adminController.loadLogout);
 adminRouter.get('/category',categoryController.loadCategory);
-adminRouter.get('/products',productController.loadProduct);
+adminRouter.get('/products',productController.loadProductList);
 adminRouter.get('/editcategory',categoryController.editCategory);
 adminRouter.get('/customers',adminController.loadCustomers);
 adminRouter.get('/blockUnblock',adminController.userBlock);
@@ -39,6 +42,8 @@ adminRouter.get('/add-product',productController.loadAddProduct);
 adminRouter.get('/catBlockUnblock',categoryController.catBlock);
 adminRouter.get('/productUnlistAndList',productController.productUnlistAndList);
 adminRouter.get('/editProduct/:productId',productController.editProduct);
+adminRouter.get('/adminOrders',adminController.loadAdminOrders);
+adminRouter.post('/productStatus',adminController.changeOrderStatus);
 
 adminRouter.post('/add-product',upload.array('images'),productController.insertProduct);
 adminRouter.post('/editcategory/:categorybyid',categoryController.updateCategory);

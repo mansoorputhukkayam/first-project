@@ -25,6 +25,10 @@ const cartSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    status:{
+        type:String,
+        default:'pending',
+    },
     isOrder:{
         type:Boolean,
         default:false,

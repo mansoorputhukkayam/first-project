@@ -1,5 +1,6 @@
 const Address = require('../models/addressModel');
 const User = require('../models/userModel');
+const mongoose = require('mongoose');
 
 
 const addAddress = async (req, res) => {
@@ -21,6 +22,28 @@ const addAddress = async (req, res) => {
     }  catch (error) {
     console.log(error.message);
     res.status(500).json('error')
+    }
+}
+
+const checkOutAddAddress = async (req,res)=>{
+    try{
+        const userId = req.session.user_id;
+        const checkOutAddress = new Address({
+            userId:userId,
+            name:req.body.name,
+            mobile:req.body.mobile,
+            address:req.body.address,
+            locality:req.body.locality,
+            state:req.body.state,
+            post:req.body.post,
+            pincode:req.body.pincode
+        })
+        await checkOutAddress.save();
+        console.log('checkoutadresssssssssssssssssss',checkOutAddress);
+        res.redirect('/loadCheckOut');
+    }catch{
+        console.log(error.message);
+        res.status(500).json('error');
     }
 }
 
@@ -55,5 +78,6 @@ module.exports = {
     addAddress,
     updateAddress,
     deleteAddress,
+    checkOutAddAddress,
     
 }

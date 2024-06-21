@@ -67,6 +67,9 @@ app.use('/admin', adminRouter);
 app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use('/productImages', express.static('public/productImages'));
 
+app.get('*',(req,res)=>{
+    res.send('error page');
+})
 // app.locals.formData = {};
 
 app.listen(3000, () => {
