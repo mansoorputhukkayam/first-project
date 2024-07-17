@@ -1,39 +1,87 @@
 <%- include('../layouts/header.ejs') %>
 
-
-<div class="container">
+  <div class="container">
     <div class="row">
       <div class="col-md-6 offset-md-3">
-        <h2 class="text-center text-dark mt-5">Admin Login</h2>
-        <div class="text-center mb-5 text-dark">Furni.</div>
-        <div class="card my-5">
-
-          <form class="card-body cardbody-color p-lg-5" method="post" action="admin/login">
+        <h2 class="text-center text-dark mt-2">Admin Login</h2>
+        <div class="text-center text-dark">Furni.</div>
+        
+        <div class="card">
+          <form id="loginForm" class="card-body cardbody-color p-lg-5" method="post" action="admin/login"
+            onsubmit="return validateForm()">
 
             <div class="text-center">
-              <img src="https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295397__340.png" class="img-fluid profile-image-pic img-thumbnail rounded-circle my-3"
-                width="200px" alt="profile">
+              <img src="https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295397__340.png"
+                class="img-fluid profile-image-pic img-thumbnail rounded-circle my-3" width="100px" alt="profile">
             </div>
-
-            <div class="mb-3">
+            <div class="alert-info">
+              <h5 class="text-danger text-center">
+                <%= message %>
+              </h5>
+            </div>
+            <div class="mb-4">
               <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp"
-                placeholder="Email" required>
+                placeholder="Email">
+              <small id="emailError" class="form-text text-danger"></small>
             </div>
-            <div class="mb-3">
-              <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
+            <div class="mb-4">
+              <input type="password" class="form-control" id="password" name="password" placeholder="password">
+              <small id="passwordError" class="fort-text text-danger"></small>
             </div>
             <div class="text-center"><button type="submit" class="btn btn-color px-5 mb-5 w-100">Login</button></div>
- 
-            
+
+
           </form>
         </div>
       </div>
-      <% if (typeof message !== 'undefined') { %>
-        <div class="text-danger" id=".error">
-          <%= message %>
-        </div>
-      <% } %>
+      <% if (typeof message !=='undefined' ) { %>
+        <!-- <div class="text-danger" id=".error">
+          
+        </div> -->
+        <% } %>
     </div>
   </div>
 
-<%- include('../layouts/footer.ejs') %>
+  <script>
+    function validateForm() {
+      let email = document.getElementById('email').value;
+      let password = document.getElementById('password').value;
+      let emailError = document.getElementById('emailError');
+      let passwordError = document.getElementById('passwordError');
+      let isValid = true;
+
+      // Reset error messages
+      emailError.textContent = '';
+      passwordError.textContent = '';
+
+      // Email validation
+      let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        emailError.textContent = 'Please enter a valid email address.';
+        isValid = false;
+      }
+
+      // Check for spaces in email
+      if (email.includes(' ')) {
+        emailError.textContent = 'Email should not contain spaces.';
+        isValid = false;
+      }
+
+      // Password validation
+      if (password.trim() === '') {
+        passwordError.textContent = 'Password cannot be empty.';
+        isValid = false;
+      }
+
+      // Additional password validations can be added here
+      // For example, minimum length:
+      if (password.length < 5) {
+        passwordError.textContent = 'Password must be at least 5 characters long.';
+        isValid = false;
+      }
+
+      return isValid;
+    }
+  </script>
+
+  <%- include('../layouts/footer.ejs') %>

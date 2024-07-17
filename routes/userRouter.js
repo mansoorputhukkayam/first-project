@@ -16,9 +16,9 @@ const productController = require('../controllers/productController');
 const userController = require('../controllers/userController');
 const addressController = require('../controllers/addressController');
 userRouter.get('/',userController.loadHome);
-userRouter.get('/login',isLogout,userController.loginLoad);
+userRouter.get('/login',userController.loginLoad);
 userRouter.get('/shop',userController.loadShop)
-userRouter.get('/signin',isLogout,isBlocked,userController.loadSignin)
+userRouter.get('/signin',isBlocked,userController.loadSignin)
 userRouter.get('/about',isLogin,isBlocked,userController.loadAbout);
 userRouter.get('/product',isLogin,isBlocked,productController.loadProducts);
 userRouter.get('/services',isLogin,isBlocked,userController.loadServices);
@@ -38,7 +38,7 @@ userRouter.get('/user',isLogin,userController.loadProfile);
 // userRouter.get('/logout',userController.loadLogout);
 userRouter.get('/cart',isLogin,isBlocked,cartControllers.loadCart);
 userRouter.get('/removeCartItem/:id',isLogin,isBlocked,cartControllers.removeCartItem);
-userRouter.get('/loadCheckout',isLogin,isBlocked,userController.loadCheckout);
+userRouter.get('/loadCheckout',isLogin,isBlocked,cartControllers.loadCheckout);
 userRouter.get('/deleteAddress/:id',isLogin,isBlocked,addressController.deleteAddress);
 userRouter.get('/quantityIncrease/:id',isLogin,isBlocked,cartControllers.quantityIncrease);
 userRouter.get('/quantityDecrease/:id',isLogin,isBlocked,cartControllers.quantityDecrease);
@@ -56,7 +56,7 @@ userRouter.post('/updateProfile',userController.updateProfile);
 userRouter.post('/changeUserPassword',userController.changeUserPassword);
 userRouter.post('/addToCart', cartControllers.addCart);
 userRouter.post('/checkCart',cartControllers.checkCart);
-userRouter.post('/checkOut',cartControllers.checkOut);
+userRouter.post('/checkOut',cartControllers.postCheckOut);
 userRouter.post('/login',isBlocked,userController.verifyLogin);
 userRouter.post('/signin',userController.insertUser);  
 userRouter.post('/verify',userController.verifyMail);

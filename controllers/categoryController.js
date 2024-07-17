@@ -15,8 +15,8 @@ const loadCategory = async (req, res) => {
 
 const addCategory = async (req, res) => {
     try {
-        const value = await Category.findOne({ categoryName: new RegExp(req.body.category, 'i') });
-        const { category, description } = req.body
+        const value = await Category.findOne({ categoryName: { $regex: new RegExp(`^${req.body.category}$`, 'i') } });
+        const { category, description } = req.body;
 
         if (!value) {
             const catego = new Category({
@@ -26,12 +26,12 @@ const addCategory = async (req, res) => {
             // console.log('hhhh',description)
             const userData = await catego.save();
             console.log('successfully added....');
-            res.status(200).redirect('/admin/category');
+            res.json({success:true,message:'Category created successfully..'})
         }
         else {
             // Send a JSON response indicating the category already exists
-            console.log('its working....already item added....>>>>>>');
-            res.json({ message: "The category already exists...!!" });
+            // console.log('its working....already item added....>>>>>>');
+            return res.json({success:false, message: "The category already exists...!!" });
         }
     } catch (error) {
         console.log(error.message);
@@ -64,23 +64,24 @@ const editCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
     try {
-
         const categoryId = req.body._id;
+        // console.log('catogoryId',categoryId)
         const { categoryName, description } = req.body;
 
         const currentCategory = await Category.findById(categoryId);
         if (!currentCategory) {
-            req.flash('msg', 'Category not found');
-            return res.redirect('/admin/category');
+            return res.json({ success: false, message: 'Category not found' });
         }
 
-        const existingCategory = await Category.findOne({
-            categoryName: { $regex: new RegExp(`^${categoryName}$`, 'i') }
-        });
+        if (currentCategory.categoryName.toLowerCase() !== categoryName.toLowerCase()) {
+            const existingCategory = await Category.findOne({
+                categoryName: { $regex: new RegExp(`^${categoryName}$`, 'i') },
+                _id: { $ne: categoryId }
+            });
 
-        if (existingCategory) {
-            req.flash('msg', 'category already exist');
-            return res.redirect(`/admin/editCategory?id=${categoryId}`);
+            if (existingCategory) {
+                return res.json({ success: false, message: 'Category name already exists' });
+            }
         }
 
         // // Update the category
@@ -88,17 +89,15 @@ const updateCategory = async (req, res) => {
             { categoryName, description }, { new: true });
 
         if (!updatedCategory) {
-            req.flash('msg', 'Failed to update category');
-            return res.redirect(`/admin/editCategory?id=${categoryId}`);
+            return res.json({ success: false, message: 'Failed to update category' });
         }
-        req.flash('msg', 'Category Updated Successfully');
-        res.redirect('/admin/category'); // Redirect to categories page after editing
+
+        res.json({ success: true, message: 'Category updated successfully' });
     } catch (error) {
         console.error(error);
-        req.flash('msg', 'Server Error');
-        res.redirect('/admin/category');
+        res.status(500).json({ success: false, message: 'Server Error' });
     }
-}
+};
 
 const catBlock = async (req, res) => {
     try {

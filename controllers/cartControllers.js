@@ -126,12 +126,17 @@ const quantityIncrease = async (req, res) => {
 
 const increaseCartItemQuantity = async (cartItemId) => {
    let cartItem = await Cart.findById(cartItemId);
-   console.log('cart', cartItem)
+   // console.log('cart', cartItem)
    if (!cartItem) {
       throw new Error('Cart item not found');
    }
 
-   cartItem.quantity += 1;
+   if (cartItem.quantity < 7) {
+      cartItem.quantity += 1;
+   } else {
+      throw new Error('maximum quantity reached');
+   }
+
    cartItem.total = cartItem.quantity * cartItem.price;
    await cartItem.save();
 
@@ -172,20 +177,48 @@ const decreaseCartItemQuantity = async (cartItemId) => {
    return cartItem;
 };
 
-const checkOut = async (req,res)=>{
+const loadCheckout = async (req, res) => {
    try {
-      // console.log('eddd')
-      // console.log(req.body);
+       const userId = req.session.user_id;
+       // console.log('session',userId)
+       const userCartData = await Cart.find({ userId });
+       // console.log('usercardDAta',userCartData)
+       const addressData = await Address.find({ userId });
+       console.log('addressData',addressData)
+       const userCartTotal = userCartData.reduce((total, cart) => total + cart.total, 0);
+       // console.log('usercartTotal',userCartTotal)
+       res.render('checkout', { userCartData: userCartData, userCartTotal, addressData });
+   } catch (error) {
+       console.log(error.message)
+   }
+}
+
+const postCheckOut = async (req,res)=>{
+   try {
+      console.log('eddd')
+      // console.log(req.body,'req.body')
       const userId = req.session.user_id;
       const userData = await User.findOne({_id:userId});
       const userDataId = userData._id;
       let cartData = await Cart.find({userId});
       const paymentMethod = req.body.paymentMethod;
+      console.log('paymetnt',paymentMethod);
       const deliveryAddress = await Address.findOne({name:req.body.name}); 
+      console.log('delivery addres',deliveryAddress);
       const deliveryAddressId = deliveryAddress._id;
+   
+      const orderStatus = req.body.paymentMethod === 'COD' ? 'Placed' : 'Pending'; 
+      console.log('order Staus ',orderStatus);
+      console.log('deliveryaddId',deliveryAddressId);
       const randomInteger = Math.floor(Math.random() * 100000000000 );
+      console.log('orderId',randomInteger);
       let totalAmount = 0;
       cartData.forEach((i)=>(totalAmount += i.total));
+
+      cartData = cartData.map((item) => {
+         return { ...item._doc, status: orderStatus }; 
+       });
+   
       
       // console.log(userId,'userId');
       // console.log(cartData,'cartData');
@@ -199,12 +232,14 @@ const checkOut = async (req,res)=>{
          payment:paymentMethod,
          orderId:randomInteger,
          orderAmount:totalAmount,
-         orderedItems:[...cartData],
+         status:orderStatus,
+         orderedItems:cartData,
       });
       await orderData.save();
       const del = await Cart.deleteMany({userId});
       console.log('succes...',del);
-      res.redirect('/thankyou');
+      res.status(200).json({status:true})
+      // res.redirect('/thankyou');
 
    } catch (error) {
     console.log(error.message);  
@@ -213,13 +248,17 @@ const checkOut = async (req,res)=>{
 
 const thankyou = async (req,res)=>{
    try {
-      console.log('hello');
+      // console.log('hello');
       // console.log(req.body)
       const lastOrder = await Order.findOne({}).sort({_id: -1});
+      for(let item of lastOrder.orderedItems){
+         await Product.updateOne({_id:item.productId},{$inc:{quantity:-item.quantity}})
+         // console.log('item-id',item.quantity)
+      }
       const productDetails = lastOrder.orderedItems;
       const productId = productDetails.map(product=>product.productId);
       const prdct = await Product.find({_id:productId}).populate('categoryId');
-      console.log(prdct,'prdcttt')
+      // console.log(prdct,'prdcttt')
       res.render('thankyou',{lastOrder,prdct});
    } catch (error) {
       console.log(error.message);
@@ -233,7 +272,8 @@ module.exports = {
    quantityIncrease,
    updateCart,
    quantityDecrease,
+   loadCheckout,
+   postCheckOut,
    checkCart,
-   checkOut,
    thankyou,
 }

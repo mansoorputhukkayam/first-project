@@ -27,6 +27,7 @@ const addAddress = async (req, res) => {
 
 const checkOutAddAddress = async (req,res)=>{
     try{
+        console.log('here is reached ')
         const userId = req.session.user_id;
         const checkOutAddress = new Address({
             userId:userId,

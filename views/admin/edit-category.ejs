@@ -15,6 +15,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/favicon.svg" />
     <!-- Template CSS -->
     <link href="/public/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -114,17 +117,15 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="/admin/editcategory/<%= categorybyid._id %>" method="post">
+                            <form id="editCategoryForm" action="/admin/editcategory %>" method="post">
                                 <% if(categorybyid) { %>
                                     <% if(msg && msg.length> 0) { %>
                                         <div class="alert alert-info">
-                                            <h5 class="text-danger">
-                                                <%= msg %>
-                                            </h5>
+                                            <%= msg %>
                                         </div>
                                         <% } %>
                                             <div class="mb-4">
-                                                <label for="product_category" class="form-label">Category Name</label>
+                                                <label for="category_name" class="form-label">Category Name</label>
                                                 <input type="hidden" name="_id" value="<%= categorybyid._id %>">
                                                 <input type="text" name="categoryName"
                                                     value="<%= categorybyid.categoryName %>" placeholder="Type here"
@@ -196,8 +197,63 @@
             </div>
         </footer>
     </main>
-    <script>
 
+    <script>
+        document.getElementById('editCategoryForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Client-side validation
+            const categoryName = data['categoryName'].trim();
+            const description = data['description'].trim();
+
+            if (categoryName === '' || description === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please fill in both the category name and description.',
+                });
+                return; // Stop the form submission
+            }
+
+            try {
+                const response = await axios.post('/admin/editcategory', data);
+
+                if (response.data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.data.message,
+                        timer:2000,
+                        showConfirmButton:false
+                    }).then(() => {
+                        window.location.href = '/admin/category'; // Redirect to categories page
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.data.message,
+                        timer:2000,
+                        showConfirmButtonText:false,
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating category:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Server Error',
+                    text: 'An error occurred while updating the category.',
+                });
+            }
+        });
     </script>
 
     <script src="/public/assets/js/vendors/jquery-3.6.0.min.js"></script>

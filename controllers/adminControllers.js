@@ -22,7 +22,8 @@ const loadLogin = async (req, res) => {
         // if (req.body.email.trim() == "" || req.body.password.trim() == "") {
         //     res.render("login", { message: "field cant be empty" });
         //   }
-        res.render('login');
+        const message = req.flash('msg');
+            res.render('login',{message});
     } catch (error) {
         console.log(error.message);
     }
@@ -44,11 +45,13 @@ const verifyLogin = async (req, res) => {
                 return res.redirect('/admin/home')
             }
             else {
+                req.flash('msg','Password is not correct');
                 console.log('pwd errror...')
                 return res.redirect('/admin')
             }
         }
         else {
+            req.flash('msg','Your are not an admin');
             console.log('its worked else')
             return res.redirect('/admin');
         }
@@ -104,10 +107,12 @@ const userBlock = async (req, res) => {
 
 const loadLogout = async (req, res) => {
     try {
+        // console.log('hey logout')
         req.session.user_id = null;
-        res.redirect('/admin');
+        res.status(200).send({ message: 'Logged out Successfully...' })
     } catch (error) {
         console.log(error.message);
+        res.status(500).send({ message: 'Error in Logout' });
     }
 }
 
@@ -115,18 +120,21 @@ const loadAdminOrders = async (req, res) => {
     try {
         console.log('hi order admin');
         const userId = req.session.user_id;
+        const orderDetails = await Order.findOne({}).sort({_id:-1});
+        console.log('laast data ', orderDetails)
         const orderData = await Order.find({}).populate('deliveryAddress').populate('userId').exec();
         // console.log(orderData,'orderDattasa');
-        res.render('orders', { orderData: orderData })
+        res.render('orders', { orderData: orderData,orderDetails })
     } catch (error) {
         console.log(error.message);
+        
     }
 }
 
 const changeOrderStatus = async (req, res) => {
     try {
         console.log('hey it is working');
-        const {productId,status}= req.body;
+        const { productId, status } = req.body;
         console.log('ProductId:', productId, 'Status:', status);
         const product = new mongoose.Types.ObjectId(productId);
 
@@ -136,7 +144,7 @@ const changeOrderStatus = async (req, res) => {
             { new: true }
         );
         console.log('result', result);
-        if(result){
+        if (result) {
             res.json({ success: true, message: 'Status updated successfully' });
         } else {
             res.json({ success: false, message: 'Order not found or not updated successfully' });

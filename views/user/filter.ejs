@@ -1,15 +1,33 @@
 <%- include('../layouts/header.ejs') %>
 
+<!-- page loader start -->
+<div id="preLoader" style="width: 100%;height: 100vh;padding-top: 35vh; background-color: #000;">
+    <img class="img-fluid" style="width: 15%;display: block;margin-left:auto;margin-right: auto;" src="/public/images/loader-trans.gif">
+</div>
+
+<!-- page loader ends  -->
+<script>
+
+    let loader = document.getElementById("preLoader")
+    window.addEventListener("load", function () {
+        loader.style.display = "none";
+    })
+
+    </script>
+
+	<style>
+		#men{
+			transform: translateX(-135px);
+		}
+	</style>
+
 <!-- Start Header/Navigation -->
 <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
-
 	<div class="container">
 		<a class="navbar-brand" href="/">Furni<span>.</span></a>
-
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-
 		<div class="collapse navbar-collapse" id="navbarsFurni">
 			<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
 				<li class="nav-item ">
@@ -17,18 +35,39 @@
 				</li>
 				<li class="active"><a class="nav-link" href="">Shop</a></li>
 				<li><a class="nav-link" href="/about">About us</a></li>
-				<li><a class="nav-link" href="/services">Services</a></li>
-				<li><a class="nav-link" href="/blog">Blog</a></li>
 				<li><a class="nav-link" href="/contact">Contact us</a></li>
 			</ul>
 
+			<div>
+				<form id="searchForm" class="d-flex ms-auto" action="/search" method="post">
+					<input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" id="searchInput">
+					<button class="btn btn-outline-primary" type="submit">Search</button>
+				</form>
+			</div>
+<!-- starting filter  -->
+			<div class="col-auto ms-1">
+				<button class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button" aria-expanded="false">
+					Sort
+					<span class="visually-hidden">Toggle Dropdown</span>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end" id="men">
+					<li><a class="dropdown-item" href="">popularity</a></li>
+					<li><a class="dropdown-item" href="/loadpricehigh">Price Ascending</a></li>
+					<li><a class="dropdown-item" href="/loadpricelow">Price Descending</a></li>
+					<li><a class="dropdown-item" href="/nameAscending">Name Ascending</a></li>
+					<li><a class="dropdown-item" href="/nameDescending">Name Descending</a></li>
+					<li><a class="dropdown-item" href="">New Arrivals</a></li>
+					<li><a class="dropdown-item" href="">Average Ratings</a></li>
+					<li><a class="dropdown-item" href="">Featured</a></li>
+				</ul>
+			</div>
+				<!-- end filter -->
 			<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
 				<li><a class="nav-link" href="/user"><img src="/public/images/user.svg"></a></li>
 				<li><a class="nav-link" href="/cart"><img src="/public/images/cart.svg"></a></li>
 			</ul>
 		</div>
-	</div>
-		
+	</div>	
 </nav>
 <!-- End Header/Navigation -->
 
@@ -42,106 +81,55 @@
 						<h1>Shop</h1>
 					</div>
 				</div>
-				<!-- starting filter  -->
-				<div class="col-auto">
-                    <br>
-                    <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button" aria-expanded="false">
-                      Filter
-                      <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="">popularity</a></li>
-                        <li><a class="dropdown-item" href="/loadpricehigh">Price Ascending</a></li>
-                        <li><a class="dropdown-item" href="/loadpricelow">Price Descending</a></li>
-                        <li><a class="dropdown-item" href="/nameAscending">Name Ascending</a></li>
-                        <li><a class="dropdown-item" href="/nameDescending">Name Descending</a></li>
-                        <li><a class="dropdown-item" href="">New Arrivals</a></li>
-                        <li><a class="dropdown-item" href="">Average Ratings</a></li>
-                        <li><a class="dropdown-item" href="">Featured</a></li>
-                    </ul>
-                  </div>
-				<!-- end filter -->
 			</div>
+		</div>
+
+		<div class="btn-group" style="margin-left: 60px;" >
+			<br>
+			<button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" type="button"
+				aria-expanded="false">
+				Filtered.By..
+				<span class="visually-hidden">Toggle Dropdown</span>
+			</button>
+			<ul class="dropdown-menu">
+				<% categories.forEach(function(category){ %>
+					<li><a class="dropdown-item" href="/shop/<%= category._id %>">
+							<%= category.categoryName %>
+						</a></li>
+					<% }) %>
+			</ul>
 		</div>
 	</div>
 <!-- End Hero Section -->
 
-<div class="btn-group">
-  <br>
-  <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button" aria-expanded="false">
-    Categories
-    <span class="visually-hidden">Toggle Dropdown</span>
-  </button>
-  <ul class="dropdown-menu">
-    <% categories.forEach(function(category){ %>
-      <li><a class="dropdown-item" href="/shop/<%= category._id %>"><%= category.categoryName %></a></li>
-    <% }) %>
-  </ul>
-</div>
-
-
-
 <div class="untree_co-section product-section before-footer-section">
 	<div class="container">
 		  <div class="row">
+			<% if(display && display.length> 0) { %>
 			<% display.forEach(function(product) { %>
 
 				<!-- Start Column 1 -->
 				<div class="col-12 col-md-4 col-lg-3 mb-5">
 					<input type="hidden" name="id" value="<%= product._id %>">
-					<a class="product-item" href="/product?id=<%= product._id %>" >
-						 
+					<a class="product-item" href="/product?id=<%= product._id %>" > 
 						<img src="/productImages/<%= product.image[0] %>" alt="Product-image" class="img-fluid product-thumbnail">
 						<h3 class="product-title"><%= product.name %></h3>
 						<strong class="product-price">$<%= product.price %></strong>
-						
 						<span class="icon-cross">
 							<img src="/public/images/cross.svg" class="img-fluid">
 					</span>
 				</a>
 			</div	> 
 			<!-- End Column 1 -->
-			
+
 			<% }) %>
-			<!-- Start Column 2 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="/product">
-					<img src="/public/images/product-1.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Nordic Chair</h3>
-					<strong class="product-price">$50.00</strong>
-
-					<span class="icon-cross">
-						<img src="/public/images/cross.svg" class="img-fluid">
-					</span>
-				</a>
-			</div> 
-			<!-- End Column 2 -->
-
-			<!-- Start Column 3 -->
-		
-			<!-- End Column 3 -->
-
-			<!-- Start Column 4 -->
-			
-			<!-- End Column 4 -->
-
-
-			<!-- Start Column 1 -->
-		
-			<!-- End Column 1 -->
-				
-			<!-- Start Column 2 -->
-		
-			<!-- End Column 2 -->
-
-			<!-- Start Column 3 -->
-		
-			<!-- End Column 3 -->
-
-			<!-- Start Column 4 -->
-		
-			<!-- End Column 4 -->
-
+			<% } else { %>
+				<div class="col-12 text-center text-danger">
+					<h3>
+						<%= typeof message !=='undefined' ? message : 'No Products found'   %>
+					</h3>
+				</div>
+				<% } %>
 		  </div>
 	</div>
 </div>

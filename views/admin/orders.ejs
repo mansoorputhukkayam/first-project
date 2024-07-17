@@ -15,6 +15,17 @@
     <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/favicon.svg" />
     <!-- Template CSS -->
     <link href="/public/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -214,7 +225,7 @@
                             <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
                                 center</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i
+                            <a class="dropdown-item text-danger" id="logout"><i
                                     class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
@@ -293,7 +304,11 @@
                                                     <%= element.status %>
                                                 </span></td>
                                             <td>
-                                                <a href="#" class="btn btn-md rounded font-sm">View</a>
+                                                <button type="button" class="btn-btn-info btn-sm" data-toggle="modal"
+                                                    data-target="#productModal"
+                                                    data-product-name="<%= element.productName %>"
+                                                    data-product-quantity="<%= element.quantity %>"
+                                                    data-product-image="<%= element.image %>">View</button>
                                             </td>
                                             <td>
                                                 <div class="text-center">
@@ -302,25 +317,33 @@
                                                         style="background-color: #4c5306; color: #fcf8f8;"
                                                         onchange="ProductStatus(event,'<%= element._id %>')"
                                                         data-previous-value="<%= element.status %>">
-                                                        <% if (element.status=='pending' ) { %>
-                                                            <option value="pending" hidden>Pending</option>
-                                                            <option value="shipped">Shipped</option>
-                                                            <option value="delivered">Delivered</option>
-                                                            <option value="cancelled">Cancelled</option>
-                                                            <% } else if (element.status=='shipped' ) { %>
-                                                                <option value="shipped" hidden>Shipped</option>
-                                                                <option value="delivered">Delivered</option>
-                                                                <option value="cancelled">Cancelled</option>
-                                                                <% } else if (element.status=='delivered' ) { %>
-                                                                    <option value="delivered" hidden>Delivered</option>
-                                                                    <option value="shipped">Shipped</option>
-                                                                    <option value="cancelled">Cancelled</option>
-                                                                    <% } else if (element.status=='cancelled' ) { %>
-                                                                        <option value="cancelled" hidden>Cancelled
+                                                        <% if (element.status=='Pending' ) { %>
+                                                            <option value="Pending" hidden>Pending</option>
+                                                            <option value="Placed">Placed</option>
+                                                            <option value="Shipped">Shipped</option>
+                                                            <option value="Delivered">Delivered</option>
+                                                            <option value="Cancelled">Cancelled</option>
+                                                            <% } else if (element.status=='Shipped' ) { %>
+                                                                <option value="Shipped" hidden>Shipped</option>
+                                                                <option value="Placed">Placed</option>
+                                                                <option value="Delivered">Delivered</option>
+                                                                <option value="Cancelled">Cancelled</option>
+                                                                <% } else if (element.status=='Delivered' ) { %>
+                                                                    <option value="Delivered" hidden>Delivered</option>
+                                                                    <!-- <option value="Shipped">Shipped</option>
+                                                                    <option value="Cancelled">Cancelled</option> -->
+                                                                    <% } else if (element.status=='Cancelled' ) { %>
+                                                                        <option value="Cancelled" hidden>Cancelled
                                                                         </option>
-                                                                        <option value="shipped">Shipped</option>
-                                                                        <option value="delivered">Delivered</option>
-                                                                        <% } %>
+                                                                        <option value="Placed">Placed</option>
+                                                                        <option value="Shipped">Shipped</option>
+                                                                        <option value="Delivered">Delivered</option>
+                                                                        <% } else if (element.status=='Placed' ) { %>
+                                                                            <option value="Placed" hidden>Placed</option>
+                                                                            <option value="Shipped">Shipped</option>
+                                                                            <option value="Delivered">Delivered</option>
+                                                                            <option value="Cancelled">Cancelled</option>
+                                                                            <% } %>
                                                     </select>
 
                                                     <!-- <select class="form-select">
@@ -376,17 +399,65 @@
         </footer>
     </main>
 
+
+    <!-- Modal Structure -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Product Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="product-card">
+                                    <div id="modalProductImage" class="product-image"></div>
+                                    <div class="product-info">
+                                        <span id="modalProductQuantity" class="product-quantity"></span>
+                                        <span id="modalProductName" class="product-name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#productModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var productName = button.data('product-name');
+            var productQuantity = button.data('product-quantity');
+            var productImage = button.data('product-image');
+        
+            var modal = $(this);
+            modal.find('.modal-body #modalProductName').text(productName);
+            modal.find('.modal-body #modalProductQuantity').text(productQuantity);
+            modal.find('.modal-body #modalProductImage').attr('src',productImage);
+        });
+        </script>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         function ProductStatus(event, productId) {
             const status = event.target.value;
-            console.log('sending request with :',{status, productId});
+            console.log('sending request with :', { status, productId });
             axios.post('/admin/productStatus', {
                 status: status,
                 productId: productId
             })
                 .then(response => {
-                    console.log('server response:',response.data);
+                    console.log('server response:', response.data);
                     if (response.data.success) {
                         location.reload()
                         // console.log(response.data.message);
@@ -407,6 +478,44 @@
                     // event.target.value = event.target.getAttribute('data-previous-value');
                 });
         }
+    </script>
+
+    <script>
+        document.getElementById('logout').addEventListener('click', async () => {
+            const result = await Swal.fire({
+                title: 'Are you sure ?',
+                text: 'Do you really want to logout?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                timer: 3000,
+                confirmButtonText: 'Yes logout'
+            });
+            if (result.isConfirmed) {
+                const response = await fetch('/admin/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    Swal.fire(
+                        'Logout',
+                        'You have been logout successfully...',
+                        'success'
+                    ).then(() => {
+                        window.location.href = '/admin';
+                    });
+                } else {
+                    Swal.fire(
+                        'Error',
+                        'There is a error',
+                        'error'
+                    );
+                }
+            }
+        });
     </script>
 
     <script src="/public/assets/js/vendors/jquery-3.6.0.min.js"></script>

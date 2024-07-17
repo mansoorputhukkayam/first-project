@@ -68,7 +68,7 @@ app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use('/productImages', express.static('public/productImages'));
 
 app.get('*',(req,res)=>{
-    res.send('error page');
+    res.render('../error');
 })
 // app.locals.formData = {};
 

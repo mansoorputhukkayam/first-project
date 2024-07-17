@@ -56,6 +56,7 @@ const sendVerifyMail = async (name, email, user_id, otp) => {
 
 const loginLoad = async (req, res) => {
     try {
+        if (req.session.user_id) return res.redirect('/')
         res.render('login')
     } catch (error) {
         console.log(error.message);
@@ -64,6 +65,7 @@ const loginLoad = async (req, res) => {
 
 const loadSignin = async (req, res) => {
     try {
+        if (req.session.user_id) return res.redirect('/')
         res.render('signin');
     } catch (error) {
         console.log(error.message);
@@ -97,12 +99,13 @@ const insertUser = async (req, res) => {
             is_admin: 0
         });
         const userData = await user.save();
+        req.session.email = userData._id;
         if (userData) {
             const otp = generateOTP();
             saveOTP(req.body.email, otp)
             sendVerifyMail(req.body.name, req.body.email, userData._id, otp);
             console.log('jjjjj', otp);
-            req.session.user_id = userData._id;
+            
             res.render('signupotp')
         }
         else {
@@ -150,7 +153,13 @@ const verifyMail = async (req, res) => {
         const userOtp = await OTP.findOne({ otp: enteredOtp });
 
         if (!userOtp) return res.render('signupotp', { message: "OTP is incorrect...!!" });
-        else res.render('home');
+        else{
+            const userData = await User.findById({_id:req.session.email});
+            console.log(userData,'usrdata kittnddn');
+            req.session.user_id = userData._id;
+            res.redirect('/');
+        }
+         
 
     } catch (error) {
         console.error(error);
@@ -180,7 +189,10 @@ const saveOTP = async (email, otp) => {
 };
 const loadHome = async (req, res) => {
     try {
-        res.render('home');
+        const userId = req.session.user_id;
+        // console.log(userId)
+        const products = await Product.find({}).limit(3);
+        res.render('home', { products: products, userId});
     } catch (error) {
         console.log(error.message);
     }
@@ -190,12 +202,14 @@ const loadProfile = async (req, res) => {
     try {
         const userId = req.session.user_id;
         const userProfile = await User.findById(userId);
+        // console.log('userProfile', userProfile);
         const viewAddress = await Address.find({ userId });
         const orderData = await Order.find({ userId }).populate('deliveryAddress').exec();
-        // console.log('order',orderData,'order');
+
         res.render('user', { userProfile: userProfile, viewAddress, orderData });
     } catch (error) {
         console.log(error.message);
+        res.redirect('/login');
     }
 }
 
@@ -304,18 +318,6 @@ const loadLogout = async (req, res) => {
 //         res.status(500).send('Server error!!!!');
 //     }
 // }
-
-const loadCheckout = async (req, res) => {
-    try {
-        const userId = req.session.user_id;
-        const userCartData = await Cart.find({ userId });
-        const addressData = await Address.find({ userId });
-        const userCartTotal = userCartData.reduce((total, cart) => total + cart.total, 0);
-        res.render('checkout', { userCartData: userCartData, userCartTotal, addressData });
-    } catch (error) {
-        console.log(error.message)
-    }
-}
 
 // adminDashboard = async(req,res)=>{
 //     try {
@@ -469,7 +471,7 @@ const loadShop = async (req, res) => {
 
         res.render('shop', { display: displayProducts, categories: categories });
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
     }
 }
 
@@ -484,9 +486,9 @@ const loadSearch = async (req, res) => {
         });
 
         if (productData.length > 0) {
-            res.render('shop', { display: productData, categories: categories, searchTerm: searchData });
+            res.render('shop', { display: productData, categories: categories, searchData: searchData });
         } else {
-            res.render('shop', { display: [], categories: categories, searchTerm: searchData, message: `NO Products Found For ${searchData}`  });
+            res.render('shop', { display: [], categories: categories, searchData: searchData, message: `NO Products Found For ${searchData}` });
         }
     } catch (error) {
         res.status(500).json({ message: 'Error searching for products', error });
@@ -505,14 +507,20 @@ const loadSearch = async (req, res) => {
 const cancelProducts = async (req, res) => {
     try {
         const productId = req.query.productId;
-        console.log(productId);
+        const prdctId = req.query.prdctId;
+        const orderQuantity = req.query.orderQuantity;
+        const productData = { productId, orderQuantity };
+        console.log('productData', productData);
+        console.log(productId, orderQuantity, 'orderquantity,produucid');
         const result = await Order.findOneAndUpdate(
             { 'orderedItems._id': new mongoose.Types.ObjectId(productId) },
-            { $set: { "orderedItems.$.status": 'cancelled' } },
+            { $set: { "orderedItems.$.status": 'Cancelled' } },
             { new: true }
         );
-        console.log('result',result);
-        if (result) {
+        // console.log('result', result);
+
+        const productCountUpdate = await Product.updateOne({ _id: prdctId }, { $inc: { quantity: orderQuantity } })
+        if (result && productCountUpdate) {
             res.json({ success: true })
         } else {
             res.json({ success: false })
@@ -539,7 +547,6 @@ module.exports = {
     loadContact,
     loadProfile,
     loadLogout,
-    loadCheckout,
     updateProfile,
     changeUserPassword,
     forgotPassword,

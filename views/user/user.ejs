@@ -7,6 +7,7 @@
   <title>User Profile</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -17,6 +18,13 @@
   <title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    .error {
+        color: red;
+        font-size: 0.9em;
+    }
+</style>
 
 </head>
 
@@ -64,12 +72,12 @@
             
 <!-- start order history -->
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderHistoryModal">
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderHistoryModal">
   View Order History
-</button>
+</button> -->
 
 <!-- Order History Modal -->
-<div class="modal fade" id="orderHistoryModal" tabindex="-1" role="dialog" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="orderHistoryModal" tabindex="-1" role="dialog" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -101,9 +109,9 @@
                     View Details
                   </button>
                 </td>
-              </tr>
+              </tr> -->
               <!-- Add more order rows here -->
-            </tbody>
+            <!-- </tbody>
           </table>
         </div>
       </div>
@@ -112,7 +120,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <!-- end history here -->
           </div>
 
@@ -189,14 +197,21 @@
                                     <td>
                                       <%= item.quantity %>
                                     </td>
-                                    <td>$<%= item.total %>
-                                    </td>
-                                    <% if(item.status==='cancelled' ) { %>
-                                      <td class="text-danger">Cancelled</td>
+                                    <td>$<%= item.total %></td>
+                                    
+                                    <% if(item.status==='Cancelled'){ %>
+                                      <td class="text-danger"><%= item.status %>
+                                        <br>
+
+                                      <%}else if( item.status == 'Delivered' ) { %>
+                                      <td class="text-info"><%= item.status %>
+                                        <br>
                                       <% } else { %>
-                                        <td>
-                                          <button class="btn-danger"
-                                            onclick="btnclick('<%= item._id %>')">Cancel</button>
+                                        <td class="text-success">
+                                          <%= item.status %>
+                                          <br>
+                                          <button class="btn btn-sm btn-danger"
+                                            onclick="btnclick('<%= item._id %>','<%= item.quantity %>','<%= item.productId %>')">Cancel</button>
                                         </td>
                                         <% } %>
                                   </tr>
@@ -220,6 +235,7 @@
               <div class="col-md-6">
                 <img src="/public/images/person_1.jpg" class="img-fluid" alt="User Image">
               </div>
+              <% if(userProfile){ %>
               <h2 class="mt-3">
                 <%= userProfile.name %>
               </h2>
@@ -230,8 +246,10 @@
               <a href="#" class="btn btn-primary editButton" data-bs-toggle="modal"
                 data-bs-target="#editModal<%= userProfile._id %>">Edit</a>
             </div>
+            <% } %>
           </div>
           <!-- userprofile edit Modal starts  -->
+           <% if(userProfile) { %>
           <div class="modal fade" id="editModal<%= userProfile._id %>" tabindex="-1" aria-labelledby="editModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -261,6 +279,7 @@
               </div>
             </div>
           </div>
+          <% } %>
           <!-- userprofile modal ends here  -->
 
           <!-- address  start-->
@@ -355,29 +374,33 @@
               <div class="tab-pane fade" id="v-pills-addAddress" role="tabpanel"
                 aria-labelledby="v-pills-addAddress-tab">
                 <div>
-                  <form action="/addAddress" method="post">
+                  <form id="addressForm" action="/addAddress" method="post">
                     <div class="form-row">
                       <div class="form-group col-md-6">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" name="name" id="name" placeholder="Name" required
                           minlength="5">
+                          <span class="error" id="nameError"></span>
                       </div>
                       <div class="form-group col-md-6">
                         <label for="mobile">Mobile</label>
                         <input type="text" class="form-control" name="mobile" id="mobile" placeholder="mobile" required
                           pattern="\d{10}" title="Mobile number must be 10 digits">
+                          <span class="error" id="mobileError"></span>
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="inputAddress">Address</label>
                       <input type="text" class="form-control" name="address" id="inputAddress" placeholder="address"
                         required>
+                        <span class="error" id="addressError"></span>
                     </div>
                     <div class="form-row">
                       <div class="form-group col-md-6">
                         <label for="inputCity">City/Town</label>
                         <input type="text" class="form-control" id="inputCity" name="locality" placeholder="locality"
                           required>
+                          <span class="error" id="cityError"></span>
                       </div>
                       <div class="form-group col-md-4">
                         <label for="inputState">State</label>
@@ -426,11 +449,13 @@
                         <div class="form-group col-md-3">
                           <label for="Post">Post</label>
                           <input type="text" class="form-control" name="post" id="post" required>
+                          <span class="error" id="postError"></span>
                         </div>
                         <div class="form-group col-md-2">
                           <label for="pincode">Pin code</label>
                           <input type="text" class="form-control" name="pincode" id="pincode" required pattern="\d{6}"
                             title="Pin code must be 6 digits">
+                            <span class="error" id="pincodeError"></span>
                         </div>
                       </div>
                     </div>
@@ -570,8 +595,9 @@
   <!-- End Footer Section -->
 
   <script>
-    function btnclick(productId) {
-      fetch(`/userbtn?productId=${productId}`, { method: "get" })
+    function btnclick(productId,orderQuantity,prdctId) {
+      console.log(productId,orderQuantity,prdctId)
+      fetch(`/userbtn?productId=${productId}&orderQuantity=${orderQuantity}&prdctId=${prdctId}`, { method: "get" })
         .then(response => response.json())
         .then(data => {
           if (data.success) {
@@ -645,6 +671,60 @@
     });
   </script>
 
+ <script>
+        document.getElementById('addressForm').addEventListener('submit', function(event) {
+            let valid = true;
+
+            // Clear previous error messages
+            document.querySelectorAll('.error').forEach(error => error.textContent = '');
+
+            // Name validation
+            const name = document.getElementById('name').value;
+            if (/[^a-zA-Z0-9 ]/.test(name)) {
+                document.getElementById('nameError').textContent = "Name must not contain special characters.";
+                valid = false;
+            }
+
+            // Mobile validation
+            const mobile = document.getElementById('mobile').value;
+            if (!/^\d{10}$/.test(mobile) || /^0+$/.test(mobile)) {
+                document.getElementById('mobileError').textContent = "Mobile number must be 10 digits and not all zeros.";
+                valid = false;
+            }
+
+            // Address validation
+            const address = document.getElementById('inputAddress').value;
+            if (/[^a-zA-Z0-9 ]/.test(address)) {
+                document.getElementById('addressError').textContent = "Address must not contain special characters.";
+                valid = false;
+            }
+
+            // City/Town validation
+            const city = document.getElementById('inputCity').value;
+            if (/[^a-zA-Z0-9 ]/.test(city)) {
+                document.getElementById('cityError').textContent = "City/Town must not contain special characters.";
+                valid = false;
+            }
+
+            // Post validation
+            const post = document.getElementById('post').value;
+            if (/[^a-zA-Z0-9 ]/.test(post)) {
+                document.getElementById('postError').textContent = "Post must not contain special characters.";
+                valid = false;
+            }
+
+            // Pincode validation
+            const pincode = document.getElementById('pincode').value;
+            if (!/^\d{6}$/.test(pincode) || /^0+$/.test(pincode)) {
+                document.getElementById('pincodeError').textContent = "Pincode must be 6 digits and not all zeros.";
+                valid = false;
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+    </script>
 
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">

@@ -55,19 +55,23 @@
                 <h2>
                     <%= product.name %>
                 </h2>
-                <p class="price">$<%= product.price %>
+                <p class="price text-success" style="font-size: large; font-weight: 500;">$<%= product.price %>
                 </p>
-                <p class="quantity">Available Quantity:<%= product.quantity %>
-                </p>
-                <p class="ratings">Ratings: ⭐⭐⭐⭐⭐</p>
-                <p>
-                    <%= product.description %>
-                </p>
-
-                <button type="button"
-                    onclick="addToCart('<%= product._id%>', '<%= product.name%>', '<%= product.image[0]%>', '<%= product.price%>', '<%= 1%>')"
-                    class="btn btn-primary">Add to Cart</button>
-
+                <% if(product.quantity >= 1 ) { %>
+                    <button class="btn border btn-success">Available</button>
+                    <br><br>
+                    <p class="quantity">Available Quantity:<%= product.quantity %>
+                    </p>
+                    <p class="ratings">Ratings: ⭐⭐⭐⭐⭐</p>
+                    <p>
+                        <%= product.description %>
+                    </p>
+                    <button type="button"
+                        onclick="addToCart('<%= product._id%>', '<%= product.name%>', '<%= product.image[0]%>', '<%= product.price%>', '<%= 1%>')"
+                        class="btn btn-primary">Add to Cart</button>
+                    <% } else { %>
+                        <button class="btn border btn-danger">Out Of Stock</button>
+                        <% } %>
             </div>
             <p>
                 <%= msg %>
@@ -176,7 +180,13 @@
             }).then(res => res.json())
                 .then(response => {
                     if (response.exists) {
-                        swal("Warning!", "This product is already in your cart", "warning");
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Category already Exists.!",
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
                     } else {
                         fetch('/addToCart', {
                             method: 'POST',
@@ -187,7 +197,13 @@
                         }).then(res => res.json())
                             .then(data => {
                                 if (data.success) {
-                                    swal("Success!", "Successfully added to cart", "success");
+                                    Swal.fire({
+                                        position: "center",
+                                        icon: "success",
+                                        title: "Successfully added",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
                                 }
                             });
                     }

@@ -1,5 +1,21 @@
 <%- include('../layouts/header.ejs') %>
 
+<!-- page loader start -->
+<div id="preLoader" style="width: 100%;height: 100vh;padding-top: 35vh; background-color: #000;">
+  <img class="img-fluid" style="width: 15%;display: block;margin-left:auto;margin-right: auto;" src="/public/images/loader-trans.gif">
+</div>
+
+<!-- page loader ends  -->
+<script>
+
+  let loader = document.getElementById("preLoader")
+  window.addEventListener("load", function () {
+      loader.style.display = "none";
+  })
+
+  </script>
+
+
   <!-- Start Header/Navigation -->
   <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
 
@@ -95,7 +111,8 @@
                           aria-describedby="button-addon1">
                         <div class="input-group-append">
 
-                          <button class="btn btn-outline-black increase" type="button" data-id="<%= cartitem._id %>">&plus;</button>
+                          <button class="btn btn-outline-black increase" type="button"
+                            data-id="<%= cartitem._id %>">&plus;</button>
                         </div>
                       </div>
 
@@ -294,6 +311,8 @@
   </script>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <script>
     $(document).ready(function () {
       $('.increase, .decrease').on('click', function (e) {
@@ -318,6 +337,12 @@
             updateCartTotal();
           },
           error: function (err) {
+            const errorMessage = err.responseJSON ? err.responseJSON.error : 'Error updating quantity';
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: errorMessage
+            });
             console.error('Error updating quantity:', err);
           }
         });

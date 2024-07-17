@@ -1,95 +1,111 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="author" content="Untree.co">
-  <link rel="shortcut icon" href="favicon.png">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="author" content="Untree.co">
+	<link rel="shortcut icon" href="favicon.png">
 
-  <meta name="description" content="" />
-  <meta name="keywords" content="bootstrap, bootstrap4" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="" />
+	<meta name="keywords" content="bootstrap, bootstrap4" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<!-- Bootstrap CSS -->
-                
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="">
-		<link href="/public/css/bootstrap.min.css" rel="stylesheet">
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-		<link href="/public/css/tiny-slider.css" rel="stylesheet">
-		<link href="/public/css/style.css" rel="stylesheet">
-		<title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-        <style>
-			 .bg-image-vertical {
-                position: relative;
-                overflow: hidden;
-                background-repeat: no-repeat;
-                background-position: right center;
-                background-size: auto 100%;
-                }
-                
-                @media (min-width: 1025px) {
-                .h-custom-2 {
-                height: 100%;
-                }
-                }
-        </style>  
-	</head>
-	
-    <body>
+	<!-- Bootstrap CSS -->
 
-		<!-- Start Header/Navigation -->
-		<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark " arial-label="Furni navigation bar">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" href="">
+	<link href="/public/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<link href="/public/css/tiny-slider.css" rel="stylesheet">
+	<link href="/public/css/style.css" rel="stylesheet">
+	<title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
-			<div class="container ">
-				<a class="navbar-brand mx-auto" href="/">Furni<span>.</span></a>
-			</div>
-				
-		</nav>
-		<!-- End Header/Navigation -->
-    
-    <body>		
+	<style>
+		.bg-image-vertical {
+			position: relative;
+			overflow: hidden;
+			background-repeat: no-repeat;
+			background-position: right center;
+			background-size: auto 100%;
+		}
+
+		@media (min-width: 1025px) {
+			.h-custom-2 {
+				height: 100%;
+			}
+		}
+
+		.error {
+			color: red;
+			font-size: 0.9em;
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- Start Header/Navigation -->
+	<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark " arial-label="Furni navigation bar">
+
+		<div class="container ">
+			<a class="navbar-brand mx-auto" href="/">Furni<span>.</span></a>
+		</div>
+
+	</nav>
+	<!-- End Header/Navigation -->
+
+	<body>
 		<section class="vh-100">
 			<div class="container-fluid">
-			  <div class="row">
-                <div class="col-sm-6 px-0 d-none d-sm-block">
-					<img style="width:100px;height:100px"src="/public/images/why-choose-us-img.jpg"
-					  alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
-				</div>
-				<div class="col-sm-6 text-black">
-					
-					<div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
-						<form id="signupForm" style="width: 23rem;"  method='POST' action='#' onsubmit="return validateForm()">
-                      
-							<h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign Up</h3>
-							<div class="mb-3">
-								<label for="name" class="form-label text-primary">Name</label>
-								<input type="text" class="form-control" id="name" name="name" required maxlength="20">
-							</div>
-							<div class="mb-3">
-								<label for="email" class="form-label text-primary">Email</label>
-								<input type="email" class="form-control" id="email" name="email" required>
-							</div>
-							<div class="mb-3">
-								<label for="mobile" class="form-label text-primary">Mobile Number</label>
-								<input type="text" class="form-control" id="mobile" name="mobile" required>
-							</div>
-							<div class="mb-3">
-								<label for="password" class="form-label text-primary">Password</label>
-								<input type="password" class="form-control" id="password" name="password" required minlength="8">
-							</div>
-							
-							<div class="text-center">
-								<button type="submit" class="btn btn-primary px-4 me-5">Sign Up</button>
-								<a href="/login" class="btn btn-secondary px-4">Login</a>
-							</div>
-						</form>
+				<div class="row">
+					<div class="col-sm-6 px-0 d-none d-sm-block">
+						<img style="width:100px;height:100px" src="/public/images/why-choose-us-img.jpg"
+							alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
 					</div>
-				</div>
+					<div class="col-sm-6 text-black">
 
-				
+						<div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+							<form id="signupForm" style="width: 23rem;margin-bottom: auto;" method='POST' action='#'
+								onsubmit="return validateForm()">
+
+								<h3 class="fw-normal pb-3" style="letter-spacing: 1px;">Sign Up</h3>
+								<div class="mb-3">
+									<label for="name" class="form-label text-primary">Name</label>
+									<input type="text" class="form-control" id="name" name="name" required
+										maxlength="20">
+									<span class="error" id="nameError"></span>
+								</div>
+								<div class="mb-3">
+									<label for="email" class="form-label text-primary">Email</label>
+									<input type="email" class="form-control" id="email" name="email" required>
+									<span class="error" id="emailError"></span>
+								</div>
+								<div class="mb-3">
+									<label for="mobile" class="form-label text-primary">Mobile Number</label>
+									<input type="text" class="form-control" id="mobile" name="mobile" required>
+									<span class="error" id="mobileError"></span>
+								</div>
+								<div class="mb-3">
+									<label for="password" class="form-label text-primary">Password</label>
+									<input type="password" class="form-control" id="password" name="password" required
+										minlength="8">
+									<span class="error" id="passwordError"></span>
+								</div>
+
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary px-4 me-5">Sign Up</button>
+									<a href="/login" class="btn btn-secondary px-4">Login</a>
+								</div>
+							</form>
+						</div>
+					</div>
+
+
 				</div>
 			</div>
 		</section>
@@ -102,7 +118,9 @@
 				<div class="row g-5 mb-5">
 					<div class="col-lg-4">
 						<div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Furni<span>.</span></a></div>
-						<p class="mb-4">Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. Pellentesque habitant</p>
+						<p class="mb-4">Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl
+							dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor
+							tristique. Pellentesque habitant</p>
 
 						<ul class="list-unstyled custom-social">
 							<li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
@@ -155,8 +173,12 @@
 				<div class="border-top copyright">
 					<div class="row pt-4">
 						<div class="col-lg-6">
-							<p class="mb-2 text-center text-lg-start">Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; Designed with love by <a href="https://untree.co">Untree.co</a> Distributed By <a hreff="https://themewagon.com">ThemeWagon</a>  <!-- License information: https://untree.co/license/ -->
-            </p>
+							<p class="mb-2 text-center text-lg-start">Copyright &copy;
+								<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash;
+								Designed with love by <a href="https://untree.co">Untree.co</a> Distributed By <a
+									hreff="https://themewagon.com">ThemeWagon</a>
+								<!-- License information: https://untree.co/license/ -->
+							</p>
 						</div>
 
 						<div class="col-lg-6 text-center text-lg-end">
@@ -171,57 +193,101 @@
 
 			</div>
 		</footer>
-		<!-- End Footer Section -->	
+		<!-- End Footer Section -->
 
 		<script>
 			function validateForm() {
+				let valid = true;
+
+				// Clear previous error messages
+				document.querySelectorAll('.error').forEach(error => error.textContent = '');
+
+				// Get form values
 				var name = document.getElementById("name").value.trim();
 				var email = document.getElementById("email").value.trim();
 				var mobile = document.getElementById("mobile").value.trim();
 				var password = document.getElementById("password").value.trim();
-			
-				// Check for empty spaces
-				if (name === "" || email === "" || mobile === "" || password === "") {
-					alert("Please fill in all fields.");
-					return false;
+
+				// Validate name
+				var nameRegex = /^[a-zA-Z]+$/;
+				if (!nameRegex.test(name) || name.length > 20) {
+					document.getElementById("nameError").textContent = "Name must contain only letters, and be less than or equal to 20 characters.";
+					valid = false;
 				}
-			
-				// Validate name length
-				if (name.length > 20) {
-					alert("Name must be less than or equal to 20 characters.");
-					return false;
-				}
-			
+
 				// Validate email
 				var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 				if (!emailRegex.test(email)) {
-					alert("Please enter a valid email address.");
-					return false;
+					document.getElementById("emailError").textContent = "Please enter a valid email address.";
+					valid = false;
 				}
-			
+
 				// Validate mobile number
 				var mobileRegex = /^\d{10}$/;
-				if (!mobileRegex.test(mobile)) {
-					alert("Please enter a valid 10-digit mobile number.");
-					return false;
+				if (!mobileRegex.test(mobile) || /^0+$/.test(mobile)) {
+					document.getElementById("mobileError").textContent = "Mobile number must be 10 digits and not all zeros.";
+					valid = false;
 				}
-			
-				// Validate password length
+
+				// Validate password
 				if (password.length < 8) {
-					alert("Password must be at least 8 characters long.");
+					document.getElementById("passwordError").textContent = "Password must be at least 8 characters long.";
+					valid = false;
+				}
+
+				if (!valid) {
 					return false;
 				}
-			
+
 				return true;
 			}
-			</script>
+
+			// Event listeners for real-time validation
+			document.getElementById("name").addEventListener("input", function () {
+				var name = this.value.trim();
+				var nameRegex = /^[a-zA-Z]+$/;
+				if (!nameRegex.test(name) || name.length > 20) {
+					document.getElementById("nameError").textContent = "Name must contain only letters and be less than or equal to 20 characters.";
+				} else {
+					document.getElementById("nameError").textContent = "";
+				}
+			});
+
+			document.getElementById("email").addEventListener("input", function () {
+				var email = this.value.trim();
+				var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+				if (!emailRegex.test(email)) {
+					document.getElementById("emailError").textContent = "Please enter a valid email address.";
+				} else {
+					document.getElementById("emailError").textContent = "";
+				}
+			});
+
+			document.getElementById("mobile").addEventListener("input", function () {
+				var mobile = this.value.trim();
+				var mobileRegex = /^\d{10}$/;
+				if (!mobileRegex.test(mobile) || /^0+$/.test(mobile)) {
+					document.getElementById("mobileError").textContent = "Mobile number must be 10 digits and not all zeros.";
+				} else {
+					document.getElementById("mobileError").textContent = "";
+				}
+			});
+
+			document.getElementById("password").addEventListener("input", function () {
+				var password = this.value.trim();
+				if (password.length < 8) {
+					document.getElementById("passwordError").textContent = "Password must be at least 8 characters long.";
+				} else {
+					document.getElementById("passwordError").textContent = "";
+				}
+			});
+		</script>
 
 
-<script src="/public/js/bootstrap.bundle.min.js"></script>
-<script src="/public/js/custom.js"></script>
-<script src="/public/js/tiny-slider.js"></script>
-</body>
+		<script src="/public/js/bootstrap.bundle.min.js"></script>
+		<script src="/public/js/custom.js"></script>
+		<script src="/public/js/tiny-slider.js"></script>
+	</body>
 </body>
 
 </html>
-

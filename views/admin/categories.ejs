@@ -200,7 +200,7 @@
                             <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
                                 center</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="/admin/logout"><i
+                            <a class="dropdown-item text-danger" id="logout"><i
                                     class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
@@ -229,8 +229,8 @@
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
-                                    <textarea placeholder="Type here" name="description"
-                                        class="form-control" id="description"></textarea>
+                                    <textarea placeholder="Type here" name="description" class="form-control"
+                                        id="description"></textarea>
                                 </div>
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-primary">Create category</button>
@@ -263,13 +263,17 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <% if (catego[i].is_blocked===true){ %>
-                                                            <a class="btn btn-danger"
-                                                                href="/admin/catBlockUnblock?id=<%= catego[i]._id %>">Unblock</a>
-                                                            <% console.log('caaaattt',catego[i]._id) %>
-                                                                <% } else { %>
-                                                                    <a class="btn btn-success"
-                                                                        href="/admin/catBlockUnblock?id=<%= catego[i]._id %>">Block</a>
-                                                                    <% } %>
+                                                            <a class="btn btn-danger block-unblock-btn"
+                                                                href="/admin/catBlockUnblock?id=<%= catego[i]._id %>"
+                                                                data-action="unblock"
+                                                                data-id="<%= catego[i]._id %>">Unblock</a>
+
+                                                            <% } else { %>
+                                                                <a class="btn btn-success block-unblock-btn"
+                                                                    href="/admin/catBlockUnblock?id=<%= catego[i]._id %>"
+                                                                    data-action="block"
+                                                                    data-id="<%= catego[i]._id %>">Block</a>
+                                                                <% } %>
                                                     </td>
                                                     <td>
                                                         <a href="/admin/editcategory?id=<%= catego[i]._id %>">Edit</a>
@@ -339,23 +343,125 @@
                     url: '/admin/addcat',
                     data: $(this).serialize(),
                     success: function (response) {
-                        if (response.message) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon:'success',
+                                title:'Success',
+                                text:response.message,
+                                timer:2000,
+                                showConfirmButton:false
+                            }).then(()=>{
+                                window.location.href = '/admin/category';
+                            });
+                        } else {
                             // Display SweetAlert popup if the category already exists
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Oops...',
                                 text: response.message,
                             });
-                        } else {
-                            // Handle successful category addition
-                            window.location.href = '/admin/category';
                         }
+                    },
+                    error: function (error) {
+                        console.error('Error',error);
+                        Swal.fire({
+                            icon:'error',
+                            title:'Server Error',
+                            text:'an error occured while creating the category',
+                        });
                     }
                 });
             });
         });
     </script>
 
+    <script>
+        document.getElementById('logout').addEventListener('click', async () => {
+            const result = await Swal.fire({
+                title: 'Are you sure ?',
+                text: 'Do you really want to logout?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                timer: 3000,
+                confirmButtonText: 'Yes logout'
+            });
+            if (result.isConfirmed) {
+                const response = await fetch('/admin/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    Swal.fire(
+                        'Logout',
+                        'You have been logout successfully...',
+                        'success'
+                    ).then(() => {
+                        window.location.href = '/admin';
+                    });
+                } else {
+                    Swal.fire(
+                        'Error',
+                        'There is a error',
+                        'error'
+                    );
+                }
+            }
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll('.block-unblock-btn').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const action = button.getAttribute('data-action');
+                const id = button.getAttribute('data-id');
+                const url = button.getAttribute('href');
+                const actionText = action === 'block' ? 'Block' : 'Unblock';
+
+                Swal.fire({
+                    title: `Are you sure you want to ${actionText} this category?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: `Yes, ${actionText}`,
+                    cancelButtonText: 'No, cancel'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        fetch(url, {
+                            method: 'GET'
+                        }).then(response => {
+                            if (response.ok) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: `Category ${actionText === 'Block' ? 'blocked' : 'unblocked'} successfully`,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: `Failed to ${actionText} the category.`,
+                                });
+                            }
+                        }).catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: `Failed to ${actionText} the category.`,
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 
 
 </body>

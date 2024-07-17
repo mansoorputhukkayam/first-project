@@ -17,9 +17,9 @@ const loadProducts = async (req, res) => {
     try {
         console.log(req.query.id)
         const product = await Product.findOne({ _id: req.query.id })
-        console.log(product,'kiytyyy')
+        // console.log(product, 'kiytyyy')
         const msg = req.flash('msg');
-        res.render('product', { product: product,msg})
+        res.render('product', { product: product,msg })
     } catch (error) {
         console.log(error.message);
     }
@@ -31,47 +31,47 @@ const insertProduct = async (req, res) => {
 
         if (!req.files || req.files.length === 0) {
             return res.status(400).send('No files were uploaded.');
-          }
-      
-       // Assuming req.files is an array of uploaded files, as configured by multer
-       const imagePaths = req.files.map(file => file.filename);
-   console.log('update aavuo',req.body.category)
-       // Create a new product instance
-       
-       const product = new Product({
-         name: req.body.name,
-         price: req.body.price,
-         image: imagePaths, // Store the paths to the uploaded images
-         categoryId: req.body.category, // Ensure this is an ObjectId or handle accordingly
-         quantity: req.body.quantity,
-         description: req.body.description,
-         status: req.body.status,
+        }
 
-         // Adjust this part based on how you're handling the cropped image data
-         croppedImageData: req.body.croppedImageData
-       });
-       // Save the product to the database
-       const savedProduct = await product.save();
-       console.log('Product added:', savedProduct);
-       res.redirect('/admin/products');
+        // Assuming req.files is an array of uploaded files, as configured by multer
+        const imagePaths = req.files.map(file => file.filename);
+        console.log('update aavuo', req.body.category)
+        // Create a new product instance
+
+        const product = new Product({
+            name: req.body.name,
+            price: req.body.price,
+            image: imagePaths, // Store the paths to the uploaded images
+            categoryId: req.body.category, // Ensure this is an ObjectId or handle accordingly
+            quantity: req.body.quantity,
+            description: req.body.description,
+            status: req.body.status,
+
+            // Adjust this part based on how you're handling the cropped image data
+            croppedImageData: req.body.croppedImageData
+        });
+        // Save the product to the database
+        const savedProduct = await product.save();
+        console.log('Product added:', savedProduct);
+        res.json({ success: true, message: 'Product added Successfully' });
     } catch (error) {
-       console.error('Error adding product:', error);
-       res.status(500).send('Error adding product');
+        console.error('Error adding product:', error);
+        res.status(500).json({ success: false, message: 'Error adding product' });
     }
-   };
-   
-   const loadAddProduct = async(req,res)=>{
+};
+
+const loadAddProduct = async (req, res) => {
     try {
         const categories = await Category.find({})
-        res.render('addProduct',{categories});
+        res.render('addProduct', { categories });
     } catch (error) {
         console.log(error.message);
     }
-   }
+}
 
-   const productUnlistAndList = async (req, res) => {
+const productUnlistAndList = async (req, res) => {
     try {
-        
+
         // const userId = req.session.user_id;
         // const user = await User.findById(userId);
         // console.log('testinhhhhh',user);
@@ -79,30 +79,31 @@ const insertProduct = async (req, res) => {
         const productId = req.query.id;
         // console.log('prrrrrrrr',productId);
 
-      const productData = await Product.findById(productId);
-    //   console.log('bloccccc',productData)
-      
-      const update = await Product.updateOne({_id:productData._id},{$set:{is_Unlisted:!productData.is_Unlisted}});
-      res.redirect('/admin/products');
-    //   console.log('pppppppp>>>>>',update);
-    //   res.json({isBlocked:userData.is_blocked});
-  
-    } catch (error) {
-      console.log('error changing blocking status');
-      console.log(error);
-      res.status(500).json({ res: false, error: 'Internal server error' });
-    }
-  }
+        const productData = await Product.findById(productId);
+        //   console.log('bloccccc',productData)
 
-  const editProduct = async (req,res) => {
+        const update = await Product.updateOne({ _id: productData._id }, { $set: { is_Unlisted: !productData.is_Unlisted } });
+        res.redirect('/admin/products');
+        //   console.log('pppppppp>>>>>',update);
+        //   res.json({isBlocked:userData.is_blocked});
+
+    } catch (error) {
+        console.log('error changing blocking status');
+        console.log(error);
+        res.status(500).json({ res: false, error: 'Internal server error' });
+    }
+}
+
+const editProduct = async (req, res) => {
     try {
         const id = req.params.productId
-        const productId = Product.findById({_id:id}).populate('categoryId');
+        const category = await Category.find({ is_blocked: false }).select('categoryName _id')
+        const productById = await Product.findById({ _id: id });
+        // console.log(category, 'prdctiddd');r
 
-        const fetchProductById = await productId;
-        if(fetchProductById){
-            res.render('editProduct',{productById:fetchProductById});
-        }else{
+        if (productById) {
+            res.render('editProduct', { productById, category });
+        } else {
             return res.status(404).send('product not found');
         }
     } catch (error) {
@@ -114,46 +115,58 @@ const insertProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const productId = req.body._id;
-        console.log("files : ",req.files);
-        console.log("body : ",req.body);
-        console.log('pppp>>>>>>>>>>',productId);
-
-        // const imageUrls = await uploadImages(req.files);
-
         const updatedProduct = {
             name: req.body.name,
             price: req.body.price,
             description: req.body.description,
             quantity: req.body.quantity,
             category: req.body.category,
-            // image:imageUrls
-            
         };
 
-        // Handle image deletion if checkbox is checked
-        if (req.body.deleteImage && req.body.deleteImage.length > 0) {
-            const deleteIndexes = req.body.deleteImage.map(index => parseInt(index));
-            deleteIndexes.sort((a, b) => b - a); // Sort indexes in descending order to avoid index shifting
-            deleteIndexes.forEach(index => {
-               updatedProduct.image.splice(index, 1);
+        // Find the product in the database
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        // Handle image replacement
+        if (req.files && req.files.length > 0) {
+            // Assuming that each new image replaces the corresponding existing image
+            req.files.forEach((file, index) => {
+                if (product.image[index]) {
+                    product.image[index] = file.filename;
+                } else {
+                    product.image.push(file.filename);
+                }
             });
         }
 
-        // Update product in the database
+        // Update other product details
+        product.name = updatedProduct.name;
+        product.price = updatedProduct.price;
+        product.description = updatedProduct.description;
+        product.quantity = updatedProduct.quantity;
+        product.category = updatedProduct.category;
+
+        // Save the updated product
+        await product.save();
+
+        // Update other product details
         const updatedProductData = await Product.findByIdAndUpdate(productId, updatedProduct, { new: true });
 
         if (updatedProductData) {
-            res.redirect('/admin/products'); // Redirect to products list page after successful update
+            res.json({ success: true, message: 'Product updated successfully' });
         } else {
-            res.status(404).send('Product not found'); // If product is not found in the database
+            res.status(404).json({ success: false, message: 'Product not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
-const filterProducts = async(req,res) =>{
+
+const filterProducts = async (req, res) => {
     try {
         const sortBy = req.query.sort;
         let products = getProducts(); // Assume this function fetches your products
@@ -163,7 +176,7 @@ const filterProducts = async(req,res) =>{
                 break;
             case 'priceAsc':
                 products = sortByPriceAsc(products);
-                break; 
+                break;
             case 'priceDesc':
                 products = sortByPriceDesc(products);
                 break;
@@ -185,8 +198,8 @@ const filterProducts = async(req,res) =>{
             default:
                 // Default sorting or filtering logic
                 break;
-            
-            res.render('products', { products });
+
+                res.render('products', { products });
         }
     }
     catch (error) {
@@ -198,65 +211,47 @@ function sortByPriceAsc(products) {
     return products.sort((a, b) => a.price - b.price);
 }
 
-// const lowhigh = async (req, res) => {
-//     try {
-//         console.log('loading low-high filtering');
-//         const userId = req.session.user_id
-//         console.log('userID', userId);
-
-//         const userData = await User.findById(userId)
-//         console.log('userData', userData);
-
-//         const products = await Product.find().sort({ price: 1 })
-//         res.render('shop', { products: products, user: userData })
-
-//     } catch (error) {
-//         console.log('error loading low-high filtering');
-//         console.log(error.message);
-//     }
-// }
-
-const lowHigh = async(req,res)=>{
+const lowHigh = async (req, res) => {
     try {
         const categories = await Category.find()
-        const display = await Product.find().sort({price:1});
-        res.render('filter',{categories,display});
+        const display = await Product.find().sort({ price: 1 });
+        res.render('filter', { categories, display });
     } catch (error) {
         console.log(error.message);
         res.json('error')
     }
 }
 
-const highLow = async(req,res) =>{
+const highLow = async (req, res) => {
     try {
         const categories = await Category.find()
-        const display = await Product.find().sort({price:-1});
-        res.render('filter',{categories,display});
+        const display = await Product.find().sort({ price: -1 });
+        res.render('filter', { categories, display });
     } catch (error) {
         console.log(error.message);
         res.json('error')
     }
 }
 
-const nameAscending = async(req,res)=>{
+const nameAscending = async (req, res) => {
     try {
         const categories = await Category.find();
-        const display = await Product.find().sort({name:1});
-        res.render('filter',{categories,display});
+        const display = await Product.find().sort({ name: 1 });
+        res.render('filter', { categories, display });
     } catch (error) {
         console.log(error.message);
         res.json('error');
     }
 }
 
-const nameDescending = async(req,res) =>{
+const nameDescending = async (req, res) => {
     try {
         const categories = await Category.find();
-        const display = await Product.find().sort({name:-1});
-        res.render('filter',{categories,display});
+        const display = await Product.find().sort({ name: -1 });
+        res.render('filter', { categories, display });
     } catch (error) {
-       console.log(error.message);
-       res.json('error') 
+        console.log(error.message);
+        res.json('error')
     }
 }
 module.exports = {
