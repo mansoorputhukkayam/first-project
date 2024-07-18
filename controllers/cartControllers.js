@@ -4,6 +4,13 @@ const User = require('../models/userModel');
 const Address = require('../models/addressModel');
 const Order = require('../models/orderModel');
 const categoryModel = require('../models/categoryModel');
+const Razorpay = require('razorpay');
+
+let instance = new Razorpay({
+    key_id: 'rzp_test_4AB1dm0KvAE5MR', 
+    key_secret: '8EUhYfAmGN3B5Grn0fGrnUGa'
+    });
+
 
 const addCart = async (req, res) => {
    // console.log('add to cart', req.body);
@@ -226,6 +233,10 @@ const postCheckOut = async (req,res)=>{
       // console.log(randomInteger,'randomInteree');
       // console.log(totalAmount,'totalamint');
       
+if( PaymentMethod == 'COD'){
+
+
+
       const orderData = new Order({
          userId:userDataId,
          deliveryAddress:deliveryAddressId,
@@ -235,12 +246,34 @@ const postCheckOut = async (req,res)=>{
          status:orderStatus,
          orderedItems:cartData,
       });
-      await orderData.save();
-      const del = await Cart.deleteMany({userId});
-      console.log('succes...',del);
-      res.status(200).json({status:true})
-      // res.redirect('/thankyou');
+      const orderDetails = await orderData.save();
+      console.log(orderDetails,'orderDetails');
+      const orderid = orderDetails._id; 
+      console.log('orderid',orderid);
+      res.status(200).json({codSuccess:true,orderid});
 
+   } else if(paymentMethod == 'Razorpay'){
+      
+      const options = {
+         amount: totalAmount * 100,
+         currency: "INR",
+         receipt: orderid,
+      };
+      
+      instance.orders.create(options,(err,order)=>{
+         if(err){
+            console.log('error:',err);
+         }
+         console.log('new order:',order);
+         res.status(200).json({onlineSuccess:true,order})
+      })
+
+   }
+   
+   console.log('succes...',del);
+   // res.redirect('/thankyou');
+   const del = await Cart.deleteMany({userId});
+   
    } catch (error) {
     console.log(error.message);  
    }

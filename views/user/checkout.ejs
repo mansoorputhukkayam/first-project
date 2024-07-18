@@ -428,7 +428,8 @@
 	<!-- End Footer Section -->
 
 
-
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+	
 	<script>
 		document.querySelectorAll('input[name="address"]').forEach((radio) => {
 			radio.addEventListener('change', function () {
@@ -470,7 +471,11 @@
 					axios.post('/checkOut', checkOutData)
 						.then(response => {
 							console.log('Order places success');
-							window.location.href = '/thankyou';
+							if(response.status){
+								window.location.href = '/thankyou';
+							}else{
+
+							}
 						})
 						.catch(error => {
 							console.error('error saving address:', error);
