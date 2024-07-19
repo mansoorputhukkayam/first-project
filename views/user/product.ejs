@@ -24,6 +24,7 @@
 
                 <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
                     <li><a class="nav-link" href="/user"><img src="/public/images/user.svg"></a></li>
+                    <!-- <li><a class="nav-link" href="/wishlist"><img src="/public/images/heart.svg"></a></li> -->
                     <li><a class="nav-link" href="/cart"><img src="/public/images/cart.svg"></a></li>
                 </ul>
             </div>
@@ -66,12 +67,23 @@
                     <p>
                         <%= product.description %>
                     </p>
+                    <div class="btndiv">
                     <button type="button"
+                        onclick="addToWishlist('<%= product._id%>', '<%= product.name%>', '<%= product.image[0]%>', '<%= product.price%>', '<%= 1%>')"
+                        class="btn btn-danger">Add to Wishlist</button>
+
+                        <button style="margin-left: 10px;" type="button"
                         onclick="addToCart('<%= product._id%>', '<%= product.name%>', '<%= product.image[0]%>', '<%= product.price%>', '<%= 1%>')"
                         class="btn btn-primary">Add to Cart</button>
-                    <% } else { %>
-                        <button class="btn border btn-danger">Out Of Stock</button>
-                        <% } %>
+
+                        <% } else { %>
+                            <button class="btn border btn-danger">Out Of Stock</button>
+                            <br><br>
+                            <p>
+                                <%= product.description %>
+                            </p>
+                            <% } %>
+                    </div>
             </div>
             <p>
                 <%= msg %>
@@ -183,7 +195,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",
-                            text: "Category already Exists.!",
+                            text: "Product already Exists.!",
                             timer: 1500,
                             showConfirmButton: false
                         });
@@ -211,6 +223,53 @@
         }
 
     </script>
+
+<script>
+    function addToWishlist(productId, productName, image, price, quantity) {
+        console.log(productId, productName, image, price, quantity)
+        const data = { productId, productName, image, price, quantity };
+
+        fetch('/checkWishlist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // Set content type to JSON
+            },
+            body: JSON.stringify({ productId })
+        }).then(res => res.json())
+            .then(response => {
+                if (response.exists) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Product already Exists.!",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    fetch('/addToWishlist', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json' // Set content type to JSON
+                        },
+                        body: JSON.stringify(data)
+                    }).then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    position: "center",
+                                    icon: "success",
+                                    title: "Successfully added to Wishlist",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        });
+                }
+            });
+    }
+
+</script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
     <!-- Include Bootstrap JS -->

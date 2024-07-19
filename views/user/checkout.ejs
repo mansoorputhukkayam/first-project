@@ -116,7 +116,8 @@
 							<div class="form-group row">
 								<div class="col-md-12">
 									<label for="name" class="text-black">Name <span class="text-danger">*</span></label>
-									<input type="text" class="form-control" id="c_name" name="name" value="<%= addressData.name %>">
+									<input type="text" class="form-control" id="c_name" name="name"
+										value="<%= addressData.name %>">
 								</div>
 							</div>
 
@@ -168,7 +169,8 @@
 
 
 							<div class="form-group">
-								<a href="/user"> <button type="button" class="btn btn-primary btn-block btn-md">Ship to Another address</button></a>
+								<a href="/user"> <button type="button" class="btn btn-primary btn-block btn-md">Ship to
+										Another address</button></a>
 								<!-- <label for="c_ship_different_address" class="text-black" data-bs-toggle="collapse"
 									href="#ship_different_address" role="button" aria-expanded="false"
 									aria-controls="ship_different_address"><input type="checkbox" value="1"
@@ -429,7 +431,7 @@
 
 
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-	
+
 	<script>
 		document.querySelectorAll('input[name="address"]').forEach((radio) => {
 			radio.addEventListener('change', function () {
@@ -471,10 +473,13 @@
 					axios.post('/checkOut', checkOutData)
 						.then(response => {
 							console.log('Order places success');
-							if(response.status){
-								window.location.href = '/thankyou';
-							}else{
+							console.log(response.data, 'response data')
+							if (response.data.codSuccess) {
 
+								window.location.href = '/thankyou';
+							} else if (response.data.onlineSuccess) {
+								console.log('else if orderdata', response.data.order)
+								razorpayPayment(response.data.order)
 							}
 						})
 						.catch(error => {
@@ -485,6 +490,60 @@
 				console.log('form element with id "checkOutForm" not found');
 			}
 		});
+
+		function razorpayPayment(order) {
+			var options = {
+				"key": "rzp_test_4AB1dm0KvAE5MR", // Enter the Key ID generated from the Dashboard
+				"amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+				"currency": "INR",
+				"name": "Furni", //your business name
+				"description": "Quality is our value",
+				"image": "https://themewagon.github.io/furni/images/sofa.png",
+				"order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+				"handler": function (response) {
+					alert('payment Success')
+
+					const data = {
+						response,
+						order,
+					};
+
+					axios.post('/verifyPayment', data)
+						.then(response => {
+							console.log('verifyPayment keri')
+							if (response.data.Success) {
+								window.location.href = '/thankyou';
+							}
+						})
+						.catch(error => {
+							console.log('verification error:', error);
+						})
+				},
+				"prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+					"name": "Muhammad Mansoor", //your customer's name
+					"email": "mansoorputhukkayam@gmail.com",
+					"contact": "7907822914"  //Provide the customer's phone number for better conversion rates 
+				},
+				"notes": {
+					"address": "Razorpay Corporate Office"
+				},
+				"theme": {
+					"color": "#3b5d50"
+				}
+			};
+
+			var rzp1 = new Razorpay(options);
+			rzp1.on('payment.failed', function (response) {
+				alert(response.error.code);
+				alert(response.error.description);
+				alert(response.error.source);
+				alert(response.error.step);
+				alert(response.error.reason);
+				alert(response.error.metadata.order_id);
+				alert(response.error.metadata.payment_id);
+			});
+			rzp1.open();
+		}
 
 	</script>
 
