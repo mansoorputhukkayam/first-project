@@ -1,17 +1,18 @@
 <%- include('../layouts/header.ejs') %>
 
-<!-- page loader start -->
-<div id="preLoader" style="width: 100%;height: 100vh;padding-top: 35vh; background-color: #000;">
-  <img class="img-fluid" style="width: 15%;display: block;margin-left:auto;margin-right: auto;" src="/public/images/loader-trans.gif">
-</div>
+  <!-- page loader start -->
+  <div id="preLoader" style="width: 100%;height: 100vh;padding-top: 35vh; background-color: #000;">
+    <img class="img-fluid" style="width: 15%;display: block;margin-left:auto;margin-right: auto;"
+      src="/public/images/loader-trans.gif">
+  </div>
 
-<!-- page loader ends  -->
-<script>
+  <!-- page loader ends  -->
+  <script>
 
-  let loader = document.getElementById("preLoader")
-  window.addEventListener("load", function () {
+    let loader = document.getElementById("preLoader")
+    window.addEventListener("load", function () {
       loader.style.display = "none";
-  })
+    })
 
   </script>
 
@@ -41,7 +42,8 @@
 
         <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
           <li><a class="nav-link" href="/user"><img src="/public/images/user.svg"></a></li>
-          <li><a class="nav-link" href=""><img src="/public/images/cart.svg"></a></li>
+          <li><a class="nav-link" href="#"><img src="/public/images/heart.png"></a></li>
+          <li><a class="nav-link" href="/cart"><img src="/public/images/cart.svg"></a></li>
         </ul>
       </div>
     </div>
@@ -79,53 +81,62 @@
                   <th class="product-thumbnail">Image</th>
                   <th class="product-name">Product</th>
                   <th class="product-price">Price</th>
-                  <th class="product-quantity">Quantity</th>
-                  <th class="product-total">Total</th>
-                  <th class="product-remove">Remove</th>
+                  <th class="product-status">Status</th>
+                  <th class="product-remove">Action</th>
+                  <th class="product-action">Remove</th>
+
+
+
                 </tr>
               </thead>
-              <tbody>
-                <% if(cartData){ %>
-                <% cartData.forEach((cartitem)=> { %>
+              <% console.log(wishlist,'it is wddddd') %>
+                <% if(wishlist.length> 0) { %>
+                  <% wishlist[0].products.forEach((product,index)=>{ %>
+                    <tbody id="wishlist-item-<%= index %>">
 
-                  <tr>
-                    <td class="product-thumbnail">
-                      <img src="/public/productImages/<%= cartitem.image%>" alt="Image" class="img-fluid">
-                    </td>
-                    <td class="product-name">
-                      <h2 class="h5 text-black">
-                        <%= cartitem.productName %>
-                      </h2>
-                    </td>
-                    <td>
-                      <%= cartitem.price %>
-                    </td>
-                    <td>
-                      <div class="input-group mb-3 d-flex align-items-center quantity-container"
-                        style="max-width: 120px;">
-                        <div class="input-group-prepend">
-                          <button class="btn btn-outline-black decrease" type="button"
-                            data-id="<%= cartitem._id %>">&minus;</button>
-                        </div>
-                        <input type="text" class="form-control text-center quantity-amount"
-                          value="<%= cartitem.quantity %>" placeholder="" aria-label="Example text with button addon"
-                          aria-describedby="button-addon1">
-                        <div class="input-group-append">
+                      <tr>
+                        <td class="product-thumbnail">
+                          <img src="/public/productImages/<%= product.productId.image[0]%>" alt="Image"
+                            class="img-fluid">
+                        </td>
+                        <td class="product-name">
+                          <h2 class="h5 text-black">
+                            <%= product.productId.name %>
+                          </h2>
+                        </td>
+                        <td style="font-weight: 700; font-size: medium;">
+                          <%= product.productId.price %>
+                        </td>
 
-                          <button class="btn btn-outline-black increase" type="button"
-                            data-id="<%= cartitem._id %>">&plus;</button>
-                        </div>
-                      </div>
+                        <!-- <input type="hidden" name="id"> -->
+                        <%if(product.productId.quantity>0){ %>
 
-                    </td>
-                    <td>$<%= cartitem.total %>
-                    </td>
-                    <input type="hidden" name="id" value="<%= cartitem._id %>">
-                    <td><button class="btn btn-black btn-sm delete-btn" data-id="<%= cartitem._id %>">X</button></td>
-                  </tr>
-                  <% }) %>
-                  <% } %>
-              </tbody>
+                          <td class="stock-col text-success" style="font-size: large;"><span
+                              class="in-stock">Available</span></td>
+                          <% }else{ %>
+
+                            <td class="stock-col"><span class="in-stock text-danger" style="font-size: medium;">Out of
+                                Stock</span></td>
+                            <% } %>
+                              <td class="action-col">
+                                <%if(product.productId.quantity>0){ %>
+
+                                  <button class="btn btn-block btn-outline-primary-2"
+                                    onclick="addCart('<%= product.productId._id %>')"><i class="icon-cart-plus"></i>Add
+                                    to
+                                    Cart</button>
+                                  <% }%>
+                              </td>
+                              <td class="remove-col">
+                                <button type="button" onclick="remove('<%= product._id %>','<%= index %>')"
+                                  class="btn btn-remove ">
+                                  <i class="icon-close"></i>X
+                                </button>
+                              </td>
+                      </tr>
+                      <% }) %>
+                        <% } %>
+                    </tbody>
             </table>
           </div>
         </form>
@@ -135,64 +146,6 @@
         <h3>Total: <span id="cartTotal" class="cartTotal">$0.00</span></h3>
     </div> -->
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="row mb-5">
-            <div class="col-md-6 mb-3 mb-md-0">
-              <a href="/updateCart"><button class="btn btn-black btn-sm btn-block">Update Cart</button></a>
-            </div>
-            <div class="col-md-6">
-              <a href="/shop"><button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button></a>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <label class="text-black h4" for="coupon">Coupon</label>
-              <p>Enter your coupon code if you have one.</p>
-            </div>
-            <div class="col-md-8 mb-3 mb-md-0">
-              <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
-            </div>
-            <div class="col-md-4">
-              <button class="btn btn-black">Apply Coupon</button>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 pl-5">
-          <div class="row justify-content-end">
-            <div class="col-md-7">
-              <div class="row">
-                <div class="col-md-12 text-right border-bottom mb-5">
-                  <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <span class="text-black">Subtotal</span>
-                </div>
-                <div class="col-md-6 text-right">
-                  <strong class="text-black cartTotal">$<%= cartTotal %>.00</strong>
-                </div>
-              </div>
-              <div class="row mb-5">
-                <div class="col-md-6">
-                  <span class="text-black">Total</span>
-                </div>
-                <div class="col-md-6 text-right">
-                  <strong class="text-black cartTotal">$<%= cartTotal %>.00</strong>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-12">
-                  <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='/loadCheckout'">Proceed
-                    To Checkout</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -285,81 +238,81 @@
   <!-- End Footer Section -->
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const deleteButtons = document.querySelectorAll('.delete-btn');
 
-      deleteButtons.forEach(button => {
-        button.addEventListener('click', function (event) {
-          event.preventDefault();
-          const cartItemId = this.getAttribute('data-id');
-          const deleteUrl = `/removeCartItem/${cartItemId}`;
+    function addCart(productId) {
+      event.preventDefault();
+      console.log('its getting the result', productId);
 
-          Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you really want to remove this item from the cart?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = deleteUrl;
-            }
-          });
-        });
+      let quantity = 1;
+
+      fetch(`/addToCart/${productId}/${quantity}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response is not OK');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.status === true) {
+            Swal.fire({
+              icon: "success",
+              title: "Your Product has been added",
+              showConfirmButton: false,
+              timer: 1500,
+            })
+          } else {
+            Swal.fire({
+              title: 'Item already in your Cart',
+              text: 'You already added this item to the product',
+              icon: 'info',
+              confirmButtonText: 'Ok'
+            })
+          }
+        })
+        .catch(error => {
+          console.log('it is got');
+          console.error('Error :', error);
+        })
+    }
+
+    function remove(productId, index) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.post(`/removeWishlist/${productId}`)
+            .then(response => {
+              if (response.data.removed) {
+                document.getElementById(`wishlist-item-${index}`).remove();
+                Swal.fire(
+                  'Deleted!',
+                  'Your item has been deleted.',
+                  'success'
+                );
+              }
+            })
+            .catch(error => {
+              console.log('its error:', error);
+            });
+        }
       });
-    });
+    }
+
+
   </script>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <script>
-    $(document).ready(function () {
-      $('.increase, .decrease').on('click', function (e) {
-        e.preventDefault();
-
-        // Determine whether the button is for increasing or decreasing
-        const isIncrease = $(this).hasClass('increase');
-        const cartItemId = $(this).closest('tr').find('input[name="id"]').val();
-
-        const url = isIncrease ? `/quantityIncrease/${cartItemId}` : `/quantityDecrease/${cartItemId}`;
-
-        $.ajax({
-          url: url,
-          method: 'GET',
-          success: function (updatedCartItem) {
-            // Update the quantity and total in the DOM
-            const row = $(`input[value="${updatedCartItem._id}"]`).closest('tr');
-            row.find('.quantity-amount').val(updatedCartItem.quantity);
-            row.find('td:nth-child(5)').text(`$${updatedCartItem.total}`);
-
-            // Optionally, update the overall cart total
-            updateCartTotal();
-          },
-          error: function (err) {
-            const errorMessage = err.responseJSON ? err.responseJSON.error : 'Error updating quantity';
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: errorMessage
-            });
-            console.error('Error updating quantity:', err);
-          }
-        });
-      });
-
-      function updateCartTotal() {
-        let total = 0;
-        $('tbody tr').each(function () {
-          const itemTotal = parseFloat($(this).find('td:nth-child(5)').text().replace('$', ''));
-          total += itemTotal;
-        });
-        $('.cartTotal').text(`$${total.toFixed(2)}`);
-      }
-    });
-  </script>
-
 
   <%- include('../layouts/footer.ejs') %>

@@ -23,6 +23,7 @@
 	<link href="/public/css/tiny-slider.css" rel="stylesheet">
 	<link href="/public/css/style.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 	<title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
 </head>
@@ -81,13 +82,6 @@
 
 	<div class="untree_co-section">
 		<div class="container">
-			<!-- <div class="row mb-5">
-		        <div class="col-md-12">
-		          <div class="border p-4 rounded" role="alert">
-		            Returning customer? <a href="#">Click here</a> to login
-		          </div>
-		        </div>
-		      </div> -->
 
 			<div class="row mb-5">
 				<div class="col-md-6">
@@ -96,7 +90,7 @@
 						<% addressData.forEach((address, index)=> { %>
 							<div class="form-check mb-2">
 								<input class="form-check-input" type="radio" name="address" id="address<%= index %>"
-									value="<%= address._id %>" data-address='<%= JSON.stringify(address) %>'>
+									value="<%= address._id %>" data-address="<%= JSON.stringify(address) %>">
 								<label class="form-check-label" for="address<%= index %>">
 									<%= address.name %>, <%= address.locality %>, <%= address.post %>, <%= address.state
 													%>, <%= address.pincode %>
@@ -159,7 +153,6 @@
 							</div>
 
 							<div class="form-group row mb-5">
-
 								<div class="col-md-6">
 									<label for="c_phone" class="text-black">Phone <span
 											class="text-danger">*</span></label>
@@ -171,16 +164,8 @@
 							<div class="form-group">
 								<a href="/user"> <button type="button" class="btn btn-primary btn-block btn-md">Ship to
 										Another address</button></a>
-								<!-- <label for="c_ship_different_address" class="text-black" data-bs-toggle="collapse"
-									href="#ship_different_address" role="button" aria-expanded="false"
-									aria-controls="ship_different_address"><input type="checkbox" value="1"
-										id="c_ship_different_address"> Ship To A Different Address?</label> -->
 							</div>
 
-							<!-- <div class="form-group">
-		              <label for="c_order_notes" class="text-black">Order Notes</label>
-		              <textarea name="c_order_notes" id="c_order_notes" cols="30" rows="5" class="form-control" placeholder="Write your notes here..."></textarea>
-		            </div> -->
 
 						</div>
 					</div>
@@ -227,10 +212,7 @@
 													</td>
 												</tr>
 												<% }) %>
-													<!-- <tr>
-		                      <td>Polo Shirt <strong class="mx-2">x</strong>   1</td>
-		                      <td>$100.00</td>
-		                    </tr> -->
+
 													<tr>
 														<td class="text-black font-weight-bold"><strong>Cart
 																Subtotal</strong></td>
@@ -254,15 +236,6 @@
 												aria-expanded="false" aria-controls="collapsebank">
 											<label for="paymentCOD" class="d-block">Cash On Delivery</label>
 										</h3>
-
-										<!-- <div class="collapse" id="collapsebank">
-										<div class="py-2">
-											<p class="mb-0">Make your payment directly into our bank account. Please
-												use
-												your Order ID as the payment reference. Your order won’t be shipped
-												until the funds have cleared in our account.</p>
-										</div>
-									</div> -->
 									</div>
 
 									<div class="border p-3 mb-3">
@@ -271,15 +244,6 @@
 												role="button" aria-expanded="false" aria-controls="Razorpay">
 											<label for="Razorpay" class="d-block">Razor Pay</label>
 										</h3>
-
-										<!-- <div class="collapse" id="collapsecheque">
-										<div class="py-2">
-											<p class="mb-0">Make your payment directly into our bank account. Please
-												use
-												your Order ID as the payment reference. Your order won’t be shipped
-												until the funds have cleared in our account.</p>
-										</div>
-									</div> -->
 									</div>
 
 									<div class="border p-3 mb-5">
@@ -289,14 +253,6 @@
 											<label for="paymentPaypal" class="d-block">Paypal</label>
 										</h3>
 
-										<!-- <div class="collapse" id="collapsepaypal">
-										<div class="py-2">
-											<p class="mb-0">Make your payment directly into our bank account. Please
-												use
-												your Order ID as the payment reference. Your order won’t be shipped
-												until the funds have cleared in our account.</p>
-										</div>
-									</div> -->
 									</div>
 
 									<div class="form-group">
@@ -461,6 +417,30 @@
 				form.addEventListener('submit', function (event) {
 					event.preventDefault();
 
+					// Validate address
+					const addressInputs = ['c_name', 'c_address', 'c_state_country', 'c_postal_zip', 'c_locality', 'c_post_office', 'c_phone'];
+					let addressSelected = addressInputs.every(inputId => document.getElementById(inputId).value.trim() !== '');
+
+					if (!addressSelected) {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: 'Address is not selected or incomplete',
+						});
+						return;
+					}
+
+					// Validate payment method
+					const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+					if (!paymentMethod) {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: 'Payment method is not selected',
+						});
+						return;
+					}
+
 					const formData = new FormData(this);
 
 					const checkOutData = {};
@@ -475,15 +455,20 @@
 							console.log('Order places success');
 							console.log(response.data, 'response data')
 							if (response.data.codSuccess) {
-
-								window.location.href = '/thankyou';
+								Swal.fire({
+									icon: 'success',
+									title: 'Success',
+									text: 'Order placed successfully',
+								}).then(() => {
+									window.location.href = '/thankyou';
+								});
 							} else if (response.data.onlineSuccess) {
 								console.log('else if orderdata', response.data.order)
 								razorpayPayment(response.data.order)
 							}
 						})
 						.catch(error => {
-							console.error('error saving address:', error);
+							console.error('Error placing order :', error);
 						});
 				});
 			} else {
@@ -510,12 +495,17 @@
 
 					axios.post('/verifyPayment', data)
 						.then(response => {
-							console.log('verifyPayment keri')
+							console.log('verifyPayment success')
 							if (response.data.Success) {
-								window.location.href = '/thankyou';
+								Swal.fire({
+									icon: 'success',
+									title: 'Success',
+									text: 'Order placed successfully',
+								}).then(() => {
+									window.location.href = '/thankyou';
+								});
 							}
-						})
-						.catch(error => {
+						}).catch(error => {
 							console.log('verification error:', error);
 						})
 				},

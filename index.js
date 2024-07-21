@@ -18,6 +18,7 @@ const userRouter = require('./routes/userRouter');
 const adminRouter = require('./routes/adminRouter');
 const path = require('path');
 const crypto = require('crypto');
+const PORT = process.env.PORT || 3000;
 
 function setDynamicViews(req, res, next) {
     if (req.path.startsWith('/admin')) {
@@ -45,14 +46,6 @@ app.use(session({
     }
 }));
 
-// app.use(
-//     cookieSession({
-//         name:"session",
-//         keys:["somesessionkey"],
-//         maxAge:24 * 60 * 60 * 100,
-//     })
-// );
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -72,6 +65,6 @@ app.get('*',(req,res)=>{
 })
 // app.locals.formData = {};
 
-app.listen(3000, () => {
-    console.log('server is running...')
+app.listen(PORT, () => {
+    console.log(`server is running..on port : ${PORT}`);
 })

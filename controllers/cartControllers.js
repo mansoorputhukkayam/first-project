@@ -5,6 +5,7 @@ const Address = require('../models/addressModel');
 const Order = require('../models/orderModel');
 const categoryModel = require('../models/categoryModel');
 const Razorpay = require('razorpay');
+const wishlistModel = require('../models/wishlistModel');
 
 let instance = new Razorpay({
    key_id: 'rzp_test_4AB1dm0KvAE5MR',
@@ -242,12 +243,6 @@ const postCheckOut = async (req, res) => {
       const orderid = orderDetails._id;
       console.log('orderid', orderid);
 
-      // console.log(userId,'userId');
-      // console.log(cartData,'cartData');
-      // console.log(paymentMethod,'paymentMentheod');
-      // console.log(randomInteger,'randomInteree');
-      // console.log(totalAmount,'totalamint');
-
       if (orderStatus == 'Placed') {
 
          res.status(200).json({ codSuccess: true, orderid });
@@ -317,31 +312,25 @@ const addWishlist = async(req,res)=>{
    }
 }
 
-const checkWishlist = async(req,res) =>{
-   try {
-      
-   } catch (error) {
-      console.log(error.message);
-   }
-}
 
-const loadWishlist = async(req,res) =>{
-   try {
-      console.log('load wishlisgh');
-      const userId = req.session.user_id;
-      const cartData = await Cart.find({ userId });
-      const cartTotal = cartData.reduce((total, cart) => total + cart.total, 0);
-      // console.log('cartTotal',cartTotal)  
+
+// const loadWishlist = async(req,res) =>{
+//    try {
+//       console.log('load wishlisgh');
+//       const userId = req.session.user_id;
+//       const cartData = await Cart.find({ userId });
+//       const cartTotal = cartData.reduce((total, cart) => total + cart.total, 0);
+//       // console.log('cartTotal',cartTotal)  
       
-      res.render('wishlist',{cartData:cartData,cartTotal});
-   } catch (error) {
-      console.log(error.message);
-   }
-}
+//       res.render('wishlist',{cartData:cartData,cartTotal});
+//    } catch (error) {
+//       console.log(error.message);
+//    }
+// }
 
 const removeWishlistItem = async(req,res)=>{
    try {
-      
+      console.log('hey remove worked')
    } catch (error) {
       console.log(error.message);
    }
@@ -350,8 +339,7 @@ const removeWishlistItem = async(req,res)=>{
 module.exports = {
    addCart,
    addWishlist,
-   checkWishlist,
-   loadWishlist,
+   // loadWishlist,
    loadCart,
    removeCartItem,
    removeWishlistItem,

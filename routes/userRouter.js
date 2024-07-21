@@ -15,6 +15,8 @@ const cartControllers = require('../controllers/cartControllers');
 const productController = require('../controllers/productController');
 const userController = require('../controllers/userController');
 const addressController = require('../controllers/addressController');
+const wishlistController = require('../controllers/wishlistController');
+
 userRouter.get('/',userController.loadHome);
 userRouter.get('/login',userController.loginLoad);
 userRouter.get('/shop',userController.loadShop)
@@ -35,11 +37,12 @@ userRouter.get('/nameAscending',isLogin,isBlocked,productController.nameAscendin
 userRouter.get('/nameDescending',isLogin,isBlocked,productController.nameDescending);
 
 userRouter.get('/user',isLogin,userController.loadProfile);
+
+userRouter.post('/removeWishlist/:productId',wishlistController.removeWishlist);
 // userRouter.get('/logout',userController.loadLogout);
 userRouter.get('/cart',isLogin,isBlocked,cartControllers.loadCart);
-userRouter.get('/wishlist',isLogin,isBlocked,cartControllers.loadWishlist);
+userRouter.get('/wishlist',isLogin,isBlocked,wishlistController.loadWishlist);
 userRouter.get('/removeCartItem/:id',isLogin,isBlocked,cartControllers.removeCartItem);
-userRouter.get('/removeWishlistItem/:id',isLogin,isBlocked,cartControllers.removeWishlistItem);
 userRouter.get('/loadCheckout',isLogin,isBlocked,cartControllers.loadCheckout);
 userRouter.get('/deleteAddress/:id',isLogin,isBlocked,addressController.deleteAddress);
 userRouter.get('/quantityIncrease/:id',isLogin,isBlocked,cartControllers.quantityIncrease);
@@ -57,9 +60,9 @@ userRouter.post('/updateAddress',addressController.updateAddress);
 userRouter.post('/updateProfile',userController.updateProfile);
 userRouter.post('/changeUserPassword',userController.changeUserPassword);
 userRouter.post('/addToCart', cartControllers.addCart);
-userRouter.post('/addToWishlist',cartControllers.addWishlist);
+userRouter.post('/addToWishlist',wishlistController.addToWishlist);
 userRouter.post('/checkCart',cartControllers.checkCart);
-userRouter.post('/checkWishlist',cartControllers.checkWishlist);
+userRouter.post('/checkWishlist',wishlistController.checkWishlist);
 userRouter.post('/checkOut',cartControllers.postCheckOut);
 userRouter.post('/verifyPayment',cartControllers.verifyPayment);
 userRouter.post('/login',isBlocked,userController.verifyLogin);
