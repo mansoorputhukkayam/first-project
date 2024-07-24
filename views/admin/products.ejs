@@ -65,17 +65,20 @@
                 </li>
 
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/add-product">
-                        <i class="icon material-icons md-add_box"></i>
-                        <span class="text">Add product</span>
-                    </a>
-                </li>
-
-                <li class="menu-item">
                     <a class="menu-link" href="/admin/adminOrders">
                         <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/viewCoupon"> <i class="icon material-icons md-add_box"></i> <span
+                            class="text">Coupons</span> </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/viewOffer"> <i class="icon material-icons md-payment"></i> <span
+                            class="text">Offers</span> </a>
                 </li>
 
                 <li class="menu-item has-submenu">
@@ -370,8 +373,8 @@
                                     icon: 'success',
                                     title: confirmText,
                                     text: `Product has been ${confirmText.toLowerCase()}.`,
-                                    timer:2000,
-                                    confirmButtonText:false
+                                    timer: 2000,
+                                    confirmButtonText: false
                                 }).then(() => {
                                     location.reload();
                                 });

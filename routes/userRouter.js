@@ -50,6 +50,7 @@ userRouter.get('/quantityDecrease/:id',isLogin,isBlocked,cartControllers.quantit
 userRouter.get('/updateCart',isLogin,isBlocked,cartControllers.updateCart);
 userRouter.get('/thankyou',isLogin,isBlocked,cartControllers.thankyou);
 userRouter.get('/userbtn',isLogin,isBlocked,userController.cancelProducts);
+
 // userRouter.get('/devideByCategorise',productController.devidebyCategorise);
 
 // userRouter.get('/login/federated/google', passport.authenticate('google'));

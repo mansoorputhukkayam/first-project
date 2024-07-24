@@ -3,6 +3,8 @@ const adminRouter = express.Router();
 const adminController = require('../controllers/adminControllers');
 const categoryController = require('../controllers/categoryController');
 const productController = require('../controllers/productController');
+const couponController = require('../controllers/couponController');
+const offerController = require('../controllers/offerController');
 const path = require('path');
 
 
@@ -28,7 +30,7 @@ adminRouter.use(bodyParser.urlencoded({extended:true}));
 const auth = require('../middleware/adminAuth');
 
 adminRouter.get('/',auth.isLogout,adminController.loadLogin);
-adminRouter.get('/login',auth.isLogout,adminController.loadLogin);
+// adminRouter.get('/login',auth.isLogout,adminController.loadLogin);
 adminRouter.get('/category',auth.isLogin,categoryController.loadCategory);
 adminRouter.get('/products',auth.isLogin,productController.loadProductList);
 adminRouter.get('/editcategory',auth.isLogin,categoryController.editCategory);
@@ -40,6 +42,19 @@ adminRouter.get('/catBlockUnblock',auth.isLogin,categoryController.catBlock);
 adminRouter.get('/productUnlistAndList',auth.isLogin,productController.productUnlistAndList);
 adminRouter.get('/editProduct/:productId',auth.isLogin,productController.editProduct);
 adminRouter.get('/adminOrders',auth.isLogin,adminController.loadAdminOrders);
+
+adminRouter.get('/viewCoupon',couponController.viewCoupon);
+adminRouter.get('/loadAddCoupon',couponController.loadAddCoupon);
+adminRouter.get('/editCoupon/:id',couponController.editCoupon);
+adminRouter.get('/deleteCoupon/:id',couponController.deleteCoupon);
+adminRouter.post('/coupon',couponController.addCoupon);
+adminRouter.post('/updateCoupon',couponController.updateCoupon);
+
+adminRouter.get('/viewOffer',offerController.viewOffer);
+adminRouter.get('/getAddOffer',offerController.getAddOffer);
+adminRouter.post('/addOffer',offerController.addOffer);
+adminRouter.get('/editOffer/:id',offerController.editOffer);
+
 adminRouter.post('/productStatus',auth.isLogin,adminController.changeOrderStatus);
 
 adminRouter.post('/logout',adminController.loadLogout);
