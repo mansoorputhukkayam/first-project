@@ -252,7 +252,7 @@
                                         <td>
                                             <a href="/admin/editOffer/<%= off._id %>" class="btn btn-sm btn-warning">Edit
                                             </a>
-                                            <a href="#" class="btn btn-sm btn-light">Delete</a>
+                                            <a href="#" class="btn btn-sm btn-light" onclick="confirmDelete('<%= off._id %>')">Delete
                                             </a>
                                         </td>
                                         <td>
@@ -340,56 +340,7 @@
     </script>
 
     <script>
-        $(document).ready(function () {
-            $('.list-unlist-btn').on('click', function (e) {
-                e.preventDefault();
-
-                var productId = $(this).data('id');
-                var action = $(this).data('action');
-                var actionText = action === 'unlist' ? 'unlist' : 'list';
-                var confirmText = action === 'unlist' ? 'Unlisted' : 'Listed';
-                var confirmColor = action === 'unlist' ? '#d33' : '#3085d6';
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: `You are about to ${actionText} this product.`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: confirmColor,
-                    cancelButtonColor: '#aaa',
-                    confirmButtonText: `Yes, ${actionText} it!`
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: `/admin/productUnlistAndList?id=${productId}`,
-                            type: 'GET',
-                            success: function (response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: confirmText,
-                                    text: `Product has been ${confirmText.toLowerCase()}.`,
-                                    timer: 2000,
-                                    confirmButtonText: false
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function (error) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'An error occurred while updating the product status.',
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        function confirmDelete(couponId) {
+        function confirmDelete(offerId) {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -400,22 +351,22 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    deleteCoupon(couponId);
+                    deleteCoupon(offerId);
                 }
             });
         }
 
-        function deleteCoupon(couponId) {
-            axios.get(`/admin/deleteCoupon/${couponId}`)
+        function deleteCoupon(offerId) {
+            axios.get(`/admin/deleteOffer/${offerId}`)
                 .then(response => {
                     console.log('responseData', response.data);
-                    if (response.data.deleteSuccess) {
+                    if (response.data.deleteOffer) {
                         Swal.fire({
-                            text: 'Coupon deleted...',
+                            text: 'Offer deleted...',
                             timer: 2000,
                             willClose: () => {
                                 // Redirect to the coupon page after the alert closes
-                                window.location.href = '/admin/viewCoupon';
+                                window.location.href = '/admin/viewOffer';
                             }
                         });
                     }

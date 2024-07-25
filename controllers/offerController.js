@@ -50,11 +50,39 @@ const editOffer = async (req,res) => {
     }
 }
 
+const updateOffer = async (req,res) =>{
+    try {
+        // console.log('update stated');
+        const offerId = req.body.id;
+        const {offerName,discountPercentage,offerType,expiryDate} = req.body;
+
+        const newOffer = await Offer.findByIdAndUpdate(offerId,{offerName,discountPercentage,offerType,expiryDate},{new:true});
+        console.log('update Success',newOffer);
+        res.status(200).json({updateSuccess:true});
+
+    } catch (error) {
+        console.log('updating offer:',error);
+    }
+}
+
+const deleteOffer = async (req,res) =>{
+    try {
+        console.log('delter offer');
+        const offerId = req.params.id;
+        const deleteData = await Offer.deleteOne({_id:offerId});
+        res.status(200).json({deleteOffer:true});
+    } catch (error) {
+        console.log('offer deleting error:',error);
+        res.status(500).json({deleteOffer:false});
+    }
+}
+
 
 module.exports = {
     viewOffer,
     addOffer,
     getAddOffer,
     editOffer,
-
+    updateOffer,
+    deleteOffer
 }

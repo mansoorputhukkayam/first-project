@@ -5,6 +5,9 @@ const mongoose = require('mongoose');
 
 const loadProductList = async (req, res) => {
     try {
+        const page = req.query.page || 1 ;
+        const limit = 7;
+        const totalProducts = await Products.find().
         const savedProducts = await Product.find().sort({_id:-1}).populate('categoryId').exec();
         res.render('products', { savedProducts: savedProducts });
     } catch (error) {

@@ -72,9 +72,23 @@ const loadHome = async (req, res) => {
 
 const loadCustomers = async (req, res) => {
     try {
-        const users = await User.find({})
+        const page = parseInt(req.query.page) || 1;
+        // console.log('page nbr',page);
+        const limit = 7 ;
+        const totalUsers = await User.countDocuments();
+        // console.log('userToatal',totalUsers);
+        // const nextPage = page < totalPages ? page + 1 : null ;
+
+        const users = await User.find().skip((page - 1) * limit).limit(limit).sort({_id:-1});
+
+        const currentPage = page;
+
+        const pages = Math.ceil(totalUsers/limit);
+        // console.log('pages',pages);
+
+        // const users = await User.find({})
         // console.log('loaaaddddd',users);
-        res.render('customers', { users: users });
+        res.render('customers', { users: users,currentPage,pages });
     } catch (error) {
         console.log(error.message);
     }

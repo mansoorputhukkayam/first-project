@@ -54,6 +54,8 @@ adminRouter.get('/viewOffer',offerController.viewOffer);
 adminRouter.get('/getAddOffer',offerController.getAddOffer);
 adminRouter.post('/addOffer',offerController.addOffer);
 adminRouter.get('/editOffer/:id',offerController.editOffer);
+adminRouter.post('/updateOffer',offerController.updateOffer);
+adminRouter.get('/deleteOffer/:id',offerController.deleteOffer);
 
 adminRouter.post('/productStatus',auth.isLogin,adminController.changeOrderStatus);
 

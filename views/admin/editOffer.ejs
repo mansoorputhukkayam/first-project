@@ -195,6 +195,7 @@
                                 <% offerData.forEach((offer)=>{ %>
                             <div class="form-group">
                                 <label for="offerName">Offer Name</label>
+                                <input type="hidden" value="<%= offer._id %>" name="id">
                                 <input type="text" id="name" value="<%= offer.offerName %>" name="offerName" class="form-control" required
                                     minlength="7">
                             </div>
@@ -303,10 +304,10 @@
 
                 axios.post('/admin/updateOffer',data)
                 .then(response =>{
-                    console.log('Offer add',response.data);
-                    if(response.data.offerSuccess){
+                    console.log('Offer data',response.data);
+                    if(response.data.updateSuccess){
                         Swal.fire({
-                            title:'Offer added succesfully...',
+                            title:'Offer updated ...',
                             timer:2000
                         }).then(()=>{
                             window.location.href = '/admin/viewOffer';

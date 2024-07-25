@@ -461,7 +461,7 @@ const updateForgotNewPassword = async (req, res) => {
 const loadShop = async (req, res) => {
     try {
         let category = req.params.id;
-        const categories = await Category.find({ is_blocked: false })
+        const categories = await Category.find({ is_blocked: false });
 
         let displayProducts;
         if (!category)
