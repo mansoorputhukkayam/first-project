@@ -7,7 +7,7 @@
   <title>User Profile</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -21,10 +21,10 @@
 
   <style>
     .error {
-        color: red;
-        font-size: 0.9em;
+      color: red;
+      font-size: 0.9em;
     }
-</style>
+  </style>
 
 </head>
 
@@ -48,6 +48,8 @@
             aria-controls="v-pills-home" data-bs-toggle="pill" aria-selected="true">Home</a>
           <a data-mdb-pill-init class="nav-link" id="v-pills-myorder-tab" href="#v-pills-myorder" role="tab"
             aria-controls="v-pills-myorder" data-bs-toggle="pill" aria-selected="false">My Orders</a>
+          <a data-mdb-pill-init class="nav-link" id="v-pills-mywallet-tab" href="#v-pills-mywallet"
+            role="tab" aria-controls="v-pills-mywallet" data-bs-toggle="pill" aria-selected="false">My Wallet</a>
           <a data-mdb-pill-init class="nav-link" id="v-pills-profile-tab" href="#v-pills-profile" role="tab"
             aria-controls="v-pills-profile" data-bs-toggle="pill" aria-selected="false">Profile</a>
           <a data-mdb-pill-init class="nav-link" id="v-pills-address-tab" href="#v-pills-address" role="tab"
@@ -69,15 +71,15 @@
         <!-- Tab content -->
         <div class="tab-content" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-            
-<!-- start order history -->
-<!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderHistoryModal">
+
+            <!-- start order history -->
+            <!-- Button trigger modal -->
+            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderHistoryModal">
   View Order History
 </button> -->
 
-<!-- Order History Modal -->
-<!-- <div class="modal fade" id="orderHistoryModal" tabindex="-1" role="dialog" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
+            <!-- Order History Modal -->
+            <!-- <div class="modal fade" id="orderHistoryModal" tabindex="-1" role="dialog" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -110,7 +112,7 @@
                   </button>
                 </td>
               </tr> -->
-              <!-- Add more order rows here -->
+            <!-- Add more order rows here -->
             <!-- </tbody>
           </table>
         </div>
@@ -121,7 +123,7 @@
     </div>
   </div>
 </div> -->
-<!-- end history here -->
+            <!-- end history here -->
           </div>
 
           <!-- starting of a order -->
@@ -197,23 +199,27 @@
                                     <td>
                                       <%= item.quantity %>
                                     </td>
-                                    <td>$<%= item.total %></td>
-                                    
-                                    <% if(item.status==='Cancelled'){ %>
-                                      <td class="text-danger"><%= item.status %>
-                                        <br>
+                                    <td>$<%= item.total %>
+                                    </td>
 
-                                      <%}else if( item.status == 'Delivered' ) { %>
-                                      <td class="text-info"><%= item.status %>
-                                        <br>
-                                      <% } else { %>
-                                        <td class="text-success">
-                                          <%= item.status %>
+                                    <% if(item.status==='Cancelled' ){ %>
+                                      <td class="text-danger">
+                                        <%= item.status %>
+                                          <br>
+
+                                          <%}else if( item.status=='Delivered' ) { %>
+                                      <td class="text-info">
+                                        <%= item.status %>
+                                          <br>
+                                          <button class="btn btn-sm btn-success" onclick="returnclick('<%= item._id %>','<%= item.productId %>')">Return</button>
+                                          <% } else { %>
+                                      <td class="text-success">
+                                        <%= item.status %>
                                           <br>
                                           <button class="btn btn-sm btn-danger"
                                             onclick="btnclick('<%= item._id %>','<%= item.quantity %>','<%= item.productId %>')">Cancel</button>
-                                        </td>
-                                        <% } %>
+                                      </td>
+                                      <% } %>
                                   </tr>
                                   <% }) %>
                               </tbody>
@@ -229,6 +235,66 @@
           </div>
           <!-- end of a order -->
 
+          <div class="tab-pane fade" id="v-pills-mywallet" role="tabpanel" aria-labelledby="v-pills-mywallet-tab">
+             <div class="container my-5">
+        <h1 class="mb-4">My Wallet</h1>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="wallet-card">
+                    <h3 class="mb-3">Balance</h3>
+                    <h2 class="mb-4">$555</h2>
+                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addFundsModal">
+                        <i class="fas fa-plus-circle me-2"></i>Add Funds
+                    </button>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <h3 class="mb-3">Recent Transactions</h3>
+                <div class="transaction-list">
+                    
+                        <p>No transactions yet.</p>
+                    
+                        
+                            <div class="transaction-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>everyONe change</span>
+                                    <span class="">
+                                        type
+                                    </span>
+                                </div>
+                                <small class="text-muted"></small>
+                            </div>
+                        
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addFundsModal" tabindex="-1" aria-labelledby="addFundsModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="addFundsModalLabel">Add Funds to Wallet</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form action="/wallet/add-funds" method="POST">
+                      <div class="mb-3">
+                          <label for="amount" class="form-label">Amount</label>
+                          <input type="number" class="form-control" id="amount" name="amount" min="1" step="0.01" required>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Add Funds</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+
+          </div>
+
           <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
             <!-- Add profile content -->
             <div class="col-md-4">
@@ -236,130 +302,42 @@
                 <img src="/public/images/person_1.jpg" class="img-fluid" alt="User Image">
               </div>
               <% if(userProfile){ %>
-              <h2 class="mt-3">
-                <%= userProfile.name %>
-              </h2>
-              <h5>Mob :<%= userProfile.mobile %>
-              </h5>
-              <h5>Email : <%= userProfile.email %>
-              </h5>
-              <a href="#" class="btn btn-primary editButton" data-bs-toggle="modal"
-                data-bs-target="#editModal<%= userProfile._id %>">Edit</a>
+                <h2 class="mt-3">
+                  <%= userProfile.name %>
+                </h2>
+                <h5>Mob :<%= userProfile.mobile %>
+                </h5>
+                <h5>Email : <%= userProfile.email %>
+                </h5>
+                <a href="#" class="btn btn-primary editButton" data-bs-toggle="modal"
+                  data-bs-target="#editModal<%= userProfile._id %>">Edit</a>
             </div>
             <% } %>
           </div>
           <!-- userprofile edit Modal starts  -->
-           <% if(userProfile) { %>
-          <div class="modal fade" id="editModal<%= userProfile._id %>" tabindex="-1" aria-labelledby="editModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <!-- Modal content -->
-                <div class="modal-header">
-                  <h5 class="modal-title" id="editModalLabel">Edit Profile</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <!-- Form for editing user details -->
-                  <form action="/updateProfile" method="post">
-                    <div class="mb-3">
-                      <label for="editName" class="form-label">Name</label>
-                      <input type="hidden" value="<%= userProfile._id %>" name="id">
-                      <input type="text" class="form-control" name="name" id="editName" value="<%= userProfile.name %>"
-                        required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="editMobile" class="form-label">Mobile</label>
-                      <input type="text" class="form-control" name="mobile" id="editMobile"
-                        value="<%= userProfile.mobile %>" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-          <% } %>
-          <!-- userprofile modal ends here  -->
-
-          <!-- address  start-->
-          <div class="tab-pane fade" id="v-pills-address" role="tabpanel" aria-labelledby="v-pills-address-tab">
-            <div class="card" style="width: 18rem;">
-              <% viewAddress.forEach(function(address){ %>
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <%= address.name %>
-                  </h5>
-                  <p class="card-text">
-                    <%= address.address %>
-                  </p>
-                  <p class="card-text"><strong>State :</strong>
-                    <%= address.state %>
-                  </p>
-                  <p class="card-text"><strong>Mobile :</strong>
-                    <%= address.mobile %>
-                  </p>
-                  <!-- Edit button with unique identifier -->
-                  <a href="#" class="btn btn-primary editButton" data-bs-toggle="modal"
-                    data-bs-target="#editModal<%= address._id %>">Edit</a>
-                  <a href="/deleteAddress/<%= address._id %>" class="btn btn-primary ms-3" id="deleteButton" name="id"
-                    value="<%= address._id %>">Delete</a>
-                  <hr>
-                </div>
-                <% }) %>
-            </div>
-          </div>
-          <!-- addrress end  -->
-
-          <!-- Modal for editing address -->
-          <% viewAddress.forEach(function(address){ %>
-            <div class="modal fade" id="editModal<%= address._id %>" tabindex="-1" aria-labelledby="editModalLabel"
+          <% if(userProfile) { %>
+            <div class="modal fade" id="editModal<%= userProfile._id %>" tabindex="-1" aria-labelledby="editModalLabel"
               aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <!-- Modal content -->
                   <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Address</h5>
+                    <h5 class="modal-title" id="editModalLabel">Edit Profile</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <!-- Form for editing address details -->
-                    <form action="/updateAddress" method="post">
+                    <!-- Form for editing user details -->
+                    <form action="/updateProfile" method="post">
                       <div class="mb-3">
                         <label for="editName" class="form-label">Name</label>
-                        <input type="hidden" value="<%= address._id %>" name="id">
-                        <input type="text" class="form-control" name="name" id="editName" value="<%= address.name %>"
-                          required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="editAddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" name="address" id="editAddress"
-                          value="<%= address.address %>" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="editState" class="form-label">State</label>
-                        <input type="text" class="form-control" name="state" id="editState" value="<%= address.state %>"
-                          required>
+                        <input type="hidden" value="<%= userProfile._id %>" name="id">
+                        <input type="text" class="form-control" name="name" id="editName"
+                          value="<%= userProfile.name %>" required>
                       </div>
                       <div class="mb-3">
                         <label for="editMobile" class="form-label">Mobile</label>
                         <input type="text" class="form-control" name="mobile" id="editMobile"
-                          value="<%= address.mobile %>" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="editlocality" class="form-label">City/Town</label>
-                        <input type="text" class="form-control" name="locality" id="locality"
-                          value="<%= address.locality %>" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="editpincode" class="form-label">Pincode</label>
-                        <input type="text" class="form-control" name="pincode" id="editpincode"
-                          value="<%= address.pincode %>" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="editpost" class="form-label">Post</label>
-                        <input type="text" class="form-control" name="post" id="editpost" value="<%= address.post %>"
-                          required>
+                          value="<%= userProfile.mobile %>" required>
                       </div>
                       <button type="submit" class="btn btn-primary">Save</button>
                     </form>
@@ -367,143 +345,232 @@
                 </div>
               </div>
             </div>
-            <% }) %>
+            <% } %>
+              <!-- userprofile modal ends here  -->
 
-
-              <!-- addAddress start -->
-              <div class="tab-pane fade" id="v-pills-addAddress" role="tabpanel"
-                aria-labelledby="v-pills-addAddress-tab">
-                <div>
-                  <form id="addressForm" action="/addAddress" method="post">
-                    <div class="form-row">
-                      <div class="form-group col-md-6">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" name="name" id="name" placeholder="Name" required
-                          minlength="5">
-                          <span class="error" id="nameError"></span>
-                      </div>
-                      <div class="form-group col-md-6">
-                        <label for="mobile">Mobile</label>
-                        <input type="text" class="form-control" name="mobile" id="mobile" placeholder="mobile" required
-                          pattern="\d{10}" title="Mobile number must be 10 digits">
-                          <span class="error" id="mobileError"></span>
-                      </div>
+              <!-- address  start-->
+              <div class="tab-pane fade" id="v-pills-address" role="tabpanel" aria-labelledby="v-pills-address-tab">
+                <div class="card" style="width: 18rem;">
+                  <% viewAddress.forEach(function(address){ %>
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        <%= address.name %>
+                      </h5>
+                      <p class="card-text">
+                        <%= address.address %>
+                      </p>
+                      <p class="card-text"><strong>State :</strong>
+                        <%= address.state %>
+                      </p>
+                      <p class="card-text"><strong>Mobile :</strong>
+                        <%= address.mobile %>
+                      </p>
+                      <!-- Edit button with unique identifier -->
+                      <a href="#" class="btn btn-primary editButton" data-bs-toggle="modal"
+                        data-bs-target="#editModal<%= address._id %>">Edit</a>
+                      <a href="/deleteAddress/<%= address._id %>" class="btn btn-primary ms-3" id="deleteButton"
+                        name="id" value="<%= address._id %>">Delete</a>
+                      <hr>
                     </div>
-                    <div class="form-group">
-                      <label for="inputAddress">Address</label>
-                      <input type="text" class="form-control" name="address" id="inputAddress" placeholder="address"
-                        required>
-                        <span class="error" id="addressError"></span>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-md-6">
-                        <label for="inputCity">City/Town</label>
-                        <input type="text" class="form-control" id="inputCity" name="locality" placeholder="locality"
-                          required>
-                          <span class="error" id="cityError"></span>
-                      </div>
-                      <div class="form-group col-md-4">
-                        <label for="inputState">State</label>
-                        <select id="inputState" name="state" class="form-control" required>
-                          <option selected>Select Your State...</option>
-                          <option value="Andhra Pradesh">Andhra Pradesh</option>
-                          <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                          <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                          <option value="Assam">Assam</option>
-                          <option value="Bihar">Bihar</option>
-                          <option value="Chandigarh">Chandigarh</option>
-                          <option value="Chhattisgarh">Chhattisgarh</option>
-                          <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
-                          <option value="Daman and Diu">Daman and Diu</option>
-                          <option value="Delhi">Delhi</option>
-                          <option value="Lakshadweep">Lakshadweep</option>
-                          <option value="Puducherry">Puducherry</option>
-                          <option value="Goa">Goa</option>
-                          <option value="Gujarat">Gujarat</option>
-                          <option value="Haryana">Haryana</option>
-                          <option value="Himachal Pradesh">Himachal Pradesh</option>
-                          <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                          <option value="Jharkhand">Jharkhand</option>
-                          <option value="Karnataka">Karnataka</option>
-                          <option value="Kerala">Kerala</option>
-                          <option value="Madhya Pradesh">Madhya Pradesh</option>
-                          <option value="Maharashtra">Maharashtra</option>
-                          <option value="Manipur">Manipur</option>
-                          <option value="Meghalaya">Meghalaya</option>
-                          <option value="Mizoram">Mizoram</option>
-                          <option value="Nagaland">Nagaland</option>
-                          <option value="Odisha">Odisha</option>
-                          <option value="Punjab">Punjab</option>
-                          <option value="Rajasthan">Rajasthan</option>
-                          <option value="Sikkim">Sikkim</option>
-                          <option value="Tamil Nadu">Tamil Nadu</option>
-                          <option value="Telangana">Telangana</option>
-                          <option value="Tripura">Tripura</option>
-                          <option value="Uttar Pradesh">Uttar Pradesh</option>
-                          <option value="Uttarakhand">Uttarakhand</option>
-                          <option value="West Bengal">West Bengal</option>
-
-                        </select>
-                      </div>
-                      <div class="row">
-                        <div class="form-group col-md-3">
-                          <label for="Post">Post</label>
-                          <input type="text" class="form-control" name="post" id="post" required>
-                          <span class="error" id="postError"></span>
-                        </div>
-                        <div class="form-group col-md-2">
-                          <label for="pincode">Pin code</label>
-                          <input type="text" class="form-control" name="pincode" id="pincode" required pattern="\d{6}"
-                            title="Pin code must be 6 digits">
-                            <span class="error" id="pincodeError"></span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <br>
-                    <button type="submit" class="btn btn-primary">Save </button>
-                  </form>
+                    <% }) %>
                 </div>
               </div>
-              <!-- addAddress end -->
+              <!-- addrress end  -->
 
-              <!-- Start Change password -->
-              <div class="tab-pane fade" id="v-pills-changepassword" role="tabpanel"
-                aria-labelledby="v-pills-changepassword-tab">
-
-                <div class="container mt-5">
-                  <div class="row justify-content-center">
-                    <div class="col-md-6">
-                      <div class="card">
-                        <div class="card-header">
-                          <h4>Change Password</h4>
-                        </div>
-                        <div class="card-body">
-                          <form id="changePasswordForm" method="post" action="/changeUserPassword"
-                            onsubmit="return validateForm()">
-                            <div class="form-group">
-                              <label for="currentPassword">Current Password</label>
-                              <input type="password" class="form-control" id="currentPassword" name="currentpassword"
-                                required>
-                            </div>
-                            <div class="form-group">
-                              <label for="newPassword">New Password</label>
-                              <input type="password" class="form-control" id="newPassword" name="newpassword" required>
-                            </div>
-                            <div class="form-group">
-                              <label for="confirmPassword">Confirm New Password</label>
-                              <input type="password" class="form-control" id="confirmPassword" name="confirmpassword"
-                                required>
-                            </div>
-                            <button type="submit" class="btn btn-success">Change Password</button>
-                          </form>
-                        </div>
+              <!-- Modal for editing address -->
+              <% viewAddress.forEach(function(address){ %>
+                <div class="modal fade" id="editModal<%= address._id %>" tabindex="-1" aria-labelledby="editModalLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <!-- Modal content -->
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Address</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <!-- Form for editing address details -->
+                        <form action="/updateAddress" method="post">
+                          <div class="mb-3">
+                            <label for="editName" class="form-label">Name</label>
+                            <input type="hidden" value="<%= address._id %>" name="id">
+                            <input type="text" class="form-control" name="name" id="editName"
+                              value="<%= address.name %>" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="editAddress" class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address" id="editAddress"
+                              value="<%= address.address %>" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="editState" class="form-label">State</label>
+                            <input type="text" class="form-control" name="state" id="editState"
+                              value="<%= address.state %>" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="editMobile" class="form-label">Mobile</label>
+                            <input type="text" class="form-control" name="mobile" id="editMobile"
+                              value="<%= address.mobile %>" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="editlocality" class="form-label">City/Town</label>
+                            <input type="text" class="form-control" name="locality" id="locality"
+                              value="<%= address.locality %>" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="editpincode" class="form-label">Pincode</label>
+                            <input type="text" class="form-control" name="pincode" id="editpincode"
+                              value="<%= address.pincode %>" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="editpost" class="form-label">Post</label>
+                            <input type="text" class="form-control" name="post" id="editpost"
+                              value="<%= address.post %>" required>
+                          </div>
+                          <button type="submit" class="btn btn-primary">Save</button>
+                        </form>
                       </div>
                     </div>
                   </div>
                 </div>
+                <% }) %>
 
-              </div>
+
+                  <!-- addAddress start -->
+                  <div class="tab-pane fade" id="v-pills-addAddress" role="tabpanel"
+                    aria-labelledby="v-pills-addAddress-tab">
+                    <div>
+                      <form id="addressForm" action="/addAddress" method="post">
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Name" required
+                              minlength="5">
+                            <span class="error" id="nameError"></span>
+                          </div>
+                          <div class="form-group col-md-6">
+                            <label for="mobile">Mobile</label>
+                            <input type="text" class="form-control" name="mobile" id="mobile" placeholder="mobile"
+                              required pattern="\d{10}" title="Mobile number must be 10 digits">
+                            <span class="error" id="mobileError"></span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="inputAddress">Address</label>
+                          <input type="text" class="form-control" name="address" id="inputAddress" placeholder="address"
+                            required>
+                          <span class="error" id="addressError"></span>
+                        </div>
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="inputCity">City/Town</label>
+                            <input type="text" class="form-control" id="inputCity" name="locality"
+                              placeholder="locality" required>
+                            <span class="error" id="cityError"></span>
+                          </div>
+                          <div class="form-group col-md-4">
+                            <label for="inputState">State</label>
+                            <select id="inputState" name="state" class="form-control" required>
+                              <option selected>Select Your State...</option>
+                              <option value="Andhra Pradesh">Andhra Pradesh</option>
+                              <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                              <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                              <option value="Assam">Assam</option>
+                              <option value="Bihar">Bihar</option>
+                              <option value="Chandigarh">Chandigarh</option>
+                              <option value="Chhattisgarh">Chhattisgarh</option>
+                              <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                              <option value="Daman and Diu">Daman and Diu</option>
+                              <option value="Delhi">Delhi</option>
+                              <option value="Lakshadweep">Lakshadweep</option>
+                              <option value="Puducherry">Puducherry</option>
+                              <option value="Goa">Goa</option>
+                              <option value="Gujarat">Gujarat</option>
+                              <option value="Haryana">Haryana</option>
+                              <option value="Himachal Pradesh">Himachal Pradesh</option>
+                              <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                              <option value="Jharkhand">Jharkhand</option>
+                              <option value="Karnataka">Karnataka</option>
+                              <option value="Kerala">Kerala</option>
+                              <option value="Madhya Pradesh">Madhya Pradesh</option>
+                              <option value="Maharashtra">Maharashtra</option>
+                              <option value="Manipur">Manipur</option>
+                              <option value="Meghalaya">Meghalaya</option>
+                              <option value="Mizoram">Mizoram</option>
+                              <option value="Nagaland">Nagaland</option>
+                              <option value="Odisha">Odisha</option>
+                              <option value="Punjab">Punjab</option>
+                              <option value="Rajasthan">Rajasthan</option>
+                              <option value="Sikkim">Sikkim</option>
+                              <option value="Tamil Nadu">Tamil Nadu</option>
+                              <option value="Telangana">Telangana</option>
+                              <option value="Tripura">Tripura</option>
+                              <option value="Uttar Pradesh">Uttar Pradesh</option>
+                              <option value="Uttarakhand">Uttarakhand</option>
+                              <option value="West Bengal">West Bengal</option>
+
+                            </select>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-md-3">
+                              <label for="Post">Post</label>
+                              <input type="text" class="form-control" name="post" id="post" required>
+                              <span class="error" id="postError"></span>
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="pincode">Pin code</label>
+                              <input type="text" class="form-control" name="pincode" id="pincode" required
+                                pattern="\d{6}" title="Pin code must be 6 digits">
+                              <span class="error" id="pincodeError"></span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <br>
+                        <button type="submit" class="btn btn-primary">Save </button>
+                      </form>
+                    </div>
+                  </div>
+                  <!-- addAddress end -->
+
+                  <!-- Start Change password -->
+                  <div class="tab-pane fade" id="v-pills-changepassword" role="tabpanel"
+                    aria-labelledby="v-pills-changepassword-tab">
+
+                    <div class="container mt-5">
+                      <div class="row justify-content-center">
+                        <div class="col-md-6">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4>Change Password</h4>
+                            </div>
+                            <div class="card-body">
+                              <form id="changePasswordForm" method="post" action="/changeUserPassword"
+                                onsubmit="return validateForm()">
+                                <div class="form-group">
+                                  <label for="currentPassword">Current Password</label>
+                                  <input type="password" class="form-control" id="currentPassword"
+                                    name="currentpassword" required>
+                                </div>
+                                <div class="form-group">
+                                  <label for="newPassword">New Password</label>
+                                  <input type="password" class="form-control" id="newPassword" name="newpassword"
+                                    required>
+                                </div>
+                                <div class="form-group">
+                                  <label for="confirmPassword">Confirm New Password</label>
+                                  <input type="password" class="form-control" id="confirmPassword"
+                                    name="confirmpassword" required>
+                                </div>
+                                <button type="submit" class="btn btn-success">Change Password</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
 
         </div>
         <!-- Tab content -->
@@ -595,8 +662,8 @@
   <!-- End Footer Section -->
 
   <script>
-    function btnclick(productId,orderQuantity,prdctId) {
-      console.log(productId,orderQuantity,prdctId)
+    function btnclick(productId, orderQuantity, prdctId) {
+      console.log(productId, orderQuantity, prdctId)
       fetch(`/userbtn?productId=${productId}&orderQuantity=${orderQuantity}&prdctId=${prdctId}`, { method: "get" })
         .then(response => response.json())
         .then(data => {
@@ -609,6 +676,22 @@
         .catch(error => {
           console.log(error);
         })
+    }
+
+    function returnclick(productId,prdctId){
+      console.log(productId,podctId)
+      fetch(`/returnclick?productId=${productId}&prdctId=${prdctId}`,{method:'get'})
+      .then(response => resonse.json())
+      .then(data =>{
+        if(data.success){
+          window.location.reload()
+        } else{
+          console.log('failed to return the product');
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      })
     }
   </script>
 
@@ -671,60 +754,60 @@
     });
   </script>
 
- <script>
-        document.getElementById('addressForm').addEventListener('submit', function(event) {
-            let valid = true;
+  <script>
+    document.getElementById('addressForm').addEventListener('submit', function (event) {
+      let valid = true;
 
-            // Clear previous error messages
-            document.querySelectorAll('.error').forEach(error => error.textContent = '');
+      // Clear previous error messages
+      document.querySelectorAll('.error').forEach(error => error.textContent = '');
 
-            // Name validation
-            const name = document.getElementById('name').value;
-            if (/[^a-zA-Z0-9 ]/.test(name)) {
-                document.getElementById('nameError').textContent = "Name must not contain special characters.";
-                valid = false;
-            }
+      // Name validation
+      const name = document.getElementById('name').value;
+      if (/[^a-zA-Z0-9 ]/.test(name)) {
+        document.getElementById('nameError').textContent = "Name must not contain special characters.";
+        valid = false;
+      }
 
-            // Mobile validation
-            const mobile = document.getElementById('mobile').value;
-            if (!/^\d{10}$/.test(mobile) || /^0+$/.test(mobile)) {
-                document.getElementById('mobileError').textContent = "Mobile number must be 10 digits and not all zeros.";
-                valid = false;
-            }
+      // Mobile validation
+      const mobile = document.getElementById('mobile').value;
+      if (!/^\d{10}$/.test(mobile) || /^0+$/.test(mobile)) {
+        document.getElementById('mobileError').textContent = "Mobile number must be 10 digits and not all zeros.";
+        valid = false;
+      }
 
-            // Address validation
-            const address = document.getElementById('inputAddress').value;
-            if (/[^a-zA-Z0-9 ]/.test(address)) {
-                document.getElementById('addressError').textContent = "Address must not contain special characters.";
-                valid = false;
-            }
+      // Address validation
+      const address = document.getElementById('inputAddress').value;
+      if (/[^a-zA-Z0-9 ]/.test(address)) {
+        document.getElementById('addressError').textContent = "Address must not contain special characters.";
+        valid = false;
+      }
 
-            // City/Town validation
-            const city = document.getElementById('inputCity').value;
-            if (/[^a-zA-Z0-9 ]/.test(city)) {
-                document.getElementById('cityError').textContent = "City/Town must not contain special characters.";
-                valid = false;
-            }
+      // City/Town validation
+      const city = document.getElementById('inputCity').value;
+      if (/[^a-zA-Z0-9 ]/.test(city)) {
+        document.getElementById('cityError').textContent = "City/Town must not contain special characters.";
+        valid = false;
+      }
 
-            // Post validation
-            const post = document.getElementById('post').value;
-            if (/[^a-zA-Z0-9 ]/.test(post)) {
-                document.getElementById('postError').textContent = "Post must not contain special characters.";
-                valid = false;
-            }
+      // Post validation
+      const post = document.getElementById('post').value;
+      if (/[^a-zA-Z0-9 ]/.test(post)) {
+        document.getElementById('postError').textContent = "Post must not contain special characters.";
+        valid = false;
+      }
 
-            // Pincode validation
-            const pincode = document.getElementById('pincode').value;
-            if (!/^\d{6}$/.test(pincode) || /^0+$/.test(pincode)) {
-                document.getElementById('pincodeError').textContent = "Pincode must be 6 digits and not all zeros.";
-                valid = false;
-            }
+      // Pincode validation
+      const pincode = document.getElementById('pincode').value;
+      if (!/^\d{6}$/.test(pincode) || /^0+$/.test(pincode)) {
+        document.getElementById('pincodeError').textContent = "Pincode must be 6 digits and not all zeros.";
+        valid = false;
+      }
 
-            if (!valid) {
-                event.preventDefault();
-            }
-        });
-    </script>
+      if (!valid) {
+        event.preventDefault();
+      }
+    });
+  </script>
 
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">

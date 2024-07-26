@@ -33,6 +33,14 @@ const productSchema = new mongoose.Schema({
         enum:["active","blocked"],
         default:"active"
     },
+    offerPrice:{
+        type:Number,
+        required:false
+    },
+    offer:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Offers'
+    },
     croppedImageData:{
         type:{
             x:{type:Number,default:0},

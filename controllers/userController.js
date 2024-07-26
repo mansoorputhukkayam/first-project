@@ -10,6 +10,8 @@ const Cart = require('../models/cartModel');
 const Category = require('../models/categoryModel')
 const Order = require('../models/orderModel');
 const mongoose = require('mongoose');
+const Wallet = require('../models/walletModel');
+const Return = require('../models/returnModel');
 
 function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -531,6 +533,36 @@ const cancelProducts = async (req, res) => {
     }
 }
 
+let returnProduct = async (req, res) => {
+    try {
+
+        let {  orderId, productId } = req.query
+        console.log(reason, orderId, 'it is reason')
+        let addReturn = new Return({
+            orderId: orderId,
+            reason: reason
+        })
+        await addReturn.save();
+
+        let statusChange = await Orders.updateOne(
+            { 'orderedProducts._id': productId }, // Find the document with the matching subdocument _id
+            { $set: { 'orderedProducts.$.status': 'Returned' } } // Use the positional operator $ to update the status
+        );
+
+
+        console.log(statusChange)
+
+        res.json({ status: true })
+
+
+
+    } catch (error) {
+        console.log('error rendering returnProduct:', error)
+        res.status(500).render('error', { error: 'An error occurred while rendering the returnProduct' })
+    }
+}
+
+
 module.exports = {
     loginLoad,
     loadSignin,
@@ -556,4 +588,5 @@ module.exports = {
     loadSearch,
     // loadOrderedProducts,
     cancelProducts,
+    returnProduct
 }

@@ -132,13 +132,18 @@ const loadLogout = async (req, res) => {
 
 const loadAdminOrders = async (req, res) => {
     try {
-        console.log('hi order admin');
+        // console.log('hi order admin');
+        const page = req.query.page || 1 ;
+        const totalOrders = await Order.countDocuments();
+        const currentPage = page;
+        const limit = 7;
+        const pages = Math.ceil(totalOrders/limit);
         const userId = req.session.user_id;
         const orderDetails = await Order.findOne({}).sort({_id:-1});
-        console.log('laast data ', orderDetails)
-        const orderData = await Order.find({}).populate('deliveryAddress').populate('userId').exec();
+        // console.log('laast data ', orderDetails)
+        const orderData = await Order.find().skip((page - 1) * limit).limit(limit).sort({_id:-1}).populate('deliveryAddress').populate('userId').exec();
         // console.log(orderData,'orderDattasa');
-        res.render('orders', { orderData: orderData,orderDetails })
+        res.render('orders', { orderData: orderData,orderDetails,pages,currentPage });
     } catch (error) {
         console.log(error.message);
         

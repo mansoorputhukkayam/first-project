@@ -2,14 +2,18 @@ const Admin = require('../models/adminModel');
 const Category = require('../models/categoryModel');
 const Product = require('../models/productModel');
 const mongoose = require('mongoose');
+const Offer = require('../models/offerModel');
 
 const loadProductList = async (req, res) => {
     try {
         const page = req.query.page || 1 ;
         const limit = 7;
-        const totalProducts = await Products.find().
-        const savedProducts = await Product.find().sort({_id:-1}).populate('categoryId').exec();
-        res.render('products', { savedProducts: savedProducts });
+        const totalProducts = await Product.countDocuments();
+
+        const savedProducts = await Product.find().sort({_id:-1}).skip((page - 1) * limit).limit(limit).populate('categoryId').exec();
+        const currentPage = page;
+        const pages = Math.ceil(totalProducts/limit);
+        res.render('products', { savedProducts: savedProducts,currentPage,pages });
     } catch (error) {
         console.log(error.message);
     }
@@ -20,9 +24,10 @@ const loadProducts = async (req, res) => {
     try {
         console.log(req.query.id)
         const product = await Product.findOne({ _id: req.query.id })
+        const offers = await Offer.find({offerType:'Products'});
         // console.log(product, 'kiytyyy')
         const msg = req.flash('msg');
-        res.render('product', { product: product,msg })
+        res.render('product', { product: product,msg ,offers})
     } catch (error) {
         console.log(error.message);
     }

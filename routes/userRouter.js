@@ -16,6 +16,7 @@ const productController = require('../controllers/productController');
 const userController = require('../controllers/userController');
 const addressController = require('../controllers/addressController');
 const wishlistController = require('../controllers/wishlistController');
+const walletController = require('../controllers/walletController');
 
 userRouter.get('/',userController.loadHome);
 userRouter.get('/login',userController.loginLoad);
@@ -49,6 +50,7 @@ userRouter.get('/quantityIncrease/:id',isLogin,isBlocked,cartControllers.quantit
 userRouter.get('/quantityDecrease/:id',isLogin,isBlocked,cartControllers.quantityDecrease);
 userRouter.get('/updateCart',isLogin,isBlocked,cartControllers.updateCart);
 userRouter.get('/thankyou',isLogin,isBlocked,cartControllers.thankyou);
+userRouter.get('/returnclick',userController.returnProduct);
 userRouter.get('/userbtn',isLogin,isBlocked,userController.cancelProducts);
 
 // userRouter.get('/devideByCategorise',productController.devidebyCategorise);

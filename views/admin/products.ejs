@@ -278,14 +278,24 @@
                             <!-- <li class="page-item">
                                 <a class="page-link" href="#"><i class="material-icons md-chevron_left"></i></a>
                             </li> -->
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <!-- <li class="page-item"><a class="page-link" href="#">3</a></li> -->
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">6</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
+                            <% for(let i=1 ; i <=pages ; i++){ %>
+                                <% if(i==currentPage){ %>
+                                    <li class="page-item active"><a class="page-link"
+                                            href="/admin/products?page=<%= i %>">
+                                            <%= i %>
+                                        </a></li>
+                                    <% } else { %>
+                                        <li class="page-item"><a class="page-link" href="/admin/products?page=<%= i %>">
+                                                <%= i %>
+                                            </a></li>
+                                        <% } %>
+                                            <% } %>
+                                                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+
+                                                <li class="page-item">
+                                                    <a class="page-link" href="#"><i
+                                                            class="material-icons md-chevron_right"></i></a>
+                                                </li>
                         </ul>
                     </nav>
                 </div>

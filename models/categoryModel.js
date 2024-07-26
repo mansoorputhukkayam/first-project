@@ -13,6 +13,10 @@ const categorySchema =new mongoose.Schema({
         type : Boolean,
         default : true
     },
+    offer:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Offers'
+    },
     is_blocked:{
         type:Boolean,
         default:false
