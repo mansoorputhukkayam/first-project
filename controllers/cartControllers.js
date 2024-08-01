@@ -6,6 +6,7 @@ const Order = require('../models/orderModel');
 const categoryModel = require('../models/categoryModel');
 const Razorpay = require('razorpay');
 const wishlistModel = require('../models/wishlistModel');
+const Coupon = require('../models/couponModel');
 
 let instance = new Razorpay({
    key_id: 'rzp_test_4AB1dm0KvAE5MR',
@@ -61,8 +62,10 @@ const loadCart = async (req, res) => {
       const userId = req.session.user_id;
       const cartData = await Cart.find({ userId });
       const cartTotal = cartData.reduce((total, cart) => total + cart.total, 0);
-      // console.log('cartTotal',cartTotal)
-      res.render('cart', { cartData: cartData, cartTotal });
+      const couponData = await Coupon.find({});
+      const couponDiscountAmount = req.session.couponAmount;
+      // console.log('cccc',couponDiscountAmount);
+      res.render('cart', { cartData: cartData, cartTotal,couponData,couponDiscountAmount });
    } catch (error) {
       console.log(error.message);
    }
@@ -134,15 +137,24 @@ const quantityIncrease = async (req, res) => {
 
 const increaseCartItemQuantity = async (cartItemId) => {
    let cartItem = await Cart.findById(cartItemId);
+   let cartProductName = cartItem.productName;
+   // console.log(cartProductName,'cartIddd');
+   const product = await Product.findOne({name:cartProductName});
+   const productCount = product.quantity;
+   
+   // const productCount = product['na];
+   // console.log('productcount',productCount);
    // console.log('cart', cartItem)
    if (!cartItem) {
       throw new Error('Cart item not found');
    }
+   if (cartItem.quantity < productCount) {
 
-   if (cartItem.quantity < 7) {
-      cartItem.quantity += 1;
-   } else {
-      throw new Error('maximum quantity reached');
+      if (cartItem.quantity < 7) {
+         cartItem.quantity += 1;
+      } else {
+         throw new Error('maximum quantity reached');
+      }
    }
 
    cartItem.total = cartItem.quantity * cartItem.price;
@@ -227,7 +239,7 @@ const postCheckOut = async (req, res) => {
          return { ...item._doc, status: orderStatus };
       });
 
-      
+
       const orderData = new Order({
          userId: userDataId,
          deliveryAddress: deliveryAddressId,
@@ -237,7 +249,7 @@ const postCheckOut = async (req, res) => {
          status: orderStatus,
          orderedItems: cartData,
       });
-      
+
       const orderDetails = await orderData.save();
       console.log(orderDetails, 'orderDetails');
       const orderid = orderDetails._id;
@@ -271,16 +283,16 @@ const postCheckOut = async (req, res) => {
 
    } catch (error) {
       console.log(error.message);
-      
+
    }
 }
 
-const verifyPayment = async (req,res)=>{
-   try{
+const verifyPayment = async (req, res) => {
+   try {
       console.log('verifyPayment page loaded');
-      res.status(200).json({Success:true})
+      res.status(200).json({ Success: true })
 
-   }catch(err){
+   } catch (err) {
       console.log(err);
    }
 }
@@ -304,14 +316,6 @@ const thankyou = async (req, res) => {
    }
 }
 
-const addWishlist = async(req,res)=>{
-   try {
-      
-   } catch (error) {
-      console.log(error.message);
-   }
-}
-
 
 
 // const loadWishlist = async(req,res) =>{
@@ -321,28 +325,19 @@ const addWishlist = async(req,res)=>{
 //       const cartData = await Cart.find({ userId });
 //       const cartTotal = cartData.reduce((total, cart) => total + cart.total, 0);
 //       // console.log('cartTotal',cartTotal)  
-      
+
 //       res.render('wishlist',{cartData:cartData,cartTotal});
 //    } catch (error) {
 //       console.log(error.message);
 //    }
 // }
 
-const removeWishlistItem = async(req,res)=>{
-   try {
-      console.log('hey remove worked')
-   } catch (error) {
-      console.log(error.message);
-   }
-}
 
 module.exports = {
    addCart,
-   addWishlist,
    // loadWishlist,
    loadCart,
    removeCartItem,
-   removeWishlistItem,
    quantityIncrease,
    updateCart,
    quantityDecrease,

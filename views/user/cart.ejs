@@ -1,17 +1,18 @@
 <%- include('../layouts/header.ejs') %>
 
-<!-- page loader start -->
-<div id="preLoader" style="width: 100%;height: 100vh;padding-top: 35vh; background-color: #000;">
-  <img class="img-fluid" style="width: 15%;display: block;margin-left:auto;margin-right: auto;" src="/public/images/loader-trans.gif">
-</div>
+  <!-- page loader start -->
+  <div id="preLoader" style="width: 100%;height: 100vh;padding-top: 35vh; background-color: #000;">
+    <img class="img-fluid" style="width: 15%;display: block;margin-left:auto;margin-right: auto;"
+      src="/public/images/loader-trans.gif">
+  </div>
 
-<!-- page loader ends  -->
-<script>
+  <!-- page loader ends  -->
+  <script>
 
-  let loader = document.getElementById("preLoader")
-  window.addEventListener("load", function () {
+    let loader = document.getElementById("preLoader")
+    window.addEventListener("load", function () {
       loader.style.display = "none";
-  })
+    })
 
   </script>
 
@@ -108,17 +109,19 @@
                             data-id="<%= cartitem._id %>">&minus;</button>
                         </div>
                         <input type="text" class="form-control text-center quantity-amount"
-                          value="<%= cartitem.quantity %>" placeholder="" aria-label="Example text with button addon"
-                          aria-describedby="button-addon1">
+                          name="quantity-<%= cartitem._id %>" id="quantity-<%= cartitem._id %>"
+                          value="<%= cartitem.quantity %>" aria-label="Quantity" aria-describedby="button-addon1">
                         <div class="input-group-append">
 
                           <button class="btn btn-outline-black increase" type="button"
                             data-id="<%= cartitem._id %>">&plus;</button>
+                          <input type="hidden" name="id" value="<%= cartitem._id %>">
                         </div>
                       </div>
 
                     </td>
-                    <td>$<%= cartitem.total %>
+                    <td>
+                      <%= cartitem.total %>
                     </td>
                     <input type="hidden" name="id" value="<%= cartitem._id %>">
                     <td><button class="btn btn-black btn-sm delete-btn" data-id="<%= cartitem._id %>">X</button></td>
@@ -145,15 +148,27 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
-              <label class="text-black h4" for="coupon">Coupon</label>
-              <p>Enter your coupon code if you have one.</p>
+            <div class="row mb-5">
+              <div class="col-md-8">
+                <h2 class="h3 mb-3 text-black">Available Coupons</h2>
+                <div class="p-3 border bg-white">
+                  <% couponData.forEach((coupon, index)=> { %>
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="radio" name="coupon" id="coupon<%= index %>"
+                        value="<%= coupon._id %>" data-coupon="<%= JSON.stringify(coupon) %>">
+                      <label class="form-check-label" for="coupon<%= index %>">
+                        <%= coupon.couponName %>
+                      </label>
+                    </div>
+                    <% }) %>
+                </div>
+              </div>
             </div>
             <div class="col-md-8 mb-3 mb-md-0">
-              <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
+              <input type="text" class="form-control py-3" id="couponInput" name="couponCode" placeholder="Coupon Code">
             </div>
             <div class="col-md-4">
-              <button class="btn btn-black">Apply Coupon</button>
+              <button class="btn btn-success">Apply Coupon</button>
             </div>
           </div>
         </div>
@@ -165,29 +180,42 @@
                   <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
                 </div>
               </div>
+
               <div class="row mb-3">
                 <div class="col-md-6">
                   <span class="text-black">Subtotal</span>
                 </div>
                 <div class="col-md-6 text-right">
-                  <strong class="text-black cartTotal">$<%= cartTotal %>.00</strong>
+                  <strong class="text-black cartTotal">₹ <%= cartTotal %>.00</strong>
                 </div>
               </div>
-              <div class="row mb-5">
-                <div class="col-md-6">
-                  <span class="text-black">Total</span>
+              <% if (couponDiscountAmount) { %>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <span class="text-black">Coupon Discount</span>
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <strong class="text-black couponDiscountAmount">₹ <%= couponDiscountAmount %>.00</strong>
+                  </div>
                 </div>
-                <div class="col-md-6 text-right">
-                  <strong class="text-black cartTotal">$<%= cartTotal %>.00</strong>
-                </div>
-              </div>
+                <% } %>
 
-              <div class="row">
-                <div class="col-md-12">
-                  <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='/loadCheckout'">Proceed
-                    To Checkout</button>
-                </div>
-              </div>
+                  <div class="row mb-5">
+                    <div class="col-md-6">
+                      <span class="text-black">Total</span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <strong class="text-black cartTotal">₹ <%= cartTotal %>.00</strong>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-black btn-lg py-3 btn-block"
+                        onclick="window.location='/loadCheckout'">Proceed
+                        To Checkout</button>
+                    </div>
+                  </div>
             </div>
           </div>
         </div>
@@ -282,6 +310,109 @@
     </div>
   </footer>
   <!-- End Footer Section -->
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+  <script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const couponInput = document.getElementById('couponInput');
+      const applyButton = document.querySelector('.btn-success');
+      let selectedCouponId = null;
+
+      // Event listener for radio buttons
+      document.querySelectorAll('input[name="coupon"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+          const couponData = JSON.parse(this.dataset.coupon);
+          couponInput.value = couponData.couponCode;
+          selectedCouponId = couponData._id;
+        });
+      });
+
+      // Function to show message
+      function showMessage(message, duration = 1000) {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = message;
+        messageElement.style.position = 'fixed';
+        messageElement.style.top = '10px';
+        messageElement.style.left = '50%';
+        messageElement.style.transform = 'translateX(-50%)';
+        messageElement.style.backgroundColor = 'rgba(0,0,0,0.7)';
+        messageElement.style.color = 'white';
+        messageElement.style.padding = '10px';
+        messageElement.style.borderRadius = '5px';
+        document.body.appendChild(messageElement);
+
+        setTimeout(() => {
+          document.body.removeChild(messageElement);
+        }, duration);
+      }
+
+      // Event listener for apply/remove coupon button
+      applyButton.addEventListener('click', function () {
+        if (this.textContent === 'Apply Coupon') {
+          if (!selectedCouponId) {
+            Swal.fire({
+              title:'Please select coupon',
+              timer:2000,
+            })
+          }
+
+          // Apply coupon
+          axios.post('/applyCoupon', { couponId: selectedCouponId })
+            .then(response => {
+              console.log('clickto apply', selectedCouponId)
+              if (response.data.coupon) {
+                Swal.fire({
+                  text: `you must purchase minimum amount`,
+                  timer: 2000,
+                })
+              }
+              if (response.data.date) {
+                Swal.fire({
+                  title: 'Coupon Expired..',
+                  timer: 1500,
+                })
+              }
+              if (response.data.user) {
+                Swal.fire({
+                  title: 'Coupon Already Used',
+                  timer: 1500,
+                })
+              }
+              if (response.data.success) {
+                showMessage('Coupon applied');
+                this.textContent = 'Remove Coupon';
+              } else {
+                showMessage('Failed to apply coupon');
+              }
+            })
+            .catch(error => {
+              console.error('Error applying coupon:', error);
+              showMessage('Error applying coupon');
+            });
+        } else {
+          // Remove coupon
+          axios.post('/removeCoupon', { couponId: selectedCouponId })
+            .then(response => {
+              if (response.data.success) {
+                showMessage('Coupon removed');
+                this.textContent = 'Apply Coupon';
+                couponInput.value = '';
+                document.querySelector(`input[value="${selectedCouponId}"]`).checked = false;
+                selectedCouponId = null;
+              } else {
+                showMessage('Failed to remove coupon');
+              }
+            })
+            .catch(error => {
+              console.error('Error removing coupon:', error);
+              showMessage('Error removing coupon');
+            });
+        }
+      });
+    });
+
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {

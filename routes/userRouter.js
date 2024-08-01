@@ -17,6 +17,7 @@ const userController = require('../controllers/userController');
 const addressController = require('../controllers/addressController');
 const wishlistController = require('../controllers/wishlistController');
 const walletController = require('../controllers/walletController');
+const couponController = require('../controllers/couponController');
 
 userRouter.get('/',userController.loadHome);
 userRouter.get('/login',userController.loginLoad);
@@ -38,6 +39,10 @@ userRouter.get('/nameAscending',isLogin,isBlocked,productController.nameAscendin
 userRouter.get('/nameDescending',isLogin,isBlocked,productController.nameDescending);
 
 userRouter.get('/user',isLogin,userController.loadProfile);
+
+// coupon controllers 
+userRouter.post('/applyCoupon',couponController.applyCoupon);
+userRouter.post('/removeCoupon',couponController.removeCoupon);
 
 userRouter.post('/removeWishlist/:productId',wishlistController.removeWishlist);
 // userRouter.get('/logout',userController.loadLogout);

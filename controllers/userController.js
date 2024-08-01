@@ -206,7 +206,7 @@ const loadProfile = async (req, res) => {
         const userProfile = await User.findById(userId);
         // console.log('userProfile', userProfile);
         const viewAddress = await Address.find({ userId });
-        const orderData = await Order.find({ userId }).populate('deliveryAddress').exec();
+        const orderData = await Order.find({ userId }).sort({_id:-1}).populate('deliveryAddress').exec();
 
         res.render('user', { userProfile: userProfile, viewAddress, orderData });
     } catch (error) {
