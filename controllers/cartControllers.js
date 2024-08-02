@@ -60,12 +60,12 @@ const addCart = async (req, res) => {
 const loadCart = async (req, res) => {
    try {
       const userId = req.session.user_id;
-      const cartData = await Cart.find({ userId });
+      const cartData = await Cart.find({ userId }).populate('couponDiscount').exec();
       const cartTotal = cartData.reduce((total, cart) => total + cart.total, 0);
       const couponData = await Coupon.find({});
       const couponDiscountAmount = req.session.couponAmount;
       // console.log('cccc',couponDiscountAmount);
-      res.render('cart', { cartData: cartData, cartTotal,couponData,couponDiscountAmount });
+      res.render('cart', { cartData: cartData, cartTotal, couponData, couponDiscountAmount });
    } catch (error) {
       console.log(error.message);
    }
@@ -139,9 +139,9 @@ const increaseCartItemQuantity = async (cartItemId) => {
    let cartItem = await Cart.findById(cartItemId);
    let cartProductName = cartItem.productName;
    // console.log(cartProductName,'cartIddd');
-   const product = await Product.findOne({name:cartProductName});
+   const product = await Product.findOne({ name: cartProductName });
    const productCount = product.quantity;
-   
+
    // const productCount = product['na];
    // console.log('productcount',productCount);
    // console.log('cart', cartItem)

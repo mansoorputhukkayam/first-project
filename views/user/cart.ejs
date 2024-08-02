@@ -163,6 +163,9 @@
                     <% }) %>
                 </div>
               </div>
+              <div class="col-md-4 mt-auto">
+                <button class="btn btn-danger">Remove Coupon</button>
+              </div>
             </div>
             <div class="col-md-8 mb-3 mb-md-0">
               <input type="text" class="form-control py-3" id="couponInput" name="couponCode" placeholder="Coupon Code">
@@ -189,7 +192,7 @@
                   <strong class="text-black cartTotal">₹ <%= cartTotal %>.00</strong>
                 </div>
               </div>
-              <% if (couponDiscountAmount) { %>
+             <% if(couponDiscountAmount){ %>
                 <div class="row mb-3">
                   <div class="col-md-6">
                     <span class="text-black">Coupon Discount</span>
@@ -198,7 +201,7 @@
                     <strong class="text-black couponDiscountAmount">₹ <%= couponDiscountAmount %>.00</strong>
                   </div>
                 </div>
-                <% } %>
+            <% } %>
 
                   <div class="row mb-5">
                     <div class="col-md-6">
@@ -317,6 +320,7 @@
     document.addEventListener('DOMContentLoaded', function () {
       const couponInput = document.getElementById('couponInput');
       const applyButton = document.querySelector('.btn-success');
+      const removeButton = document.querySelector('.btn-danger');
       let selectedCouponId = null;
 
       // Event listener for radio buttons
@@ -347,7 +351,7 @@
         }, duration);
       }
 
-      // Event listener for apply/remove coupon button
+      // Event listener for apply coupon button
       applyButton.addEventListener('click', function () {
         if (this.textContent === 'Apply Coupon') {
           if (!selectedCouponId) {
@@ -365,23 +369,24 @@
                 Swal.fire({
                   text: `you must purchase minimum amount`,
                   timer: 2000,
-                })
-              }
-              if (response.data.date) {
+                });
+              } else if (response.data.date) {
                 Swal.fire({
                   title: 'Coupon Expired..',
                   timer: 1500,
-                })
-              }
-              if (response.data.user) {
+                });
+              } else if (response.data.user) {
                 Swal.fire({
                   title: 'Coupon Already Used',
                   timer: 1500,
-                })
-              }
-              if (response.data.success) {
-                showMessage('Coupon applied');
-                this.textContent = 'Remove Coupon';
+                });
+              } else if (response.data.success) {
+                Swal.fire({
+                  title:'Coupon Applied',
+                  timer:1500,
+                }).then(() => {
+                  window.location.reload();
+                });
               } else {
                 showMessage('Failed to apply coupon');
               }
@@ -390,16 +395,32 @@
               console.error('Error applying coupon:', error);
               showMessage('Error applying coupon');
             });
-        } else {
+        }
+      });
+      
+      // Event listener for remove coupon button
+      removeButton.addEventListener('click', function () {
+        if (this.textContent === 'Remove Coupon') {
+          if (!selectedCouponId) {
+            Swal.fire({
+              title:'Please select coupon',
+              timer:2000,
+            })
+          }
+        
           // Remove coupon
           axios.post('/removeCoupon', { couponId: selectedCouponId })
             .then(response => {
               if (response.data.success) {
-                showMessage('Coupon removed');
-                this.textContent = 'Apply Coupon';
-                couponInput.value = '';
-                document.querySelector(`input[value="${selectedCouponId}"]`).checked = false;
-                selectedCouponId = null;
+                Swal.fire({
+                  title:'Coupon Removed',
+                  timer:1500,
+                }).then(()=>{
+                  window.location.reload();
+                  couponInput.value = '';
+                  document.querySelector(`input[value="${selectedCouponId}"]`).checked = false;
+                  selectedCouponId = null;
+                });
               } else {
                 showMessage('Failed to remove coupon');
               }
@@ -409,8 +430,9 @@
               showMessage('Error removing coupon');
             });
         }
-      });
+      
     });
+  });
 
   </script>
 

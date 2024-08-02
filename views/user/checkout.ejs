@@ -171,7 +171,7 @@
 					</div>
 					<div class="col-md-6">
 
-						<div class="row mb-5">
+						<!-- <div class="row mb-5">
 							<div class="col-md-12">
 								<h2 class="h3 mb-3 text-black">Coupon Code</h2>
 								<div class="p-3 p-lg-5 border bg-white">
@@ -190,7 +190,7 @@
 
 								</div>
 							</div>
-						</div>
+						</div>   -->
 
 						<div class="row mb-5">
 							<div class="col-md-12">
@@ -247,10 +247,10 @@
 									</div>
 
 									<div class="border p-3 mb-5">
-										<h3 class="h6 mb-0"> <input type="radio" name="paymentMethod" id="paymentPaypal"
-												value="Paypal" data-bs-toggle="collapse" href="#collapsepaypal"
+										<h3 class="h6 mb-0"> <input type="radio" name="paymentMethod" id="wallet"
+												value="wallet" data-bs-toggle="collapse" href="#collapsepaypal"
 												role="button" aria-expanded="false" aria-controls="collapsepaypal">
-											<label for="paymentPaypal" class="d-block">Paypal</label>
+											<label for="wallet" class="d-block">Wallet</label>
 										</h3>
 
 									</div>
@@ -425,7 +425,7 @@
 						Swal.fire({
 							icon: 'error',
 							title: 'Error',
-							text: 'Address is not selected or incomplete',
+							text: 'Address is not selected',
 						});
 						return;
 					}

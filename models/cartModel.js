@@ -29,9 +29,10 @@ const cartSchema = new mongoose.Schema({
         type:String,
         default:'pending',
     },
-    isOrder:{
-        type:Boolean,
-        default:false,
+    couponDiscount:{
+        type:ObjectId,
+        ref:'Coupon',
+        default:null
     }
 });
 
