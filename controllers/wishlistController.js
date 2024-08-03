@@ -1,5 +1,6 @@
 const Product = require('../models/productModel');
 const Wishlist = require('../models/wishlistModel');
+const Cart = require('../models/cartModel');
 
 const loadWishlist = async (req, res) => {
     try {
@@ -9,8 +10,10 @@ const loadWishlist = async (req, res) => {
             path: 'products.productId',
             model: 'Product'
         });
+        const cartData = await Cart.find({ userId: userId });
+        // const itemsCount = cartData?.product.length;
         console.log(wishlist);
-        res.render('wishlist', { wishlist });
+        res.render('wishlist', { wishlist, userId });
     } catch (error) {
         console.log('its an error ', error);
     }

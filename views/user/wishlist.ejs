@@ -89,54 +89,51 @@
 
                 </tr>
               </thead>
-              <% console.log(wishlist,'it is wddddd') %>
-                <% if(wishlist.length> 0) { %>
-                  <% wishlist[0].products.forEach((product,index)=>{ %>
-                    <tbody id="wishlist-item-<%= index %>">
+              <% if(wishlist.length> 0) { %>
+                <% wishlist[0].products.forEach((product,index)=>{ %>
+                  <tbody id="wishlist-item-<%= index %>">
 
-                      <tr>
-                        <td class="product-thumbnail">
-                          <img src="/public/productImages/<%= product.productId.image[0]%>" alt="Image"
-                            class="img-fluid">
-                        </td>
-                        <td class="product-name">
-                          <h2 class="h5 text-black">
-                            <%= product.productId.name %>
-                          </h2>
-                        </td>
-                        <td style="font-weight: 700; font-size: medium;">
-                          <%= product.productId.price %>
-                        </td>
+                    <tr>
+                      <td class="product-thumbnail">
+                        <img src="/public/productImages/<%= product.productId.image[0]%>" alt="Image" class="img-fluid">
+                      </td>
+                      <td class="product-name">
+                        <h2 class="h5 text-black">
+                          <%= product.productId.name %>
+                        </h2>
+                      </td>
+                      <td style="font-weight: 700; font-size: medium;">
+                        <%= product.productId.price %>
+                      </td>
 
-                        <!-- <input type="hidden" name="id"> -->
-                        <%if(product.productId.quantity>0){ %>
+                      <!-- <input type="hidden" name="id"> -->
+                      <%if(product.productId.quantity>0){ %>
 
-                          <td class="stock-col text-success" style="font-size: large;"><span
-                              class="in-stock">Available</span></td>
-                          <% }else{ %>
+                        <td class="stock-col text-success" style="font-size: large;"><span
+                            class="in-stock">Available</span></td>
+                        <% }else{ %>
 
-                            <td class="stock-col"><span class="in-stock text-danger" style="font-size: medium;">Out of
-                                Stock</span></td>
-                            <% } %>
-                              <td class="action-col">
-                                <%if(product.productId.quantity>0){ %>
+                          <td class="stock-col"><span class="in-stock text-danger" style="font-size: medium;">Out of
+                              Stock</span></td>
+                          <% } %>
+                            <td class="action-col">
+                              <%if(product.productId.quantity>0){ %>
 
-                                  <button class="btn btn-block btn-outline-primary-2"
-                                    onclick="addCart('<%= product.productId._id %>')"><i class="icon-cart-plus"></i>Add
-                                    to
-                                    Cart</button>
-                                  <% }%>
-                              </td>
-                              <td class="remove-col">
-                                <button type="button" onclick="remove('<%= product._id %>','<%= index %>')"
-                                  class="btn btn-remove ">
-                                  <i class="icon-close"></i>X
-                                </button>
-                              </td>
-                      </tr>
-                      <% }) %>
-                        <% } %>
-                    </tbody>
+                                <button style="margin-left: 10px;" type="button"
+                                  onclick="addToCart('<%= product._id%>', '<%= product.productId.name%>', '<%= product.productId.image[0]%>', '<%= product.productId.price%>', '<%= 1%>')"
+                                  class="btn btn-primary">Add to Cart</button>
+                                <% }%>
+                            </td>
+                            <td class="remove-col">
+                              <button type="button" onclick="remove('<%= product._id %>','<%= index %>')"
+                                class="btn btn-remove ">
+                                <i class="icon-close"></i>X
+                              </button>
+                            </td>
+                    </tr>
+                    <% }) %>
+                      <% } %>
+                  </tbody>
             </table>
           </div>
         </form>
@@ -236,48 +233,58 @@
     </div>
   </footer>
   <!-- End Footer Section -->
-
   <script>
+    function addToCart(productId, productName, image, price, quantity) {
+      console.log('Adding to cart:', { productId, productName, image, price, quantity });
 
-    function addCart(productId) {
-      event.preventDefault();
-      console.log('its getting the result', productId);
+      const data = { productId, productName, image, price, quantity };
 
-      let quantity = 1;
 
-      fetch(`/addToCart/${productId}/${quantity}`, {
-        method: "GET",
+      fetch('/checkCart', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+          'Content-Type': 'application/json' // Set content type to JSON
+        },
+        body: JSON.stringify({ productId })
+      }).then(res => res.json())
         .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response is not OK');
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (data.status === true) {
+          if (response.exists) {
             Swal.fire({
-              icon: "success",
-              title: "Your Product has been added",
-              showConfirmButton: false,
+              icon: "error",
+              title: "Oops...",
+              text: "Product already Added.!",
               timer: 1500,
-            })
+              showConfirmButton: false
+            });
           } else {
-            Swal.fire({
-              title: 'Item already in your Cart',
-              text: 'You already added this item to the product',
-              icon: 'info',
-              confirmButtonText: 'Ok'
+
+            fetch('/addToCart', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json' // Set content type to JSON
+              },
+              body: JSON.stringify(data)
+            }).then(res => {
+              console.log('response.stataus', res.status);
+              return res.json()
             })
+              .then(data => {
+                console.log('res.data', data);
+                if (data.success) {
+                  Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Successfully added",
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+                }
+              });
           }
         })
         .catch(error => {
-          console.log('it is got');
-          console.error('Error :', error);
-        })
+          console.log('adding to cart is error:', error);
+        });
     }
 
     function remove(productId, index) {

@@ -23,11 +23,13 @@ const loadProductList = async (req, res) => {
 const loadProducts = async (req, res) => {
     try {
         console.log(req.query.id)
+        const userId = req.session.user_id;
+        // console.log('userId',userId);
         const product = await Product.findOne({ _id: req.query.id })
         const offers = await Offer.find({offerType:'Products'});
         // console.log(product, 'kiytyyy')
         const msg = req.flash('msg');
-        res.render('product', { product: product,msg ,offers})
+        res.render('product', { product: product,msg ,offers,userId})
     } catch (error) {
         console.log(error.message);
     }

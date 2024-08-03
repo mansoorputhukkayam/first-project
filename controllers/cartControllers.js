@@ -19,13 +19,22 @@ const addCart = async (req, res) => {
    try {
       const userId = req.session.user_id;
       const { productId, quantity, price, image, productName } = req.body;
+      console.log(req.body,'req.body');
 
       if (!userId) {
          return res.redirect('/');
       }
 
+      if(!productId || !productName || !image || !price || !quantity){
+         return res.status(400).json({error:'All fields are required.'});
+      }
+
       const quantityNum = parseInt(quantity);
       const priceNum = parseInt(price);
+
+      if(isNaN(quantityNum) || isNaN(priceNum)){
+         return res.status(400).json({error:"Quantity and price must be valid numbers"});
+      }
       const total = priceNum * quantityNum;
 
       // Check if the product is already in the cart
@@ -60,7 +69,7 @@ const addCart = async (req, res) => {
 const loadCart = async (req, res) => {
    try {
       const userId = req.session.user_id;
-      const cartData = await Cart.find({ userId }).populate('couponDiscount').exec();
+      const cartData = await Cart.find({ userId }).sort({_id:-1}).populate('couponDiscount').exec();
       const cartTotal = cartData.reduce((total, cart) => total + cart.total, 0);
       const couponData = await Coupon.find({});
       const couponDiscountAmount = req.session.couponAmount;
@@ -78,6 +87,7 @@ const checkCart = async (req, res) => {
 
       // Check if the product is already in the cart
       const cartItem = await Cart.findOne({ productId: productId, userId: userId });
+      console.log('cartItem',cartItem);
 
       if (cartItem) {
          res.json({ exists: true });
