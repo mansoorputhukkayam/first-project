@@ -10,10 +10,16 @@ const loadWishlist = async (req, res) => {
             path: 'products.productId',
             model: 'Product'
         });
+
+        let productCount = 0;
+        wishlist.forEach(item => {
+            productCount += item.products.length;
+        });
+
         const cartData = await Cart.find({ userId: userId });
         // const itemsCount = cartData?.product.length;
         console.log(wishlist);
-        res.render('wishlist', { wishlist, userId });
+        res.render('wishlist', { wishlist, userId ,productCount});
     } catch (error) {
         console.log('its an error ', error);
     }

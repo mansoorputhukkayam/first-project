@@ -107,7 +107,7 @@ const insertUser = async (req, res) => {
             saveOTP(req.body.email, otp)
             sendVerifyMail(req.body.name, req.body.email, userData._id, otp);
             console.log('jjjjj', otp);
-            
+
             res.render('signupotp')
         }
         else {
@@ -155,13 +155,20 @@ const verifyMail = async (req, res) => {
         const userOtp = await OTP.findOne({ otp: enteredOtp });
 
         if (!userOtp) return res.render('signupotp', { message: "OTP is incorrect...!!" });
-        else{
-            const userData = await User.findById({_id:req.session.email});
-            console.log(userData,'usrdata kittnddn');
+        else {
+            const userData = await User.findById({ _id: req.session.email });
+            console.log(userData, 'usrdata kittnddn');
             req.session.user_id = userData._id;
+
+            let createWallet = new Wallet({
+                balance: 0,
+                userId: userData._id
+            })
+            await createWallet.save()
+
             res.redirect('/');
         }
-         
+
 
     } catch (error) {
         console.error(error);
@@ -194,7 +201,7 @@ const loadHome = async (req, res) => {
         const userId = req.session.user_id;
         // console.log(userId)
         const products = await Product.find({}).limit(3);
-        res.render('home', { products: products, userId});
+        res.render('home', { products: products, userId });
     } catch (error) {
         console.log(error.message);
     }
@@ -206,9 +213,10 @@ const loadProfile = async (req, res) => {
         const userProfile = await User.findById(userId);
         // console.log('userProfile', userProfile);
         const viewAddress = await Address.find({ userId });
-        const orderData = await Order.find({ userId }).sort({_id:-1}).populate('deliveryAddress').exec();
-
-        res.render('user', { userProfile: userProfile, viewAddress, orderData });
+        const orderData = await Order.find({ userId }).sort({ _id: -1 }).populate('deliveryAddress').exec();
+        const walletData = await Wallet.findOne({ userId });
+        // console.log(walletData, 'walletData from userprofule');
+        res.render('user', { userProfile: userProfile, viewAddress, orderData, wallet: walletData });
     } catch (error) {
         console.log(error.message);
         res.redirect('/login');
@@ -465,19 +473,31 @@ const loadShop = async (req, res) => {
         let category = req.params.id;
         const categories = await Category.find({ is_blocked: false });
 
+        const page = req.query.page || 1;
+        const limit = 8;
+        const totalProducts = await Product.countDocuments();
+        const currentPage = page;
+        const pages = Math.ceil(totalProducts / limit);
+
         let displayProducts;
         if (!category)
-            displayProducts = await Product.find({ is_Unlisted: false });
+            displayProducts = await Product.find({ is_Unlisted: false }).skip((page - 1) * limit).limit(limit).sort({ _id: -1 });
         else
-            displayProducts = await Product.find({ categoryId: category, is_Unlisted: false });
+            displayProducts = await Product.find({ categoryId: category, is_Unlisted: false }).skip((page - 1) * limit).limit(limit).sort({ _id: -1 });
 
-        res.render('shop', { display: displayProducts, categories: categories });
+        res.render('shop', { display: displayProducts, categories: categories, currentPage, pages });
     } catch (error) {
         console.log(error.message);
     }
 }
 
 const loadSearch = async (req, res) => {
+    const page = req.query.page || 1;
+    const limit = 8;
+    const totalProducts = await Product.countDocuments()
+    const currentPage = page;
+    const pages = Math.ceil(totalProducts / limit);
+
     const searchData = req.body.search;
     console.log('searchData', searchData);
     try {
@@ -488,9 +508,9 @@ const loadSearch = async (req, res) => {
         });
 
         if (productData.length > 0) {
-            res.render('shop', { display: productData, categories: categories, searchData: searchData });
+            res.render('shop', { display: productData, categories: categories, searchData: searchData, pages, currentPage });
         } else {
-            res.render('shop', { display: [], categories: categories, searchData: searchData, message: `NO Products Found For ${searchData}` });
+            res.render('shop', { display: [], categories: categories, searchData: searchData, message: `NO Products Found For ${searchData}`, pages, currentPage });
         }
     } catch (error) {
         res.status(500).json({ message: 'Error searching for products', error });
@@ -508,11 +528,33 @@ const loadSearch = async (req, res) => {
 
 const cancelProducts = async (req, res) => {
     try {
-        const productId = req.query.productId;
-        const prdctId = req.query.prdctId;
-        const orderQuantity = req.query.orderQuantity;
+        console.log('heeyyyyy');
+        const { productId, prdctId, orderQuantity, orderId } = req.query
+
         const productData = { productId, orderQuantity };
-        console.log('productData', productData);
+        const userId = req.session.user_id;
+
+        const orderToCancel = await Order.findOne({ orderId: orderId });
+        const product = await Product.findOne({ _id: prdctId });
+        console.log(orderToCancel.payment, 'prodevt details');
+
+        if (orderToCancel.payment == 'Razorpay' || orderToCancel.payment == 'wallet') {
+            await Wallet.updateOne(
+                { userId: userId },
+                {
+                    $inc: { balance: product.price },
+                    $push: {
+                        history: {
+                            Date: new Date().toDateString(),
+                            Description: `${product.name} is Cancelled`,
+                            Amount: product.price,
+                            time: new Date()
+                        }
+                    }
+                }
+            );
+        }
+
         console.log(productId, orderQuantity, 'orderquantity,produucid');
         const result = await Order.findOneAndUpdate(
             { 'orderedItems._id': new mongoose.Types.ObjectId(productId) },
@@ -523,6 +565,7 @@ const cancelProducts = async (req, res) => {
 
         const productCountUpdate = await Product.updateOne({ _id: prdctId }, { $inc: { quantity: orderQuantity } })
         if (result && productCountUpdate) {
+            console.log('success');
             res.json({ success: true })
         } else {
             res.json({ success: false })
@@ -536,7 +579,7 @@ const cancelProducts = async (req, res) => {
 let returnProduct = async (req, res) => {
     try {
 
-        let {  orderId, productId } = req.query
+        let { orderId, productId } = req.query
         console.log(reason, orderId, 'it is reason')
         let addReturn = new Return({
             orderId: orderId,
@@ -544,7 +587,7 @@ let returnProduct = async (req, res) => {
         })
         await addReturn.save();
 
-        let statusChange = await Orders.updateOne(
+        let statusChange = await Order.updateOne(
             { 'orderedProducts._id': productId }, // Find the document with the matching subdocument _id
             { $set: { 'orderedProducts.$.status': 'Returned' } } // Use the positional operator $ to update the status
         );

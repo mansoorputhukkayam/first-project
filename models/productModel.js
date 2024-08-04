@@ -52,6 +52,10 @@ const productSchema = new mongoose.Schema({
     is_Unlisted:{
         type:Boolean,
         default:false
+    },
+    salesCount:{
+        type:Number,
+        default:0
     }
 });
 

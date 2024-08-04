@@ -7,6 +7,7 @@ const categoryModel = require('../models/categoryModel');
 const Razorpay = require('razorpay');
 const wishlistModel = require('../models/wishlistModel');
 const Coupon = require('../models/couponModel');
+const Wallet = require('../models/walletModel');
 
 let instance = new Razorpay({
    key_id: 'rzp_test_4AB1dm0KvAE5MR',
@@ -269,7 +270,7 @@ const postCheckOut = async (req, res) => {
 
          res.status(200).json({ codSuccess: true, orderid });
 
-      } else if (orderStatus == 'Pending') {
+      } else if (paymentMethod == 'Razorpay') {
 
          const options = {
             amount: totalAmount * 100,
@@ -288,8 +289,6 @@ const postCheckOut = async (req, res) => {
       }
 
       // res.redirect('/thankyou');
-      const del = await Cart.deleteMany({ userId });
-      console.log('succes...', del);
 
    } catch (error) {
       console.log(error.message);
@@ -311,6 +310,7 @@ const thankyou = async (req, res) => {
    try {
       console.log('hello');
       // console.log(req.body)
+      const userId = req.session.user_id;
       const lastOrder = await Order.findOne({}).sort({ _id: -1 });
       for (let item of lastOrder.orderedItems) {
          await Product.updateOne({ _id: item.productId }, { $inc: { quantity: -item.quantity } })
@@ -320,6 +320,11 @@ const thankyou = async (req, res) => {
       const productId = productDetails.map(product => product.productId);
       const prdct = await Product.find({ _id: productId }).populate('categoryId');
       // console.log(prdct,'prdcttt')
+
+      const del = await Cart.deleteMany({ userId });
+      console.log('succes...', del);
+
+
       res.render('thankyou', { lastOrder, prdct });
    } catch (error) {
       console.log(error.message);

@@ -457,8 +457,8 @@
 							if (response.data.codSuccess) {
 								Swal.fire({
 									icon: 'success',
-									title: 'Success',
 									text: 'Order placed successfully',
+									timer:1500,
 								}).then(() => {
 									window.location.href = '/thankyou';
 								});

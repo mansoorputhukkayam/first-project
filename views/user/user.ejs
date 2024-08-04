@@ -48,8 +48,8 @@
             aria-controls="v-pills-home" data-bs-toggle="pill" aria-selected="true">Home</a>
           <a data-mdb-pill-init class="nav-link" id="v-pills-myorder-tab" href="#v-pills-myorder" role="tab"
             aria-controls="v-pills-myorder" data-bs-toggle="pill" aria-selected="false">My Orders</a>
-          <a data-mdb-pill-init class="nav-link" id="v-pills-mywallet-tab" href="#v-pills-mywallet"
-            role="tab" aria-controls="v-pills-mywallet" data-bs-toggle="pill" aria-selected="false">My Wallet</a>
+          <a data-mdb-pill-init class="nav-link" id="v-pills-mywallet-tab" href="#v-pills-mywallet" role="tab"
+            aria-controls="v-pills-mywallet" data-bs-toggle="pill" aria-selected="false">My Wallet</a>
           <a data-mdb-pill-init class="nav-link" id="v-pills-profile-tab" href="#v-pills-profile" role="tab"
             aria-controls="v-pills-profile" data-bs-toggle="pill" aria-selected="false">Profile</a>
           <a data-mdb-pill-init class="nav-link" id="v-pills-address-tab" href="#v-pills-address" role="tab"
@@ -129,105 +129,110 @@
           <!-- starting of a order -->
           <div class="tab-pane fade" id="v-pills-myorder" role="tabpanel" aria-labelledby="v-pills-myorder-tab">
             <div class="container">
-              <div class="row">
-                <div class="col-12">
-                  <h2 class="mb-4">My Orders</h2>
-                </div>
-              </div>
+
               <div class="row">
                 <div class="col-12">
                   <div class="card">
-                    <% orderData.forEach((order)=> { %>
-                      <div class="card-header">
-                        <h5 class="mb-0">Order #<%= order.orderId %>
-                        </h5>
-                      </div>
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <h6>Order Details</h6>
-                            <ul class="list-unstyled">
-                              <li><strong>Order Date: </strong>
-                                <%= order.createdAt.toLocaleDateString() %>
-                              </li>
-                              <li><strong>Total Amount:</strong> $<%= order.orderAmount %>
-                              </li>
-                              <li><strong>Order Status:</strong>
-                                <%= order.status %>
-                              </li>
-                            </ul>
+                    <% if(orderData.length < 1){ %>
+                      <h4>no orders</h4>
+                      <% } else { %>
+                        <% orderData.forEach((order)=> { %>
+                          <div class="card-header">
+                            <h5 class="mb-0">Order #<%= order.orderId %>
+                            </h5>
                           </div>
-                          <div class="col-md-6">
-                            <h6>Shipping Address</h6>
-                            <p>
-                              <%= order.deliveryAddress.name %><br>
-                                <%= order.deliveryAddress.address %><br>
-                                  <%= order.deliveryAddress.locality %>, <%= order.deliveryAddress.post %>, <%=
-                                        order.deliveryAddress.pincode %>
-                            </p>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-12">
-                            <h6>Order Items</h6>
-                            <table class="table table-bordered">
-                              <thead>
-                                <tr>
-                                  <th>Image</th>
-                                  <th>Product</th>
-                                  <th>Price</th>
-                                  <th>Quantity</th>
-                                  <th>Total</th>
-                                  <th>Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <% order.orderedItems.forEach((item)=> { %>
-                                  <tr>
-                                    <td>
-                                      <div class="text-center">
-                                        <img style="width: 60px;height: 60px;"
-                                          src="/public/productImages/<%= item.image %>" alt="nothing to show ">
-                                      </div>
-                                    </td>
-                                    <td>
-                                      <%= item.productName %>
-                                    </td>
-                                    <td>
-                                      <%= item.price %>
-                                    </td>
-                                    <td>
-                                      <%= item.quantity %>
-                                    </td>
-                                    <td>$<%= item.total %>
-                                    </td>
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <h6>Order Details</h6>
+                                <ul class="list-unstyled">
+                                  <li><strong>Order Date: </strong>
+                                    <%= order.createdAt.toLocaleDateString() %>
+                                  </li>
+                                  <li><strong>Total Amount:</strong> $<%= order.orderAmount %>
+                                  </li>
+                                  <li><strong>Order Status:</strong>
+                                    <%= order.status %>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div class="col-md-6">
+                                <h6>Shipping Address</h6>
+                                <% if(!order.deliveryAddress){ %>
+                                  <p>Add addres</p>
+                                  <% }else{ %>
+                                    <p>
+                                      <%= order.deliveryAddress.name %><br>
+                                        <%= order.deliveryAddress.address %><br>
+                                          <%= order.deliveryAddress.locality %>, <%= order.deliveryAddress.post %>, <%=
+                                                order.deliveryAddress.pincode %>
+                                    </p>
+                                    <% } %>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-12">
+                                <h6>Order Items</h6>
+                                <table class="table table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th>Image</th>
+                                      <th>Product</th>
+                                      <th>Price</th>
+                                      <th>Quantity</th>
+                                      <th>Total</th>
+                                      <th>Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <% order.orderedItems.forEach((item)=> { %>
+                                      <tr>
+                                        <td>
+                                          <div class="text-center">
+                                            <img style="width: 60px;height: 60px;"
+                                              src="/public/productImages/<%= item.image %>" alt="nothing to show ">
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <%= item.productName %>
+                                        </td>
+                                        <td>
+                                          <%= item.price %>
+                                        </td>
+                                        <td>
+                                          <%= item.quantity %>
+                                        </td>
+                                        <td>$<%= item.total %>
+                                        </td>
 
-                                    <% if(item.status==='Cancelled' ){ %>
-                                      <td class="text-danger">
-                                        <%= item.status %>
-                                          <br>
+                                        <% if(item.status==='Cancelled' ){ %>
+                                          <td class="text-danger">
+                                            <%= item.status %>
+                                              <br>
 
-                                          <%}else if( item.status=='Delivered' ) { %>
-                                      <td class="text-info">
-                                        <%= item.status %>
-                                          <br>
-                                          <button class="btn btn-sm btn-success" onclick="returnclick('<%= item._id %>','<%= item.productId %>')">Return</button>
-                                          <% } else { %>
-                                      <td class="text-success">
-                                        <%= item.status %>
-                                          <br>
-                                          <button class="btn btn-sm btn-danger"
-                                            onclick="btnclick('<%= item._id %>','<%= item.quantity %>','<%= item.productId %>')">Cancel</button>
-                                      </td>
-                                      <% } %>
-                                  </tr>
-                                  <% }) %>
-                              </tbody>
-                            </table>
+                                              <%}else if( item.status=='Delivered' ) { %>
+                                          <td class="text-info">
+                                            <%= item.status %>
+                                              <br>
+                                              <button class="btn btn-sm btn-success"
+                                                onclick="returnclick('<%= item._id %>','<%= item.productId %>')">Return</button>
+                                              <% } else { %>
+                                          <td class="text-success">
+                                            <%= item.status %>
+                                              <br>
+                                              <button class="btn btn-sm btn-danger"
+                                                onclick="btnclick('<%= item._id %>','<%= item.quantity %>','<%= item.productId %>','<%= order.orderId %>')">Cancel</button>
+                                          </td>
+                                          <% } %>
+                                      </tr>
+                                      <% }) %>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      <% }) %>
+                          <% }) %>
+                            <% } %>
                   </div>
                 </div>
               </div>
@@ -236,62 +241,83 @@
           <!-- end of a order -->
 
           <div class="tab-pane fade" id="v-pills-mywallet" role="tabpanel" aria-labelledby="v-pills-mywallet-tab">
-             <div class="container my-5">
-        <h1 class="mb-4">My Wallet</h1>
-        
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="wallet-card">
-                    <h3 class="mb-3">Balance</h3>
-                    <h2 class="mb-4">$555</h2>
-                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addFundsModal">
-                        <i class="fas fa-plus-circle me-2"></i>Add Funds
-                    </button>
-                </div>
-            </div>
-            
-            <div class="col-md-8">
-                <h3 class="mb-3">Recent Transactions</h3>
-                <div class="transaction-list">
-                    
-                        <p>No transactions yet.</p>
-                    
-                        
-                            <div class="transaction-item">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>everyONe change</span>
-                                    <span class="">
-                                        type
-                                    </span>
-                                </div>
-                                <small class="text-muted"></small>
-                            </div>
-                        
-                    
-                </div>
-            </div>
-        </div>
-    </div>
+            <div class="container my-5">
+              <h1 class="mb-4">My Wallet</h1>
 
-    <div class="modal fade" id="addFundsModal" tabindex="-1" aria-labelledby="addFundsModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="addFundsModalLabel">Add Funds to Wallet</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div class="row">
+                <div class="col-md-4 mb-4">
+                  <div class="wallet-card">
+                    <h3 class="mb-3">Balance</h3>
+                    <% if(typeof wallet !='undefined' ) { %>
+
+                      <h2 class="mb-4">₹ <%= wallet.balance %>
+                      </h2>
+                      <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addFundsModal">
+                        <i class="fas fa-plus-circle me-2"></i>Add Funds
+                      </button>
+                      <% } %>
+                  </div>
+                </div>
+
+                <div class="col-md-8">
+                  <h3 class="mb-3">Recent Transactions</h3>
+                  <div class="transaction-list">
+
+                    <table class="table">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>Date</th>
+                          <th>Description</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% wallet.history.forEach((data)=>{ %>
+                          <td>
+                            <%= data.Date %>
+                          </td>
+                          <td>
+                            <%= data.Description %>
+                          </td>
+                          <td>
+                            <%= data.Amount %>
+                          </td>
+                          <% }) %>
+                      </tbody>
+                    </table>
+
+
+                    <div class="transaction-item">
+                      <small class="text-muted"></small>
+                    </div>
+
+
+                  </div>
+                </div>
               </div>
-              <div class="modal-body">
-                  <form action="/wallet/add-funds" method="POST">
+            </div>
+
+            <div class="modal fade" id="addFundsModal" tabindex="-1" aria-labelledby="addFundsModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="addFundsModalLabel">Add Funds to Wallet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/wallet/add-funds" method="POST">
                       <div class="mb-3">
-                          <label for="amount" class="form-label">Amount</label>
-                          <input type="number" class="form-control" id="amount" name="amount" min="1" step="0.01" required>
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" min="1" step="0.01"
+                          required>
                       </div>
                       <button type="submit" class="btn btn-primary">Add Funds</button>
-                  </form>
+                    </form>
+                  </div>
+                </div>
               </div>
-          </div>
-      </div>
-  </div>
+            </div>
 
           </div>
 
@@ -351,28 +377,32 @@
               <!-- address  start-->
               <div class="tab-pane fade" id="v-pills-address" role="tabpanel" aria-labelledby="v-pills-address-tab">
                 <div class="card" style="width: 18rem;">
-                  <% viewAddress.forEach(function(address){ %>
-                    <div class="card-body">
-                      <h5 class="card-title">
-                        <%= address.name %>
-                      </h5>
-                      <p class="card-text">
-                        <%= address.address %>
-                      </p>
-                      <p class="card-text"><strong>State :</strong>
-                        <%= address.state %>
-                      </p>
-                      <p class="card-text"><strong>Mobile :</strong>
-                        <%= address.mobile %>
-                      </p>
-                      <!-- Edit button with unique identifier -->
-                      <a href="#" class="btn btn-primary editButton" data-bs-toggle="modal"
-                        data-bs-target="#editModal<%= address._id %>">Edit</a>
-                      <a href="/deleteAddress/<%= address._id %>" class="btn btn-primary ms-3" id="deleteButton"
-                        name="id" value="<%= address._id %>">Delete</a>
-                      <hr>
-                    </div>
-                    <% }) %>
+                  <% if(viewAddress.length < 1){ %>
+                    <h4>No address is found</h4>
+                    <% }else{ %>
+                      <% viewAddress.forEach(function(address){ %>
+                        <div class="card-body">
+                          <h5 class="card-title">
+                            <%= address.name %>
+                          </h5>
+                          <p class="card-text">
+                            <%= address.address %>
+                          </p>
+                          <p class="card-text"><strong>State :</strong>
+                            <%= address.state %>
+                          </p>
+                          <p class="card-text"><strong>Mobile :</strong>
+                            <%= address.mobile %>
+                          </p>
+                          <!-- Edit button with unique identifier -->
+                          <a href="#" class="btn btn-primary editButton" data-bs-toggle="modal"
+                            data-bs-target="#editModal<%= address._id %>">Edit</a>
+                          <a href="/deleteAddress/<%= address._id %>" class="btn btn-primary ms-3" id="deleteButton"
+                            name="id" value="<%= address._id %>">Delete</a>
+                          <hr>
+                        </div>
+                        <% }) %>
+                          <% } %>
                 </div>
               </div>
               <!-- addrress end  -->
@@ -662,9 +692,9 @@
   <!-- End Footer Section -->
 
   <script>
-    function btnclick(productId, orderQuantity, prdctId) {
-      console.log(productId, orderQuantity, prdctId)
-      fetch(`/userbtn?productId=${productId}&orderQuantity=${orderQuantity}&prdctId=${prdctId}`, { method: "get" })
+    function btnclick(productId, orderQuantity, prdctId, orderId) {
+      console.log(productId, orderQuantity, prdctId, orderId)
+      fetch(`/userbtn?productId=${productId}&orderQuantity=${orderQuantity}&prdctId=${prdctId}&orderId=${orderId}`, { method: "get" })
         .then(response => response.json())
         .then(data => {
           if (data.success) {
@@ -678,20 +708,20 @@
         })
     }
 
-    function returnclick(productId,prdctId){
-      console.log(productId,podctId)
-      fetch(`/returnclick?productId=${productId}&prdctId=${prdctId}`,{method:'get'})
-      .then(response => resonse.json())
-      .then(data =>{
-        if(data.success){
-          window.location.reload()
-        } else{
-          console.log('failed to return the product');
-        }
-      })
-      .catch(error=>{
-        console.log(error);
-      })
+    function returnclick(productId, prdctId) {
+      console.log(productId, podctId)
+      fetch(`/returnclick?productId=${productId}&prdctId=${prdctId}`, { method: 'get' })
+        .then(response => resonse.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload()
+          } else {
+            console.log('failed to return the product');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
     }
   </script>
 
@@ -777,7 +807,7 @@
 
       // Address validation
       const address = document.getElementById('inputAddress').value;
-      if (/[^a-zA-Z0-9 ]/.test(address)) {
+      if (/[^a-zA-Z0-9 ,\.\-']/.test(address)) {
         document.getElementById('addressError').textContent = "Address must not contain special characters.";
         valid = false;
       }

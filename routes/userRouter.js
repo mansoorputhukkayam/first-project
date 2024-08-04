@@ -30,7 +30,7 @@ userRouter.get('/blog',isLogin,isBlocked,userController.loadBlog);
 userRouter.get('/contact',isLogin,isBlocked,userController.loadContact);
 userRouter.get('/shop/:id',isLogin,isBlocked,userController.loadShop);
 userRouter.get('/forgotPassword',userController.forgotPassword);
-userRouter.post('/search',userController.loadSearch);
+userRouter.post('/search',isLogin,isBlocked,userController.loadSearch);
 
 //filtering of products 
 userRouter.get('/loadpricehigh',isLogin,isBlocked,productController.lowHigh);
@@ -38,7 +38,7 @@ userRouter.get('/loadpricelow',isLogin,isBlocked,productController.highLow);
 userRouter.get('/nameAscending',isLogin,isBlocked,productController.nameAscending);
 userRouter.get('/nameDescending',isLogin,isBlocked,productController.nameDescending);
 
-userRouter.get('/user',isLogin,userController.loadProfile);
+userRouter.get('/user',isLogin,isBlocked,userController.loadProfile);
 
 // coupon controllers 
 userRouter.post('/applyCoupon',couponController.applyCoupon);

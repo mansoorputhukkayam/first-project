@@ -76,6 +76,9 @@
         <form class="col-md-12" method="post">
           <div class="site-blocks-table">
             <table class="table">
+              <% if(cartData.length < 1){ %>
+                <h5>No items in cart</h5>
+                <% }else{ %>
               <thead>
                 <tr>
                   <th class="product-thumbnail">Image</th>
@@ -127,6 +130,7 @@
                     <td><button class="btn btn-black btn-sm delete-btn" data-id="<%= cartitem._id %>">X</button></td>
                   </tr>
                   <% }) %>
+                  <% } %>
               </tbody>
             </table>
           </div>

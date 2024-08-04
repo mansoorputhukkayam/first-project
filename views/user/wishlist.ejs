@@ -76,6 +76,9 @@
         <form class="col-md-12" method="post">
           <div class="site-blocks-table">
             <table class="table">
+              <% if(productCount < 1 ) { %>
+                <h4>No items in Wishlist..</h4>
+                <% }else{ %>
               <thead>
                 <tr>
                   <th class="product-thumbnail">Image</th>
@@ -85,11 +88,8 @@
                   <th class="product-remove">Action</th>
                   <th class="product-action">Remove</th>
 
-
-
                 </tr>
               </thead>
-              <% if(wishlist.length> 0) { %>
                 <% wishlist[0].products.forEach((product,index)=>{ %>
                   <tbody id="wishlist-item-<%= index %>">
 
