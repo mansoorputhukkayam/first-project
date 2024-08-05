@@ -131,7 +131,7 @@ const loadLogout = async (req, res) => {
 }
 
 const loadAdminOrders = async (req, res) => {
-    try {
+    try {    
         // console.log('hi order admin');
         const page = req.query.page || 1 ;
         const totalOrders = await Order.countDocuments();

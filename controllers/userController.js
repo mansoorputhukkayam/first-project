@@ -11,7 +11,7 @@ const Category = require('../models/categoryModel')
 const Order = require('../models/orderModel');
 const mongoose = require('mongoose');
 const Wallet = require('../models/walletModel');
-const Return = require('../models/returnModel');
+const returnProduct = require('../models/returnModel');
 
 function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -536,7 +536,7 @@ const cancelProducts = async (req, res) => {
 
         const orderToCancel = await Order.findOne({ orderId: orderId });
         const product = await Product.findOne({ _id: prdctId });
-        console.log(orderToCancel.payment, 'prodevt details');
+        // console.log(orderToCancel.payment, 'prodevt details');
 
         if (orderToCancel.payment == 'Razorpay' || orderToCancel.payment == 'wallet') {
             await Wallet.updateOne(
@@ -555,7 +555,7 @@ const cancelProducts = async (req, res) => {
             );
         }
 
-        console.log(productId, orderQuantity, 'orderquantity,produucid');
+        // console.log(productId, orderQuantity, 'orderquantity,produucid');
         const result = await Order.findOneAndUpdate(
             { 'orderedItems._id': new mongoose.Types.ObjectId(productId) },
             { $set: { "orderedItems.$.status": 'Cancelled' } },
@@ -576,26 +576,44 @@ const cancelProducts = async (req, res) => {
     }
 }
 
-let returnProduct = async (req, res) => {
+ const returnProducts = async (req, res) => {
     try {
 
-        let { orderId, productId } = req.query
-        console.log(reason, orderId, 'it is reason')
-        let addReturn = new Return({
+        let { productId, prdctId, orderId,reason } = req.query
+        console.log(productId, prdctId, orderId, reason, 'it is reason');
+        const product = await Product.findOne({ _id: prdctId });
+        const userId = req.session.user_id;
+
+        let addReturn = new returnProduct({
             orderId: orderId,
             reason: reason
         })
         await addReturn.save();
 
+        await Wallet.updateOne(
+            { userId: userId },
+            {
+                $inc: { balance: product.price },
+                $push: {
+                    history: {
+                        Date: new Date().toDateString(),
+                        Description: `${product.name} was returned`,
+                        Amount: product.price,
+                        time: new Date()
+                    }
+                }
+            }
+        );
+
         let statusChange = await Order.updateOne(
-            { 'orderedProducts._id': productId }, // Find the document with the matching subdocument _id
-            { $set: { 'orderedProducts.$.status': 'Returned' } } // Use the positional operator $ to update the status
+            { 'orderedItems._id': new mongoose.Types.ObjectId(productId) },
+            { $set: { 'orderedItems.$.status': 'Returned' } }
         );
 
 
         console.log(statusChange)
 
-        res.json({ status: true })
+        res.json({ success: true })
 
 
 
@@ -631,5 +649,5 @@ module.exports = {
     loadSearch,
     // loadOrderedProducts,
     cancelProducts,
-    returnProduct
+    returnProducts
 }

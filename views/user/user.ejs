@@ -210,12 +210,17 @@
                                             <%= item.status %>
                                               <br>
 
+                                              <% }else if(item.status == 'Returned'){ %>
+                                                <td class="text-info">
+                                                  <%= item.status %>
+                                                  <br>
+                                                  
                                               <%}else if( item.status=='Delivered' ) { %>
                                           <td class="text-info">
                                             <%= item.status %>
                                               <br>
                                               <button class="btn btn-sm btn-success"
-                                                onclick="returnclick('<%= item._id %>','<%= item.productId %>')">Return</button>
+                                                onclick="returnclick('<%= item._id %>','<%= item.productId %>','<%= order._id %>')">Return</button>
                                               <% } else { %>
                                           <td class="text-success">
                                             <%= item.status %>
@@ -271,8 +276,9 @@
                           <th>Amount</th>
                         </tr>
                       </thead>
+                      <% wallet.history.forEach((data)=>{ %>
                       <tbody>
-                        <% wallet.history.forEach((data)=>{ %>
+                        <tr>
                           <td>
                             <%= data.Date %>
                           </td>
@@ -282,8 +288,9 @@
                           <td>
                             <%= data.Amount %>
                           </td>
-                          <% }) %>
+                        </tr>
                       </tbody>
+                      <% }) %>
                     </table>
 
 
@@ -708,20 +715,37 @@
         })
     }
 
-    function returnclick(productId, prdctId) {
-      console.log(productId, podctId)
-      fetch(`/returnclick?productId=${productId}&prdctId=${prdctId}`, { method: 'get' })
-        .then(response => resonse.json())
-        .then(data => {
-          if (data.success) {
-            window.location.reload()
-          } else {
-            console.log('failed to return the product');
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        })
+    function returnclick(productId, prdctId, orderId) {
+      console.log(productId, prdctId, orderId)
+      Swal.fire({
+        title: 'Return Product',
+        input: 'textarea',
+        inputLabel: 'Reason for return',
+        inputPlaceholder: 'Type your reason here',
+        inputAttributes: {
+          'aria-label': 'Type your reason here'
+        },
+        showCancelButton: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const reason = result.value;
+          fetch(`/returnclick?productId=${productId}&prdctId=${prdctId}&orderId=${orderId}&reason=${encodeURIComponent(reason)}`, { method: 'get' })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                Swal.fire('Success', 'Product returned successfully.', 'success').then(() => {
+                  window.location.reload()
+                });
+              } else {
+                Swal.fire('Error', 'failed to return the product', 'error');
+              }
+            })
+            .catch(error => {
+              console.log('Error', error);
+              Swal.fire('Error', 'An error occured while the request', 'error');
+            });
+        }
+      });
     }
   </script>
 

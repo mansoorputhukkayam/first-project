@@ -361,7 +361,10 @@
                                                                             <option value="Shipped">Shipped</option>
                                                                             <option value="Delivered">Delivered</option>
                                                                             <option value="Cancelled">Cancelled</option>
-                                                                            <% } %>
+                                                                            <% } else if (element.status=='Returned' ) { %>
+                                                                                <option value="Returned" hidden>
+                                                                                    Returned</option>
+                                                                                <% } %>
                                                     </select>
 
                                                     <!-- <select class="form-select">

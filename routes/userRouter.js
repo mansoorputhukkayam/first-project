@@ -55,7 +55,7 @@ userRouter.get('/quantityIncrease/:id',isLogin,isBlocked,cartControllers.quantit
 userRouter.get('/quantityDecrease/:id',isLogin,isBlocked,cartControllers.quantityDecrease);
 userRouter.get('/updateCart',isLogin,isBlocked,cartControllers.updateCart);
 userRouter.get('/thankyou',isLogin,isBlocked,cartControllers.thankyou);
-userRouter.get('/returnclick',userController.returnProduct);
+userRouter.get('/returnclick',userController.returnProducts);
 userRouter.get('/userbtn',isLogin,isBlocked,userController.cancelProducts);
 
 // userRouter.get('/devideByCategorise',productController.devidebyCategorise);
