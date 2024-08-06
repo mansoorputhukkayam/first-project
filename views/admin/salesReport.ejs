@@ -6,7 +6,7 @@
     <title>Nest Dashboard</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta property="og:title" content="" />
     <meta property="og:type" content="" />
     <meta property="og:url" content="" />
@@ -20,9 +20,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 
 </head>
 
@@ -61,16 +60,9 @@
                 </li>
 
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/customers">
+                    <a class="menu-link" href="">
                         <i class="icon material-icons md-store"></i>
                         <span class="text">Customers</span>
-                    </a>
-                </li>
-
-                <li class="menu-item">
-                    <a class="menu-link" href="/admin/add-product">
-                        <i class="icon material-icons md-add_box"></i>
-                        <span class="text">Add product</span>
                     </a>
                 </li>
 
@@ -81,8 +73,8 @@
                     </a>
                 </li>
 
-                <li class="menu-item active">
-                    <a class="menu-link" href="/admin/viewCoupon"> <i class="icon material-icons md-qr_code"></i> <span
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/viewCoupon"> <i class="icon material-icons md-add_box"></i> <span
                             class="text">Coupons</span> </a>
                 </li>
 
@@ -91,7 +83,7 @@
                             class="text">Offers</span> </a>
                 </li>
 
-                <li class="menu-item ">
+                <li class="menu-item active">
                     <a class="menu-link" href="/admin/getSalesReport"> <i class="icon material-icons md-receipt"></i> <span
                             class="text">Sales Report</span> </a>
                 </li>
@@ -117,7 +109,22 @@
                         <a href="page-error-404.html">Error 404</a>
                     </div>
                 </li>
-
+                <li class="menu-item">
+                    <a class="menu-link" href="page-reviews.html">
+                        <i class="icon material-icons md-comment"></i>
+                        <span class="text">Reviews</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i> <span
+                            class="text">Brands</span> </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" disabled href="#">
+                        <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Statistics</span>
+                    </a>
+                </li>
             </ul>
             <hr />
             <ul class="menu-aside">
@@ -131,7 +138,12 @@
                         <a href="page-settings-2.html">Setting sample 2</a>
                     </div>
                 </li>
-
+                <li class="menu-item">
+                    <a class="menu-link" href="page-blank.html">
+                        <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Starter page </span>
+                    </a>
+                </li>
             </ul>
             <br />
             <br />
@@ -207,99 +219,124 @@
                 </ul>
             </div>
         </header>
+
+        <div>
+            <button class="btn btn-primary" id="excel" style="margin-right: 10px;">
+                <i class="fas fa-file-excel"></i> Download Excel
+            </button>
+            <button class="btn btn-danger" id="pdf">
+                <i class="fas fa-file-pdf"></i> Download PDF
+            </button>
+        </div>
+
         <section class="content-main">
             <div class="content-header">
+
                 <div>
-                    <h2 class="content-title card-title">Coupons</h2>
-                    <!-- <p>Lorem ipsum dolor sit amet.</p> -->
+                    <h2 class="content-title card-title">Sales Report</h2>
+
                 </div>
-                <div>
-                    <!-- <a href="#" class="btn btn-light rounded font-md">Export</a>
-                        <a href="#" class="btn btn-light rounded font-md">Import</a> -->
-                    <a href="/admin/loadAddCoupon" class="btn btn-primary btn-sm rounded">Create new</a>
-                </div>
+                <!-- <div>
+                    <button class="btn border border-success" data-bs-toggle="modal" data-bs-target="#addOfferModal">Add
+                        Offer</button>
+                </div> -->
             </div>
+            <div class="card mb-4 border">
 
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Coupon Name</th>
-                                <th>Coupon Code</th>
-                                <th>Discount in ( % )</th>
-                                <th>Created Date</th>
-                                <th>Expiry Date</th>
-                                <th>Minimum Amount</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <% coupons.forEach((coupon)=>{ %>
-                            <tbody>
+                <form action="/admin/searchWithDate" method="post" class="searchform ">
+                    <div class="input-group  pt-15 ml-15">
 
-                                <tr>
+                        <input list="search_terms" type="date" name="searcheDate" class="form-control"
+                            placeholder="Search term" />
+                        <input class="btn btn-light bg" type="submit">
+                    </div>
 
-                                    <td>
-                                        <%= coupon.couponName %>
-                                    </td>
-                                    <td>
-                                        <%= coupon.couponCode %>
-                                    </td>
-                                    <td>
-                                        <%= coupon.discountAmount %>
-                                    </td>
-                                    <td>
-                                        <%= new Date(coupon.activationDate).toDateString() %>
-                                    </td>
-                                    <td>
-                                        <%= new Date(coupon.expiryDate).toDateString() %>
-                                    </td>
-                                    <td>
-                                        <%= coupon.criteriaAmount %>
-                                    </td>
-                                    <td>
-                                        <a href="/admin/editCoupon/<%= coupon._id %>" class="btn btn-sm btn-warning">Edit
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-light" onclick="confirmDelete('<%= coupon._id %>')">Delete</a>
-                                    </td>
-                                    <td>
+                </form>
 
-                                    </td>
+                <div class="container-flued  " style="padding-left: 39rem;">
+                    <div class="row ">
+                        <div class="col-md-6 mx-auto">
+                            <div class="dropdown text-end">
+                                <select class="form-select" id="myDropdown">
+                                    <option value="Day">select</option>
+                                    <option value="Day">Day</option>
+                                    <option value="Month">Month</option>
+                                    <option value="Year">Year</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- card-header end// -->
+                <div class="card-body" id="sailsReoport">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tableData">
+                            <thead>
+                                <tr class="text-center">
+                                    <!-- <th>Image</th> -->
+                                    <th>No</th>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Client Name</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Revenue</th>
+                                    <!-- <th scope="col">Status</th>
+                                    <th scope="col">More</th> -->
+
+
+
                                 </tr>
+                            </thead>
 
+                            <tbody class="text-center">
+                                <tr>
+                                    <% if(report.length> 0){ %>
+                                        <% report.forEach((report,index)=> { %>
+
+
+
+
+                                            <td><b>
+                                                    <%=index+1%>
+                                                </b></td>
+                                            <td><b>
+                                                    <%=report.orderId%>
+                                                </b></td>
+                                            <td>
+                                                <%=report.deliveryAddress.name%>
+                                            </td>
+                                            <td>
+                                                <%=report.createdAt.toDateString()%>
+                                            </td>
+
+                                            <td>
+                                                <%=report.orderAmount%>
+                                            </td>
+
+
+                                </tr>
+                                <% }) %>
+                                    <% } %>
                             </tbody>
-                            <% }) %>
-                    </table>
-                </div>
 
-
-                <!-- card end// -->
-                <div class="pagination-area mt-30 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <!-- <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_left"></i></a>
-                            </li> -->
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <!-- <li class="page-item"><a class="page-link" href="#">3</a></li> -->
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">6</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
+                        </table>
+                    </div>
+                    <!-- table-responsive //end -->
                 </div>
+                <!-- card-body end// -->
+            </div>
+            <!-- card end// -->
+
         </section>
         <!-- content-main end// -->
+
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
-                    <script>
-                        document.write(new Date().getFullYear());
-                    </script>
-                    &copy; FURNI COMPLETE FURNITURE SOLUTIONS
+
+                    &copy; Nest - HTML Ecommerce Template .
                 </div>
                 <div class="col-sm-6">
                     <div class="text-sm-end">All rights reserved</div>
@@ -307,145 +344,71 @@
             </div>
         </footer>
     </main>
+    <script src="/admin/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin/assets/js/vendors/select2.min.js"></script>
+    <script src="/admin/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/admin/assets/js/main.js?v=1.1" type="text/javascript"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script> -->
 
     <script>
-        document.getElementById('logout').addEventListener('click', async () => {
-            const result = await Swal.fire({
-                title: 'Are you sure ?',
-                text: 'Do you really want to logout?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                timer: 3000,
-                confirmButtonText: 'Yes logout'
-            });
-            if (result.isConfirmed) {
-                const response = await fetch('/admin/logout', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (response.ok) {
-                    Swal.fire(
-                        'Logout',
-                        'You have been logout successfully...',
-                        'success'
-                    ).then(() => {
-                        window.location.href = '/admin';
-                    });
-                } else {
-                    Swal.fire(
-                        'Error',
-                        'There is a error',
-                        'error'
-                    );
-                }
-            }
-        });
-    </script>
 
-    <script>
-        $(document).ready(function () {
-            $('.list-unlist-btn').on('click', function (e) {
-                e.preventDefault();
-
-                var productId = $(this).data('id');
-                var action = $(this).data('action');
-                var actionText = action === 'unlist' ? 'unlist' : 'list';
-                var confirmText = action === 'unlist' ? 'Unlisted' : 'Listed';
-                var confirmColor = action === 'unlist' ? '#d33' : '#3085d6';
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: `You are about to ${actionText} this product.`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: confirmColor,
-                    cancelButtonColor: '#aaa',
-                    confirmButtonText: `Yes, ${actionText} it!`
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: `/admin/productUnlistAndList?id=${productId}`,
-                            type: 'GET',
-                            success: function (response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: confirmText,
-                                    text: `Product has been ${confirmText.toLowerCase()}.`,
-                                    timer: 2000,
-                                    confirmButtonText: false
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function (error) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'An error occurred while updating the product status.',
-                                });
-                            }
-                        });
-                    }
+        // download as pdf
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('pdf').addEventListener('click', function () {
+                const invoiceElement = document.getElementById('sailsReoport');
+                html2pdf(invoiceElement, {
+                    margin: 1,
+                    filename: 'Sales report.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter' }
                 });
             });
         });
     </script>
 
 <script>
-    function confirmDelete(couponId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                deleteCoupon(couponId);
-            }
-        });
-    }
+    document.getElementById('excel').addEventListener('click', function () {
+        let tableData = document.getElementById('tableData');
+        const wb = XLSX.utils.table_to_book(tableData);
+        // Save workbook as XLSX file
+        XLSX.writeFile(wb, 'sales-report-excel.xlsx');
+    });
+</script>
 
-    function deleteCoupon(couponId) {
-        axios.get(`/admin/deleteCoupon/${couponId}`)
-            .then(response => {
-                console.log('responseData', response.data);
-                if (response.data.deleteSuccess) {
-                    Swal.fire({
-                        text: 'Coupon deleted...',
-                        timer: 2000,
-                        willClose: () => {
-                            // Redirect to the coupon page after the alert closes
-                            window.location.href = '/admin/viewCoupon';
-                        }
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error deleting coupon:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!'
-                });
-            });
+<style>
+    .modal-error {
+        color: #dc3545;
+        font-size: 0.875rem;
     }
+</style>
+
+<script>
+
+    let selectElement = document.getElementById('myDropdown')
+    selectElement.addEventListener('change', function () {
+        let selected = selectElement.value
+        console.log(selected, 'it is selected')
+        window.location.href = `/admin/sortReport/?sort=${selected}`
+
+
+
+    })
+
+
+
 </script>
 
 
-    <script src="/public/assets/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="/public/assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="/public/assets/js/vendors/select2.min.js"></script>
-    <script src="/public/assets/js/vendors/perfect-scrollbar.js"></script>
-    <script src="/public/assets/js/vendors/jquery.fullscreen.min.js"></script>
-    <!-- Main Script -->
-    <script src="/public/assets/js/main.js" type="text/javascript"></script>
-</body>
 
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
 </html>

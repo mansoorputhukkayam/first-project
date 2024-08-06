@@ -43,6 +43,10 @@ adminRouter.get('/productUnlistAndList',auth.isLogin,productController.productUn
 adminRouter.get('/editProduct/:productId',auth.isLogin,productController.editProduct);
 adminRouter.get('/adminOrders',auth.isLogin,adminController.loadAdminOrders);
 
+adminRouter.get('/getSalesReport',auth.isLogin,adminController.getSalesReport);
+adminRouter.post('/searchWithDate',auth.isLogin,adminController.searchWithDate);
+adminRouter.get('/sortReport',auth.isLogin,adminController.sortReport);
+
 adminRouter.get('/viewCoupon',couponController.viewCoupon);
 adminRouter.get('/loadAddCoupon',couponController.loadAddCoupon);
 adminRouter.get('/editCoupon/:id',couponController.editCoupon);

@@ -543,7 +543,7 @@ const cancelProducts = async (req, res) => {
                 { userId: userId },
                 {
                     $inc: { balance: product.price },
-                    $push: {
+                    $push: {   
                         history: {
                             Date: new Date().toDateString(),
                             Description: `${product.name} is Cancelled`,

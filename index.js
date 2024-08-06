@@ -27,7 +27,7 @@ function setDynamicViews(req, res, next) {
         app.set('views', path.join(__dirname, 'views/user'));
     }
     next();
-}
+}   
 
 app.use(setDynamicViews);
 

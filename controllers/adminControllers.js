@@ -174,6 +174,70 @@ const changeOrderStatus = async (req, res) => {
     }
 }
 
+const getSalesReport = async(req,res)=>{
+    try {
+        console.log('hey');
+
+        let report = await Order.find().sort({ orderedTime: -1 }).populate('deliveryAddress').exec();
+        console.log(report, 'it is reoprt');
+
+        res.render('salesReport',{report});
+    } catch (error) {
+        console.log('error getting sales report',error);
+    }
+}
+
+let searchWithDate = async (req, res) => {
+    try {
+
+        console.log('serchwithDate');
+        let { searcheDate } = req.body
+
+        let searchedDate = new Date(searcheDate)
+
+        let report = await Order.find({ orderedTime: { $gt: searchedDate } }).sort({ orderedTime: -1 })
+
+        res.render('salesReport',{report});
+
+        
+    } catch (error) {
+
+        console.log('error rendering searchWithDate', error)
+    }
+}
+
+const sortReport = async (req,res)=>{
+    try {
+        let {sort} = req.query;
+
+        if( sort == 'Day' ){
+            let today = new Date().toDateString();
+            console.log('its today',today);
+
+            let report = await Order.find({createdAt:{$eq:today}});
+            res.render('salesReport',{report});
+        }else if( sort == 'Month' ){
+            let today = new Date();
+            let startOfMonth = new Date(today.getFullYear(),today.getMonth(),1);
+            console.log('strtof Month',startOfMonth);
+
+            let report = await Order.find({createdAt :{$gte:startOfMonth}}).sort({createdAt:-1});
+            console.log('its reportnmonth',report);
+            res.render('salesReport',{report});
+
+        }else if( sort == 'Year' ){
+            let today = new Date();
+            let startOfYear = new Date(today.getFullYear(),0,1);
+
+            let report = await Order.find({createdAt :{$gte:startOfYear}}).sort({createdAt:-1});
+            console.log('year report',report);
+            res.render('salesReport',{report});
+        }
+    } catch (error) {
+        console.log('sorting error',error);
+    }
+}
+
 module.exports = {
     loadLogin,
     verifyLogin,
@@ -183,11 +247,7 @@ module.exports = {
     userBlock,
     loadAdminOrders,
     changeOrderStatus,
-    // loadCategory,
-    // addCategory,
-    // loadProduct,
-    // editCategory,
-    // uploadProduct,
-    // addProduct,
-    // updateCategory
+    getSalesReport,
+    searchWithDate,
+    sortReport
 }

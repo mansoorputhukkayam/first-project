@@ -9,8 +9,8 @@ const getWallet = async(req,res) =>{
     } catch (error) {
         console.log('getting wallet error:',error);
     }
-}
+}   
 
 module.exports = {
     getWallet
-}
+}      
