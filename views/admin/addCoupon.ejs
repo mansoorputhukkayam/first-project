@@ -211,7 +211,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="criteria">Minimum Purchase Amount</label>
-                                <input id="criteria" name="criteria" class="form-control" required>
+                                <input type="number" id="criteria" name="criteria" class="form-control" required>
                             </div>
 
                             <button type="submit"
@@ -300,7 +300,13 @@
                 axios.post('/admin/coupon',data)
                 .then(response =>{
                     console.log('coupon add',response.data);
-                    if(response.data.couponSuccess){
+                    if(response.data.exist){
+                        Swal.fire({
+                            title:'CouponCode already Existng...',
+                            timer:2000,
+                        })
+                    }
+                    else if(response.data.couponSuccess){
                         Swal.fire({
                             title:'Coupon addess succesfully...',
                             timer:2000

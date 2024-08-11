@@ -28,10 +28,6 @@ const orderSchema = new mongoose.Schema(
         type: Array,
         required: true,
     },
-    orderedTime:{
-        type:Date,
-        required:false
-    },
 },
 {
     timestamps: true,

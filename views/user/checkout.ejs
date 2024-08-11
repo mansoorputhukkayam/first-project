@@ -458,7 +458,7 @@
 								Swal.fire({
 									icon: 'success',
 									text: 'Order placed successfully',
-									timer:1500,
+									timer: 1500,
 								}).then(() => {
 									window.location.href = '/thankyou';
 								});
@@ -496,6 +496,7 @@
 					axios.post('/verifyPayment', data)
 						.then(response => {
 							console.log('verifyPayment success')
+							// console.log('orderId',orderId);
 							if (response.data.Success) {
 								Swal.fire({
 									icon: 'success',

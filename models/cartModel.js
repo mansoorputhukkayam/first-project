@@ -3,11 +3,11 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const cartSchema = new mongoose.Schema({
     productId:{
         type:ObjectId,
-        ref:'Products'
+        ref:'Product'
     },
     userId:{
         type:ObjectId,
-        ref:'Users'
+        ref:'User'
     },
     quantity:{
         type:Number,

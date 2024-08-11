@@ -215,6 +215,7 @@ const loadProfile = async (req, res) => {
         const viewAddress = await Address.find({ userId });
         const orderData = await Order.find({ userId }).sort({ _id: -1 }).populate('deliveryAddress').exec();
         const walletData = await Wallet.findOne({ userId });
+        walletData.history.sort((a, b) => new Date(b.time) - new Date(a.time));
         // console.log(walletData, 'walletData from userprofule');
         res.render('user', { userProfile: userProfile, viewAddress, orderData, wallet: walletData });
     } catch (error) {

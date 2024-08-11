@@ -47,19 +47,19 @@ adminRouter.get('/getSalesReport',auth.isLogin,adminController.getSalesReport);
 adminRouter.post('/searchWithDate',auth.isLogin,adminController.searchWithDate);
 adminRouter.get('/sortReport',auth.isLogin,adminController.sortReport);
 
-adminRouter.get('/viewCoupon',couponController.viewCoupon);
-adminRouter.get('/loadAddCoupon',couponController.loadAddCoupon);
-adminRouter.get('/editCoupon/:id',couponController.editCoupon);
-adminRouter.get('/deleteCoupon/:id',couponController.deleteCoupon);
+adminRouter.get('/viewCoupon',auth.isLogin,couponController.viewCoupon);
+adminRouter.get('/loadAddCoupon',auth.isLogin,couponController.loadAddCoupon);
+adminRouter.get('/editCoupon/:id',auth.isLogin,couponController.editCoupon);
+adminRouter.get('/deleteCoupon/:id',auth.isLogin,couponController.deleteCoupon);
 adminRouter.post('/coupon',couponController.addCoupon);
 adminRouter.post('/updateCoupon',couponController.updateCoupon);
 
-adminRouter.get('/viewOffer',offerController.viewOffer);
-adminRouter.get('/getAddOffer',offerController.getAddOffer);
+adminRouter.get('/viewOffer',auth.isLogin,offerController.viewOffer);
+adminRouter.get('/getAddOffer',auth.isLogin,offerController.getAddOffer);
 adminRouter.post('/addOffer',offerController.addOffer);
-adminRouter.get('/editOffer/:id',offerController.editOffer);
+adminRouter.get('/editOffer/:id',auth.isLogin,offerController.editOffer);
 adminRouter.post('/updateOffer',offerController.updateOffer);
-adminRouter.get('/deleteOffer/:id',offerController.deleteOffer);
+adminRouter.get('/deleteOffer/:id',auth.isLogin,offerController.deleteOffer);
 
 adminRouter.post('/productStatus',auth.isLogin,adminController.changeOrderStatus);
 

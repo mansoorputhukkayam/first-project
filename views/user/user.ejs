@@ -253,14 +253,17 @@
                 <div class="col-md-4 mb-4">
                   <div class="wallet-card">
                     <h3 class="mb-3">Balance</h3>
-                    <% if(typeof wallet !='undefined' ) { %>
+                    <% if(wallet && wallet.balance !== null && wallet.balance !== undefined ) { %>
 
                       <h2 class="mb-4">₹ <%= wallet.balance %>
                       </h2>
                       <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addFundsModal">
                         <i class="fas fa-plus-circle me-2"></i>Add Funds
                       </button>
-                      <% } %>
+                      <% }else{ %>
+                        <h2 class="mb-4">₹ 0.00
+                        </h2>
+                        <% } %>
                   </div>
                 </div>
 
@@ -276,6 +279,7 @@
                           <th>Amount</th>
                         </tr>
                       </thead>
+                      <% if(wallet){ %>
                       <% wallet.history.forEach((data)=>{ %>
                       <tbody>
                         <tr>
@@ -291,6 +295,7 @@
                         </tr>
                       </tbody>
                       <% }) %>
+                      <% } %>
                     </table>
 
 

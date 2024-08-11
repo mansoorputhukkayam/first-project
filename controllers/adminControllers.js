@@ -23,7 +23,7 @@ const loadLogin = async (req, res) => {
         //     res.render("login", { message: "field cant be empty" });
         //   }
         const message = req.flash('msg');
-            res.render('login',{message});
+        res.render('login', { message });
     } catch (error) {
         console.log(error.message);
     }
@@ -45,13 +45,13 @@ const verifyLogin = async (req, res) => {
                 return res.redirect('/admin/home')
             }
             else {
-                req.flash('msg','Password is not correct');
+                req.flash('msg', 'Password is not correct');
                 console.log('pwd errror...')
                 return res.redirect('/admin')
             }
         }
         else {
-            req.flash('msg','Your are not an admin');
+            req.flash('msg', 'Your are not an admin');
             console.log('its worked else')
             return res.redirect('/admin');
         }
@@ -74,21 +74,21 @@ const loadCustomers = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         // console.log('page nbr',page);
-        const limit = 7 ;
+        const limit = 7;
         const totalUsers = await User.countDocuments();
         // console.log('userToatal',totalUsers);
         // const nextPage = page < totalPages ? page + 1 : null ;
 
-        const users = await User.find().skip((page - 1) * limit).limit(limit).sort({_id:-1});
+        const users = await User.find().skip((page - 1) * limit).limit(limit).sort({ _id: -1 });
 
         const currentPage = page;
 
-        const pages = Math.ceil(totalUsers/limit);
+        const pages = Math.ceil(totalUsers / limit);
         // console.log('pages',pages);
 
         // const users = await User.find({})
         // console.log('loaaaddddd',users);
-        res.render('customers', { users: users,currentPage,pages });
+        res.render('customers', { users: users, currentPage, pages });
     } catch (error) {
         console.log(error.message);
     }
@@ -131,22 +131,22 @@ const loadLogout = async (req, res) => {
 }
 
 const loadAdminOrders = async (req, res) => {
-    try {    
+    try {
         // console.log('hi order admin');
-        const page = req.query.page || 1 ;
+        const page = req.query.page || 1;
         const totalOrders = await Order.countDocuments();
         const currentPage = page;
         const limit = 7;
-        const pages = Math.ceil(totalOrders/limit);
+        const pages = Math.ceil(totalOrders / limit);
         const userId = req.session.user_id;
-        const orderDetails = await Order.findOne({}).sort({_id:-1});
+        const orderDetails = await Order.findOne({}).sort({ _id: -1 });
         // console.log('laast data ', orderDetails)
-        const orderData = await Order.find().skip((page - 1) * limit).limit(limit).sort({_id:-1}).populate('deliveryAddress').populate('userId').exec();
+        const orderData = await Order.find().skip((page - 1) * limit).limit(limit).sort({ _id: -1 }).populate('deliveryAddress').populate('userId').exec();
         // console.log(orderData,'orderDattasa');
-        res.render('orders', { orderData: orderData,orderDetails,pages,currentPage });
+        res.render('orders', { orderData: orderData, orderDetails, pages, currentPage });
     } catch (error) {
         console.log(error.message);
-        
+
     }
 }
 
@@ -174,16 +174,16 @@ const changeOrderStatus = async (req, res) => {
     }
 }
 
-const getSalesReport = async(req,res)=>{
+const getSalesReport = async (req, res) => {
     try {
         console.log('hey');
 
-        let report = await Order.find().sort({ orderedTime: -1 }).populate('deliveryAddress').exec();
+        let report = await Order.find().sort({ createdAt: -1 }).populate('deliveryAddress').exec();
         console.log(report, 'it is reoprt');
 
-        res.render('salesReport',{report});
+        res.render('salesReport', { report });
     } catch (error) {
-        console.log('error getting sales report',error);
+        console.log('error getting sales report', error);
     }
 }
 
@@ -191,50 +191,77 @@ let searchWithDate = async (req, res) => {
     try {
 
         console.log('serchwithDate');
-        let { searcheDate } = req.body
+        let { searchDate } = req.body
+        // console.log('sse',req.body.searchDate)
 
-        let searchedDate = new Date(searcheDate)
+        let searchedDate = new Date(searchDate)
 
-        let report = await Order.find({ orderedTime: { $gt: searchedDate } }).sort({ orderedTime: -1 })
+        let startOfDay = new Date(searchedDate.setHours(0, 0, 0, 0));
+        let endOfDay = new Date(searchedDate.setHours(23, 59, 59, 999));
 
-        res.render('salesReport',{report});
+        // console.log('Searched date rangedateeeeee:', startOfDay, endOfDay);
 
-        
+        let report = await Order.find({
+            createdAt: {
+                $gte: startOfDay,
+                $lte: endOfDay
+            }
+        }).sort({ createdAt: -1 }).populate('deliveryAddress').exec();
+        ;
+
+        // console.log('Report found:', report);
+
+        res.render('salesReport', { report });
+
+
     } catch (error) {
 
         console.log('error rendering searchWithDate', error)
     }
 }
 
-const sortReport = async (req,res)=>{
+const sortReport = async (req, res) => {
     try {
-        let {sort} = req.query;
+        let { sort } = req.query;
 
-        if( sort == 'Day' ){
-            let today = new Date().toDateString();
-            console.log('its today',today);
-
-            let report = await Order.find({createdAt:{$eq:today}});
-            res.render('salesReport',{report});
-        }else if( sort == 'Month' ){
+        if (sort == 'Day') {
             let today = new Date();
-            let startOfMonth = new Date(today.getFullYear(),today.getMonth(),1);
-            console.log('strtof Month',startOfMonth);
 
-            let report = await Order.find({createdAt :{$gte:startOfMonth}}).sort({createdAt:-1});
-            console.log('its reportnmonth',report);
-            res.render('salesReport',{report});
+            let startOfDay = new Date(today.setHours(0, 0, 0, 0));
+            let endOfDay = new Date(today.setHours(23, 59, 59, 999));
 
-        }else if( sort == 'Year' ){
+            console.log('Start of day:', startOfDay);
+            console.log('End of day:', endOfDay);
+
+            let report = await Order.find({
+                createdAt: {
+                    $gte: startOfDay,
+                    $lte: endOfDay
+                }
+            }).sort({ createdAt: -1 }).populate('deliveryAddress').exec();;
+            
+
+            res.render('salesReport', { report });
+
+        } else if (sort == 'Month') {
             let today = new Date();
-            let startOfYear = new Date(today.getFullYear(),0,1);
+            let startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            console.log('strtof Month', startOfMonth);
 
-            let report = await Order.find({createdAt :{$gte:startOfYear}}).sort({createdAt:-1});
-            console.log('year report',report);
-            res.render('salesReport',{report});
+            let report = await Order.find({ createdAt: { $gte: startOfMonth } }).sort({ createdAt: -1 }).populate('deliveryAddress').exec();
+            console.log('its reportnmonth', report);
+            res.render('salesReport', { report });
+
+        } else if (sort == 'Year') {
+            let today = new Date();
+            let startOfYear = new Date(today.getFullYear(), 0, 1);
+
+            let report = await Order.find({ createdAt: { $gte: startOfYear } }).sort({ createdAt: -1 }).populate('deliveryAddress').exec();
+            console.log('year report', report);
+            res.render('salesReport', { report });
         }
     } catch (error) {
-        console.log('sorting error',error);
+        console.log('sorting error', error);
     }
 }
 
