@@ -28,6 +28,11 @@ const orderSchema = new mongoose.Schema(
         type: Array,
         required: true,
     },
+    paymentStatus:{
+        type:String,
+        required:true,
+        default:'success'
+    },
 },
 {
     timestamps: true,

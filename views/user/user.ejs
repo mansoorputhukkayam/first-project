@@ -141,103 +141,119 @@
                             <h5 class="mb-0">Order #<%= order.orderId %>
                             </h5>
                           </div>
-                          <div class="card-body">
-                            <div class="row">
-                              <div class="col-md-6">
-                                <h6>Order Details</h6>
-                                <ul class="list-unstyled">
-                                  <li><strong>Order Date: </strong>
-                                    <%= order.createdAt.toLocaleDateString() %>
-                                  </li>
-                                  <li><strong>Total Amount:</strong> $<%= order.orderAmount %>
-                                  </li>
-                                  <li><strong>Order Status:</strong>
-                                    <%= order.status %>
-                                  </li>
-                                </ul>
-                              </div>
-                              <div class="col-md-6">
-                                <h6>Shipping Address</h6>
-                                <% if(!order.deliveryAddress){ %>
-                                  <p>Add addres</p>
-                                  <% }else{ %>
-                                    <p>
-                                      <%= order.deliveryAddress.name %><br>
-                                        <%= order.deliveryAddress.address %><br>
-                                          <%= order.deliveryAddress.locality %>, <%= order.deliveryAddress.post %>, <%=
-                                                order.deliveryAddress.pincode %>
-                                    </p>
-                                    <% } %>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-12">
-                                <h6>Order Items</h6>
-                                <table class="table table-bordered">
-                                  <thead>
-                                    <tr>
-                                      <th>Image</th>
-                                      <th>Product</th>
-                                      <th>Price</th>
-                                      <th>Quantity</th>
-                                      <th>Total</th>
-                                      <th>Action</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <% order.orderedItems.forEach((item)=> { %>
-                                      <tr>
-                                        <td>
-                                          <div class="text-center">
-                                            <img style="width: 60px;height: 60px;"
-                                              src="/public/productImages/<%= item.image %>" alt="nothing to show ">
-                                          </div>
-                                        </td>
-                                        <td>
-                                          <%= item.productName %>
-                                        </td>
-                                        <td>
-                                          <%= item.price %>
-                                        </td>
-                                        <td>
-                                          <%= item.quantity %>
-                                        </td>
-                                        <td>$<%= item.total %>
-                                        </td>
 
-                                        <% if(item.status==='Cancelled' ){ %>
-                                          <td class="text-danger">
-                                            <%= item.status %>
-                                              <br>
 
-                                              <% }else if(item.status == 'Returned'){ %>
-                                                <td class="text-info">
-                                                  <%= item.status %>
-                                                  <br>
-                                                  
-                                              <%}else if( item.status=='Delivered' ) { %>
-                                          <td class="text-info">
-                                            <%= item.status %>
-                                              <br>
-                                              <button class="btn btn-sm btn-success"
-                                                onclick="returnclick('<%= item._id %>','<%= item.productId %>','<%= order._id %>')">Return</button>
-                                              <% } else { %>
-                                          <td class="text-success">
-                                            <%= item.status %>
-                                              <br>
-                                              <button class="btn btn-sm btn-danger"
-                                                onclick="btnclick('<%= item._id %>','<%= item.quantity %>','<%= item.productId %>','<%= order.orderId %>')">Cancel</button>
-                                          </td>
-                                          <% } %>
-                                      </tr>
-                                      <% }) %>
-                                  </tbody>
-                                </table>
-                              </div>
+
+                          <% if(order.paymentStatus==='Failed' && order.orderAmount> 0){ %>
+                            <div style="margin-left: auto;margin-right: 20px;margin-top: 20px;">
+                              <button class="btn btn-primary " onclick="payAgain('<%=order._id%>')">pay
+                                now</button><br>
                             </div>
-                          </div>
-                          <% }) %>
+
                             <% } %>
+
+
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <h6>Order Details</h6>
+                                    <ul class="list-unstyled">
+                                      <li><strong>Order Date: </strong>
+                                        <%= order.createdAt.toLocaleDateString() %>
+                                      </li>
+                                      <li><strong>Total Amount:</strong> $<%= order.orderAmount %>
+                                      </li>
+                                      <li><strong>Order Status:</strong>
+                                        <%= order.status %>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <h6>Shipping Address</h6>
+                                    <% if(!order.deliveryAddress){ %>
+                                      <p>Add addres</p>
+                                      <% }else{ %>
+                                        <p>
+                                          <%= order.deliveryAddress.name %><br>
+                                            <%= order.deliveryAddress.address %><br>
+                                              <%= order.deliveryAddress.locality %>, <%= order.deliveryAddress.post %>,
+                                                  <%= order.deliveryAddress.pincode %>
+                                        </p>
+                                        <% } %>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-12">
+                                    <h6>Order Items</h6>
+                                    <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th>Image</th>
+                                          <th>Product</th>
+                                          <th>Price</th>
+                                          <th>Quantity</th>
+                                          <th>Total</th>
+                                          <th>Action</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <% order.orderedItems.forEach((item)=> { %>
+                                          <tr>
+                                            <td>
+                                              <div class="text-center">
+                                                <img style="width: 60px;height: 60px;"
+                                                  src="/public/productImages/<%= item.image %>" alt="nothing to show ">
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <%= item.productName %>
+                                            </td>
+                                            <td>
+                                              <%= item.price %>
+                                            </td>
+                                            <td>
+                                              <%= item.quantity %>
+                                            </td>
+                                            <td>$<%= item.total %>
+                                            </td>
+
+                                            <% if(item.status==='Cancelled' ){ %>
+                                              <td class="text-danger">
+                                                <%= item.status %>
+                                                  <br>
+
+                                                  <% }else if(item.status=='Returned' ){ %>
+                                              <td class="text-info">
+                                                <%= item.status %>
+                                                  <br>
+
+                                                  <%}else if( item.status=='Delivered' ) { %>
+                                              <td class="text-info">
+                                                <%= item.status %>
+                                                  <br>
+                                                  <button class="btn btn-sm btn-success"
+                                                    onclick="returnclick('<%= item._id %>','<%= item.productId %>','<%= order._id %>')">Return</button>
+                                                    <a href="/downloadInvoice/?id=<%=order._id%>"
+                                                      class="btn btn-success btn-sm" id="invoice">
+                                                      Invoice
+                                                  </a>
+                                                  <% } else { %>
+                                              <td class="text-success">
+                                                <%= item.status %>
+                                                  <br>
+                                                  <button class="btn btn-sm btn-danger"
+                                                    onclick="btnclick('<%= item._id %>','<%= item.quantity %>','<%= item.productId %>','<%= order.orderId %>')">Cancel</button>
+                                              </td>
+                                              <% } %>
+                                          </tr>
+                                          <% }) %>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                              <% }) %>
+                                <% } %>
                   </div>
                 </div>
               </div>
@@ -253,7 +269,7 @@
                 <div class="col-md-4 mb-4">
                   <div class="wallet-card">
                     <h3 class="mb-3">Balance</h3>
-                    <% if(wallet && wallet.balance !== null && wallet.balance !== undefined ) { %>
+                    <% if(wallet && wallet.balance !==null && wallet.balance !==undefined ) { %>
 
                       <h2 class="mb-4">₹ <%= wallet.balance %>
                       </h2>
@@ -280,22 +296,22 @@
                         </tr>
                       </thead>
                       <% if(wallet){ %>
-                      <% wallet.history.forEach((data)=>{ %>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <%= data.Date %>
-                          </td>
-                          <td>
-                            <%= data.Description %>
-                          </td>
-                          <td>
-                            <%= data.Amount %>
-                          </td>
-                        </tr>
-                      </tbody>
-                      <% }) %>
-                      <% } %>
+                        <% wallet.history.forEach((data)=>{ %>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <%= data.Date %>
+                              </td>
+                              <td>
+                                <%= data.Description %>
+                              </td>
+                              <td>
+                                <%= data.Amount %>
+                              </td>
+                            </tr>
+                          </tbody>
+                          <% }) %>
+                            <% } %>
                     </table>
 
 
@@ -702,6 +718,83 @@
     </div>
   </footer>
   <!-- End Footer Section -->
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script>
+
+    function payAgain(orderId) {
+
+      axios.get(`/paytheAmount?id=${orderId}`)
+        .then((response) => {
+          if (response.data.payAgain) {
+            razorpayPayment(response.data.order);
+
+          }
+        })
+    }
+
+    function razorpayPayment(order) {
+
+      console.log('pay again: order:', order);
+
+      var options = {
+        "key": "rzp_test_4AB1dm0KvAE5MR", // Enter the Key ID generated from the Dashboard
+        "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Furni", //your business name
+        "description": "Quality is our value",
+        "image": "https://themewagon.github.io/furni/images/sofa.png",
+        "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": function (response) {
+          alert('payment Success')
+
+          const data = {
+            response,
+            order,
+          };
+          axios.post('/verifyPayment', data)
+            .then(response => {
+              console.log('verifyPayment success')
+              // console.log('orderId',orderId);
+              if (response.data.Success) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success',
+                  text: 'Order placed successfully',
+                }).then(() => {
+                  window.location.href = '/user';
+                });
+              }
+            }).catch(error => {
+              console.log('verification error:', error);
+            })
+
+        },
+        "prefill": {
+          "name": "Muhammad Mansoor",
+          "email": "mansoorputhukkayam@gmail.com",
+          "contact": "7907822914"
+        },
+        "notes": {
+          "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+          "color": "#3b5d50"
+        }
+      };
+
+      var rzp1 = new Razorpay(options);
+      rzp1.on('payment.failed', function (response) {
+        alert('payment failed');
+        window.location.href = `/failed?id=${order.receipt}`
+      });
+
+      rzp1.open();
+
+    }
+  </script>
 
   <script>
     function btnclick(productId, orderQuantity, prdctId, orderId) {

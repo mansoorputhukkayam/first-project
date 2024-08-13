@@ -41,6 +41,9 @@ userRouter.get('/nameDescending',isLogin,isBlocked,productController.nameDescend
 
 userRouter.get('/user',isLogin,isBlocked,userController.loadProfile);
 
+userRouter.get('/downloadInvoice',userController.downloadInvoice);
+userRouter.get('/paytheAmount',orderController.payAgain);
+
 // coupon controllers 
 userRouter.post('/applyCoupon',couponController.applyCoupon);
 userRouter.post('/removeCoupon',couponController.removeCoupon);
@@ -56,6 +59,7 @@ userRouter.get('/quantityIncrease/:id',isLogin,isBlocked,cartControllers.quantit
 userRouter.get('/quantityDecrease/:id',isLogin,isBlocked,cartControllers.quantityDecrease);
 userRouter.get('/updateCart',isLogin,isBlocked,cartControllers.updateCart);
 userRouter.get('/thankyou',isLogin,isBlocked,orderController.thankyou);
+userRouter.get('/failed',orderController.failed);
 userRouter.get('/returnclick',userController.returnProducts);
 userRouter.get('/userbtn',isLogin,isBlocked,userController.cancelProducts);
 

@@ -85,7 +85,7 @@ const placeOrder = async (req, res) => {
                 if (err) {
                     console.log('error:', err);
                 }
-                console.log('new order:', order);
+                // console.log('new order:', order);
                 res.status(200).json({ onlineSuccess: true, order })
             })
 
@@ -110,9 +110,9 @@ const verifyPayment = async (req, res) => {
         // console.log('verifypayment')
         const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body.response;
 
-        console.log('razorpay-payementid', razorpay_payment_id);
-        console.log('razorpay-orderid', razorpay_order_id);
-        console.log('razorpay-signatiorue', razorpay_signature);
+        // console.log('razorpay-payementid', razorpay_payment_id);
+        // console.log('razorpay-orderid', razorpay_order_id);
+        // console.log('razorpay-signatiorue', razorpay_signature);
 
 
         const hmac = crypto.createHmac('sha256', '8EUhYfAmGN3B5Grn0fGrnUGa');
@@ -120,84 +120,60 @@ const verifyPayment = async (req, res) => {
         const generated_signature = hmac.digest('hex');
 
         if (generated_signature === razorpay_signature) {
-            if (req.body.orderId) {  //for retry
 
-                let updateRetry = await Order.updateOne({
-                    _id: req.body.orderId,
-                    'orderedProducts._id': req.body.productId
-                }, {
-                    $set:
-                    {
-                        purchasedDate: new Date().toDateString(),
-                        orderStatus: 'Placed',
-                        orderedTime: new Date(),
-                        'orderedProducts.$.status': 'Placed'
+            console.log("Order placed successfully");
 
+            const orderId = order.receipt;
+            console.log('ordeeeerId', orderId);
+            // const { addressId, paymentMethod, formData } = req.body.orderData
 
-                    }
+            const orderData = await Order.findOne({ _id: order.receipt }, {});
+
+            // console.log('orderData', orderData);
+
+            for (const item of orderData.orderedItems) {
+                await Order.findOneAndUpdate({ _id: order.receipt, 'orderedItems.productId': item.productId }, { $set: { 'orderedItems.$.status': 'Placed', paymentStatus: 'success' } });
+                await Product.updateOne({ _id: item.productId }, {
+                    $inc: { quantity: -item.quantity, salesCount: +1 }
                 })
-                //Aftet placing order , delete cart document
-                await Cart.deleteOne({ userId: req.session.user_id })
-                console.log('quanitry decreased')
-
-                res.json({ retry: true })
-
-
-            } else {
-                console.log("Order placed successfully");
-
-                const orderId = order.receipt;
-                console.log('ordeeeerId', orderId);
-                // const { addressId, paymentMethod, formData } = req.body.orderData
-
-                const orderData = await Order.findOne({ _id: order.receipt }, {});
-
-                console.log('orderData', orderData);
-
-                for (const item of orderData.orderedItems) {
-                    await Order.findOneAndUpdate({ _id: order.receipt, 'orderedItems.productId': item.productId }, { $set: { 'orderedItems.$.status': 'Placed' } });
-                    await Product.updateOne({ _id: item.productId }, {
-                        $inc: { quantity: -item.quantity }
-                    })
-                }
-
-                // const userCart = await Cart.findOne({ userId: user_id }).populate('productId');
-                // console.log('ussssrrcart', userCart);
-                // let subTotal = userCart.Products.reduce((total, current) => total + current.productId.offerPrice * current.quantity, 0)
-
-
-                // let productItems = userCart.Product.map((product) => ({
-                //     productId: product.productId,
-                //     quantity: product.quantity,
-                //     price: product.productId.offerPrice,
-                //     totalPrice: product.productId.price * product.quantity,
-                //     status: 'Placed'
-
-                // }))
-
-
-                // let storeOrder = new Order({
-                //     userId: user_id,
-                //     userName: newAddress.firstName,
-                //     shipAddress: [{ name: newAddress.firstName, country: newAddress.country, state: newAddress.state, city: newAddress.town, streetName: newAddress.streetName, pinCode: newAddress.postCode, phone: newAddress.phone, email: newAddress.email }],
-                //     orderedProducts: productItems,
-                //     purchasedDate: new Date().toDateString(),
-                //     paymentMethod: paymentMethod,
-                //     subTotal: subTotal,
-                //     orderedTime: new Date(),
-                //     orderStatus: 'Placed',
-                //     shippingCharge: 50
-
-
-                // })
-
-                // let resultofOrder = await storeOrder.save()
-                // const orderId = resultofOrder._id
-                // console.log(resultofOrder, 'it is form formdata')
-                // orderPlaced(orderId)
-
-
             }
+
+            // const userCart = await Cart.findOne({ userId: user_id }).populate('productId');
+            // console.log('ussssrrcart', userCart);
+            // let subTotal = userCart.Products.reduce((total, current) => total + current.productId.offerPrice * current.quantity, 0)
+
+
+            // let productItems = userCart.Product.map((product) => ({
+            //     productId: product.productId,
+            //     quantity: product.quantity,
+            //     price: product.productId.offerPrice,
+            //     totalPrice: product.productId.price * product.quantity,
+            //     status: 'Placed'
+
+            // }))
+
+
+            // let storeOrder = new Order({
+            //     userId: user_id,
+            //     userName: newAddress.firstName,
+            //     shipAddress: [{ name: newAddress.firstName, country: newAddress.country, state: newAddress.state, city: newAddress.town, streetName: newAddress.streetName, pinCode: newAddress.postCode, phone: newAddress.phone, email: newAddress.email }],
+            //     orderedProducts: productItems,
+            //     purchasedDate: new Date().toDateString(),
+            //     paymentMethod: paymentMethod,
+            //     subTotal: subTotal,
+            //     orderedTime: new Date(),
+            //     orderStatus: 'Placed',
+            //     shippingCharge: 50
+
+
+            // })
+
+            // let resultofOrder = await storeOrder.save()
+            // const orderId = resultofOrder._id
+            // console.log(resultofOrder, 'it is form formdata')
+            // orderPlaced(orderId)
+
+
             // async function orderPlaced(orderId) {
 
             // for (const item of productItems) {
@@ -214,8 +190,6 @@ const verifyPayment = async (req, res) => {
             res.status(200).json({ Success: true })
 
 
-        } else {
-            console.log("Signature verification failed");
         }
 
 
@@ -252,10 +226,54 @@ const thankyou = async (req, res) => {
     }
 }
 
+const failed = async (req, res) => {
+    try {
+        const userId = req.session.user_id;
+        const orderId = req.query.id;
+        console.log('ooooo', orderId);
+        const orderData = await Order.findOneAndUpdate({ _id: orderId }, { $set: { paymentStatus: 'Failed' } });
+        // console.log('orderData',orderData); 
+        res.render('failed', { orderId });
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const payAgain = async (req, res) => {
+    try {
+        console.log('inside payagain');
+        const orderId = req.query.id;
+        console.log('oo', orderId);
+        const orderData = await Order.findOne({ _id: orderId });
+        console.log('ord', orderData);
+
+        const options = {
+            amount: orderData.orderAmount * 100,
+            currency: "INR",
+            receipt: orderId
+        };
+
+        instance.orders.create(options, (err, order) => {
+            if (err) {
+                console.log("error:", err);
+            }
+            console.log("new Order:", order);
+            res.json({ payAgain: true, order });
+
+        });
+
+    } catch (error) {
+        console.log('error paying money:', error);
+    }
+}
+
 module.exports = {
     loadCheckout,
     placeOrder,
     verifyPayment,
     thankyou,
+    failed,
+    payAgain,
 
 }

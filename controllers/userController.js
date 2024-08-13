@@ -210,6 +210,9 @@ const loadHome = async (req, res) => {
 const loadProfile = async (req, res) => {
     try {
         const userId = req.session.user_id;
+
+        // console.log('orderfailedcontroller',orderDetails)
+
         const userProfile = await User.findById(userId);
         // console.log('userProfile', userProfile);
         const viewAddress = await Address.find({ userId });
@@ -217,12 +220,12 @@ const loadProfile = async (req, res) => {
         const walletData = await Wallet.findOne({ userId });
         walletData.history.sort((a, b) => new Date(b.time) - new Date(a.time));
         // console.log(walletData, 'walletData from userprofule');
-        res.render('user', { userProfile: userProfile, viewAddress, orderData, wallet: walletData });
+        res.render('user', { userProfile: userProfile, viewAddress, orderData, wallet: walletData});
     } catch (error) {
         console.log(error.message);
         res.redirect('/login');
     }
-}
+}                   
 
 const updateProfile = async (req, res) => {
     try {
@@ -544,7 +547,7 @@ const cancelProducts = async (req, res) => {
                 { userId: userId },
                 {
                     $inc: { balance: product.price },
-                    $push: {   
+                    $push: {
                         history: {
                             Date: new Date().toDateString(),
                             Description: `${product.name} is Cancelled`,
@@ -577,10 +580,10 @@ const cancelProducts = async (req, res) => {
     }
 }
 
- const returnProducts = async (req, res) => {
+const returnProducts = async (req, res) => {
     try {
 
-        let { productId, prdctId, orderId,reason } = req.query
+        let { productId, prdctId, orderId, reason } = req.query
         console.log(productId, prdctId, orderId, reason, 'it is reason');
         const product = await Product.findOne({ _id: prdctId });
         const userId = req.session.user_id;
@@ -624,6 +627,24 @@ const cancelProducts = async (req, res) => {
     }
 }
 
+const downloadInvoice = async (req, res) => {
+    try {
+        console.log('invioince');
+        const orderId = req.query.id;
+        console.log(orderId,'orderId')
+        const orderData = await Order.find({ _id: orderId }).populate({
+            path: 'orderedItems.productId',
+            model: 'Product'
+        }).populate({
+            path:'deliveryAddress',
+            model:'Address'
+        })
+
+        res.render('invoice',{orderData});
+    } catch (error) {
+        console.log('error downloading invoice:', error);
+    }
+}
 
 module.exports = {
     loginLoad,
@@ -650,5 +671,6 @@ module.exports = {
     loadSearch,
     // loadOrderedProducts,
     cancelProducts,
-    returnProducts
+    returnProducts,
+    downloadInvoice
 }
