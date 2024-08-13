@@ -214,8 +214,7 @@
                                 <input type="number" id="criteria" name="criteria" class="form-control" required>
                             </div>
 
-                            <button type="submit"
-                                class="btn btn-lg btn-primary btn-block">Save
+                            <button type="submit" class="btn btn-lg btn-primary btn-block">Save
                             </button>
                         </form>
                     </div>
@@ -284,39 +283,38 @@
             }
         });
 
-        document.addEventListener('DOMContentLoaded',()=>{
+        document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('addCouponForm');
-            
-                form.addEventListener('submit',function (event){
-                    event.preventDefault();
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
 
                 const formData = new FormData(this);
 
                 const data = {};
-                formData.forEach((value,key) =>{
+                formData.forEach((value, key) => {
                     data[key] = value;
                 });
 
-                axios.post('/admin/coupon',data)
-                .then(response =>{
-                    console.log('coupon add',response.data);
-                    if(response.data.exist){
-                        Swal.fire({
-                            title:'CouponCode already Existng...',
-                            timer:2000,
-                        })
-                    }
-                    else(response.data.couponSuccess){
-                        Swal.fire({
-                            title:'Coupon addess succesfully...',
-                            timer:2000
-                        }).then(()=>{
-                            window.location.href = '/admin/viewCoupon';
-                        });
-                    }
-                }).catch(error=>{
-                    console.log('this is addcoupnn error',error);
-                });
+                axios.post('/admin/coupon', data)
+                    .then(response => {
+                        console.log('coupon add', response.data);
+                        if (response.data.exist) {
+                            Swal.fire({
+                                title: 'CouponCode already Existng...',
+                                timer: 2000,
+                            });
+                        } else if (response.data.couponSuccess) {
+                            Swal.fire({
+                                title: 'Coupon added succesfully...',
+                                timer: 2000
+                            }).then(() => {
+                                window.location.href = '/admin/viewCoupon';
+                            });
+                        }
+                    }).catch(error => {
+                        console.log('this is addcoupnn error', error);
+                    });
             });
         });
 

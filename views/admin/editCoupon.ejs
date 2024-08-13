@@ -186,39 +186,39 @@
                         </div>
 
                         <form id="editCouponForm">
-                            <% couponData.forEach((coupon)=>{ %>
+                            
                                 <div class="form-group">
                                     <label for="couponName">Coupon Name</label>
                                     <input type="text" id="name" name="couponName" class="form-control"
-                                        value="<%= coupon.couponName %>" required minlength="7">
+                                        value="<%= couponData.couponName %>" required minlength="7">
                                 </div>
                                 <div class="form-group">
                                     <label for="couponCode">Coupon Code</label>
-                                    <input type="text" id="price" name="couponCode" value="<%= coupon.couponCode %>"
+                                    <input type="text" id="price" name="couponCode" value="<%= couponData.couponCode %>"
                                         class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="couponDiscountAmount">Discount in ( % )</label>
                                     <input type="number" id="discount" name="discount"
-                                        value="<%= coupon.discountAmount %>" class="form-control" required>
+                                        value="<%= couponData.discountAmount %>" class="form-control" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="quantity">Expiry Date</label>
                                     <input type="date" id="expiryDate" name="expiryDate"
-                                        value="<%= coupon.expiryDate.toISOString().split('T')[0] %>"
+                                        value="<%= couponData.expiryDate.toISOString().split('T')[0] %>"
                                         class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="criteria">Minimum Purchase Amount</label>
-                                    <input id="criteria" name="criteria" value="<%= coupon.criteriaAmount %>"
+                                    <input id="criteria" name="criteria" value="<%= couponData.criteriaAmount %>"
                                         class="form-control" required>
-                                    <input type="hidden" name="id" value="<%= coupon._id %>">
+                                    <input type="hidden" name="id" value="<%= couponData._id %>">
                                 </div>
 
                                 <button type="submit" class="btn btn-lg btn-primary btn-block">Update
                                 </button>
-                                <% }) %>
+
                         </form>
                     </div>
 
