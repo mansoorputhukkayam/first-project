@@ -57,8 +57,11 @@ adminRouter.post('/updateCoupon',couponController.updateCoupon);
 adminRouter.get('/viewOffer',auth.isLogin,offerController.viewOffer);
 adminRouter.get('/getAddOffer',auth.isLogin,offerController.getAddOffer);
 adminRouter.post('/addOffer',offerController.addOffer);
-adminRouter.get('/editOffer/:id',auth.isLogin,offerController.editOffer);
-adminRouter.post('/updateOffer',offerController.updateOffer);
+adminRouter.patch('/removeOffer',offerController.removeOffer);
+adminRouter.patch('/reactivateOffer',offerController.reactivateOffer);
+
+// adminRouter.get('/editOffer/:id',auth.isLogin,offerController.editOffer);
+// adminRouter.post('/updateOffer',offerController.updateOffer);
 adminRouter.get('/deleteOffer/:id',auth.isLogin,offerController.deleteOffer);
 
 adminRouter.post('/productStatus',auth.isLogin,adminController.changeOrderStatus);

@@ -25,6 +25,8 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
+
 	<title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
 </head>
 
@@ -231,10 +233,18 @@
 
 									<div class="border p-3 mb-3">
 										<h3 class="h6 mb-0">
-											<input type="radio" name="paymentMethod" id="paymentCOD" value="COD"
-												data-bs-toggle="collapse" href="#collapsebank" role="button"
-												aria-expanded="false" aria-controls="collapsebank">
-											<label for="paymentCOD" class="d-block">Cash On Delivery</label>
+
+											<% if(userCartTotal> 1000){ %>
+												<small class="text-danger">Cash on Delivery is not available for this
+													order</small><br>
+												<% }else{ %>
+													<input type="radio" name="paymentMethod" id="paymentCOD" value="COD"
+														data-bs-toggle="collapse" href="#COD" role="button"
+														aria-expanded="false" aria-controls="collapsebank">
+													<label for="paymentCOD" class="d-block">Cash On Delivery</label>
+													<% } %>
+														<small class="text-danger" id="CODError"></small>
+
 										</h3>
 									</div>
 
@@ -247,10 +257,10 @@
 									</div>
 
 									<div class="border p-3 mb-5">
-										<h3 class="h6 mb-0"> <input type="radio" name="paymentMethod" id="wallet"
-												value="wallet" data-bs-toggle="collapse" href="#collapsepaypal"
-												role="button" aria-expanded="false" aria-controls="collapsepaypal">
-											<label for="wallet" class="d-block">Wallet</label>
+										<h3 class="h6 mb-0"> <input type="radio" name="paymentMethod" id="Wallet"
+												value="Wallet" data-bs-toggle="collapse" href="#Wallet" role="button"
+												aria-expanded="false" aria-controls="collapsepaypal">
+											<label for="Wallet" class="d-block">Wallet</label>
 										</h3>
 
 									</div>
@@ -465,6 +475,20 @@
 							} else if (response.data.onlineSuccess) {
 								console.log('else if orderdata', response.data.order)
 								razorpayPayment(response.data.order)
+							} else if (response.data.Balance) {
+								Swal.fire({
+									icon: 'error',
+									text: 'Insufficient Balance',
+									timer: 1500
+								})
+							} else if (response.data.walletSuccess) {
+								Swal.fire({
+									icon: 'success',
+									text: 'Order placed Successfully...',
+									timer: 1500
+								}).then(() => {
+									window.location.href = '/thankyou';
+								});
 							}
 						})
 						.catch(error => {
@@ -536,6 +560,8 @@
 	<script src="/public/js/bootstrap.bundle.min.js"></script>
 	<script src="/public/js/tiny-slider.js"></script>
 	<script src="/public/js/custom.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 
 </body>
 

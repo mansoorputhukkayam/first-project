@@ -51,6 +51,7 @@ const insertProduct = async (req, res) => {
         const product = new Product({
             name: req.body.name,
             price: req.body.price,
+            orgPrice:req.body.price,
             image: imagePaths, // Store the paths to the uploaded images
             categoryId: req.body.category, // Ensure this is an ObjectId or handle accordingly
             quantity: req.body.quantity,

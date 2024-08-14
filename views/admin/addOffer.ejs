@@ -186,36 +186,58 @@
 
                         <div id="alertContainer" style="display: none;"
                             class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Success!</strong> Coupon has been added successfully.
+                            <strong>Success!</strong> Offer has been added successfully.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
                         <form id="addOfferForm">
                             <div class="form-group">
                                 <label for="offerName">Offer Name</label>
-                                <input type="text" id="name" name="offerName" class="form-control" required
-                                    minlength="7">
+                                <input type="text" id="name" name="name" class="form-control" required minlength="7">
                             </div>
                             <div class="form-group">
                                 <label for="offerType">Offer Type</label>
                                 <select class="form-select" name="offerType" id="offerType" required>
-                                    <option value="Products">Products</option>
-                                    <option value="Categories">Categories</option>
+                                    <option value="product">Products</option>
+                                    <option value="category">Categories</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="discountPercentage">Discount in ( % )</label>
-                                <input type="number" id="discountPercentage" name="discountPercentage" class="form-control" required>
+
+                            <div class="form-group" id="productDiv">
+                                <label for="product">Products</label>
+                                <select class="form-control" name="product" id="selectedProduct">
+                                    <% products.forEach((product)=>{ %>
+                                        <option value="<%= product._id %>">
+                                            <%= product.name %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+
+                            <div class="form-group" id="categoryDiv">
+                                <label for="category">Category</label>
+                                <select class="form-control" name="category" id="selectedCategory">
+                                    <% categories.forEach((category)=>{ %>
+                                        <option value="<%= category._id %>">
+                                            <%= category.categoryName %>
+                                        </option>
+                                        <% }) %>
+                                </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="quantity">Expiry Date</label>
+                                <label for="discountPercentage">Discount in ( % )</label>
+                                <input type="number" id="discountPercentage" name="discountPercentage"
+                                    class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="expiryDate">Expiry Date</label>
                                 <input type="date" id="expiryDate" name="expiryDate" class="form-control" required>
                             </div>
                             <br>
 
-                            <button type="submit"
-                                class="btn btn-lg btn-primary btn-block">Save
+                            <button type="submit" class="btn btn-lg btn-primary btn-block">Save
                             </button>
                         </form>
                     </div>
@@ -284,33 +306,51 @@
             }
         });
 
-        document.addEventListener('DOMContentLoaded',()=>{
+        document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('addOfferForm');
-            
-                form.addEventListener('submit',function (event){
-                    event.preventDefault();
+
+            const offerTypeSelect = document.getElementById('offerType');
+            const productDiv = document.getElementById('productDiv');
+            const categoryDiv = document.getElementById('categoryDiv');
+
+            function showHideDivs() {
+                if (offerTypeSelect.value === "product") {
+                    productDiv.style.display = "block";
+                    categoryDiv.style.display = "none";
+                } else if (offerTypeSelect.value === "category") {
+                    productDiv.style.display = "none";
+                    categoryDiv.style.display = "block";
+                }
+            }
+            showHideDivs();
+            offerTypeSelect.addEventListener("change", showHideDivs);
+
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
 
                 const formData = new FormData(this);
 
                 const data = {};
-                formData.forEach((value,key) =>{
+                formData.forEach((value, key) => {
                     data[key] = value;
                 });
 
-                axios.post('/admin/addOffer',data)
-                .then(response =>{
-                    console.log('Offer add',response.data);
-                    if(response.data.offerSuccess){
-                        Swal.fire({
-                            title:'Offer added succesfully...',
-                            timer:2000
-                        }).then(()=>{
-                            window.location.href = '/admin/viewOffer';
-                        });
-                    }
-                }).catch(error=>{
-                    console.log('this is addcoupnn error',error);
-                });
+
+                axios.post('/admin/addOffer', data)
+                    .then(response => {
+                        console.log('Offer add', response.data);
+                        if (response.data.offerSuccess) {
+                            Swal.fire({
+                                title: 'Offer added succesfully...',
+                                timer: 2000
+                            }).then(() => {
+                                window.location.href = '/admin/viewOffer';
+                            });
+                        }
+                    }).catch(error => {
+                        console.log('this is addcoupnn error', error);
+                    });
             });
         });
 

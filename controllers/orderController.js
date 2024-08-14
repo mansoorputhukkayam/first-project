@@ -6,6 +6,7 @@ const Product = require('../models/productModel');
 const Order = require('../models/orderModel');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const Wallet = require('../models/walletModel');
 
 let instance = new Razorpay({
     key_id: 'rzp_test_4AB1dm0KvAE5MR',
@@ -20,9 +21,13 @@ const loadCheckout = async (req, res) => {
         // console.log('usercardDAta',userCartData)
         const addressData = await Address.find({ userId });
         // console.log('addressData', addressData)
+
+        const wallet = await Wallet.findOne({ userId: userId });
+        // console.log('wallet DAta',wallet);
+        console.log('walletBAlance', wallet.balance);
         const userCartTotal = userCartData.reduce((total, cart) => total + cart.total, 0);
         console.log('usercartTotal', userCartTotal)
-        res.render('checkout', { userCartData: userCartData, userCartTotal, addressData });
+        res.render('checkout', { userCartData: userCartData, userCartTotal, addressData, wallet });
     } catch (error) {
         console.log(error.message)
     }
@@ -67,9 +72,20 @@ const placeOrder = async (req, res) => {
         const orderDetails = await orderData.save();
         // console.log(orderDetails, 'orderDetails');
         const orderid = orderDetails._id;
-        console.log('orderid', orderid);
+        // console.log('orderid', orderid);
+        const order = await Order.find({_id:orderid});
 
         if (orderStatus == 'Placed') {
+
+            for (const item of orderData.orderedItems) {
+                await Order.findOneAndUpdate({ _id: orderid, 'orderedItems.productId': item.productId }, { $set: { 'orderedItems.$.status': 'Placed' } });
+                await Product.updateOne({ _id: item.productId }, {
+                    $inc: { quantity: -item.quantity, salesCount: +1 }
+                })
+            }
+
+            await Cart.deleteMany({ userId: userId })
+            console.log('deteted cartData');
 
             res.status(200).json({ codSuccess: true, orderid });
 
@@ -89,6 +105,47 @@ const placeOrder = async (req, res) => {
                 res.status(200).json({ onlineSuccess: true, order })
             })
 
+        } else if (paymentMethod === 'Wallet') {
+
+            console.log('its wallet Payment');
+
+            console.log('orderid', orderid);
+
+            const order = await Order.findOne({ _id: orderid });
+
+            const wallet = await Wallet.findOne({ userId: userId });
+
+            if (wallet.balance < order.orderAmount) {
+                res.json({ Balance: true })
+
+            } else {
+                console.log('else workd aayeee');
+
+                let walletData = await Wallet.updateOne({ userId: userId }, {
+                    $inc: { balance: -totalAmount },
+                    $push: {
+                        history: {
+                            Date: new Date().toDateString(),
+                            Description: 'Product ordered',
+                            Amount: `${totalAmount}`,
+                            time: new Date()
+                        }
+                    }
+                })
+                
+                for (const item of order.orderedItems) {
+                    await Order.findOneAndUpdate({ _id: orderid, 'orderedItems.productId': item.productId }, { $set: { 'orderedItems.$.status': 'Placed' } });
+                    await Product.updateOne({ _id: item.productId }, {
+                        $inc: { quantity: -item.quantity, salesCount: +1 }
+                    })
+                }
+
+                await Cart.deleteMany({ userId: userId })
+                console.log('deteted cartData');
+
+                res.status(200).json({ walletSuccess: true })
+
+            }
         }
 
         // res.redirect('/thankyou');
@@ -203,22 +260,15 @@ const verifyPayment = async (req, res) => {
 
 const thankyou = async (req, res) => {
     try {
-        console.log('hello');
+        console.log('hello');           
         // console.log(req.body)
         const userId = req.session.user_id;
         const lastOrder = await Order.findOne({}).sort({ _id: -1 });
-        for (let item of lastOrder.orderedItems) {
-            await Product.updateOne({ _id: item.productId }, { $inc: { quantity: -item.quantity } })
-            // console.log('item-id',item.quantity)
-        }
+       
         const productDetails = lastOrder.orderedItems;
         const productId = productDetails.map(product => product.productId);
         const prdct = await Product.find({ _id: productId }).populate('categoryId');
         // console.log(prdct,'prdcttt')
-
-        const del = await Cart.deleteMany({ userId });
-        console.log('succes...', del);
-
 
         res.render('thankyou', { lastOrder, prdct });
     } catch (error) {

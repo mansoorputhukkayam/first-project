@@ -1,62 +1,72 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.ObjectId
 const productSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true
+    name: {
+        type: String,
+        required: true
     },
-    price:{
-        type:Number,
-        min:0,
-        required:true
+    price: {
+        type: Number,
+        min: 0,
+        required: true
     },
-    image:{
-       type:[String],
-       required:true 
+    orgPrice:{
+        type:Number
     },
-    categoryId:{
-        type:ObjectId,
-        ref:'Category',
-        required:true
+    image: {
+        type: [String],
+        required: true
     },
-    quantity:{
-        type:Number,
-        min:0,
-        required:true
+    categoryId: {
+        type: ObjectId,
+        ref: 'Category',
+        required: true
     },
-    description:{
-        type:String,
-        required:true
+    quantity: {
+        type: Number,
+        min: 0,
+        required: true
     },
-    status:{
-        type:String,
-        enum:["active","blocked"],
-        default:"active"
+    description: {
+        type: String,
+        required: true
     },
-    offerPrice:{
-        type:Number,
-        required:false
+    status: {
+        type: String,
+        enum: ["active", "blocked"],
+        default: "active"
     },
-    offer:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Offers'
-    },
-    croppedImageData:{
-        type:{
-            x:{type:Number,default:0},
-            y:{type:Number,default:0},
-            width:{type:Number,default:0},
-            height:{type:Number,default:0}
+    croppedImageData: {
+        type: {
+            x: { type: Number, default: 0 },
+            y: { type: Number, default: 0 },
+            width: { type: Number, default: 0 },
+            height: { type: Number, default: 0 }
         }
     },
-    is_Unlisted:{
-        type:Boolean,
-        default:false
+    is_Unlisted: {
+        type: Boolean,
+        default: false
     },
-    salesCount:{
-        type:Number,
-        default:0
+    salesCount: {
+        type: Number,
+        default: 0
+    },
+
+    productOfferId: {
+        type: ObjectId,
+        ref: 'Offer'
+    },
+    categoryOfferId: {
+        type: ObjectId,
+        ref: 'Offer'
+    },
+    productDiscount: {
+        type: Number,
+    },
+    categoryDiscount: {
+        type: Number
     }
 });
 
-module.exports = mongoose.model('Product',productSchema);
+module.exports = mongoose.model('Product', productSchema);

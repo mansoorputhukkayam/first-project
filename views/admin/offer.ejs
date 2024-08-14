@@ -92,8 +92,8 @@
                 </li>
 
                 <li class="menu-item ">
-                    <a class="menu-link" href="/admin/getSalesReport"> <i class="icon material-icons md-receipt"></i> <span
-                            class="text">Sales Report</span> </a>
+                    <a class="menu-link" href="/admin/getSalesReport"> <i class="icon material-icons md-receipt"></i>
+                        <span class="text">Sales Report</span> </a>
                 </li>
 
                 <li class="menu-item has-submenu">
@@ -223,17 +223,17 @@
             <div class="card">
                 <div class="card-body">
                     <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Offer Name</th>
-                                <th>Discount in ( % )</th>
-                                <th>Created Date</th>
-                                <th>Offer Type</th>
-                                <th>Expiry Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
                         <% if(offer){ %>
+                            <thead>
+                                <tr>
+                                    <th>Offer Name</th>
+                                    <th>Discount in ( % )</th>
+                                    <th>Created Date</th>
+                                    <th>Offer Type</th>
+                                    <th>Expiry Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <% offer.forEach((off)=>{ %>
                                     <tr>
@@ -255,10 +255,20 @@
                                         </td>
 
                                         <td>
-                                            <a href="/admin/editOffer/<%= off._id %>" class="btn btn-sm btn-warning">Edit
-                                            </a>
-                                            <a href="#" class="btn btn-sm btn-light" onclick="confirmDelete('<%= off._id %>')">Delete
-                                            </a>
+                                            <!-- <a href="/admin/editOffer/"
+                                                class="btn btn-sm btn-warning">Edit
+                                            </a> -->
+
+                                            <% if(off.isActive){%>
+                                                <a href="#" onclick="removeOffer('<%= off._id %>')"
+                                                    class="btn btn-sm btn-outline-danger">Remove</a>
+                                                <% }else{ %>
+                                                    <a href="#" onclick="reactivateOffer('<%= off._id %>')"
+                                                        class="btn btn-sm btn-outline-success">Add</a>
+                                                    <% } %>
+                                                        <a href="#" class="btn btn-sm btn-light"
+                                                            onclick="confirmDelete('<%= off._id %>')">Delete
+                                                        </a>
                                         </td>
                                         <td>
 
@@ -266,7 +276,9 @@
                                     </tr>
                                     <% }) %>
                             </tbody>
-                            <% } %>
+                            <% }else{ %>
+                                <h4 class="text-center">No offer Created</h4>
+                                <% } %>
                     </table>
                 </div>
 
@@ -387,6 +399,34 @@
         }
     </script>
 
+    <script>
+
+        function removeOffer(offerId) {
+            axios.patch('/admin/removeOffer', { offerId })
+                .then((response) => {
+                    Swal.fire({
+                        text: 'offer removed',
+                        timer: 1500
+                    }).then(() => {
+                        window.location.reload();
+                    })
+                })
+        }
+
+        function reactivateOffer(offerId) {
+            axios.patch('/admin/reactivateOffer', { offerId })
+                .then((response) => {
+                    if (response.data.updated) {
+                        Swal.fire({
+                            text: 'offer activated',
+                            timer: 1500
+                        }).then(() => {
+                            window.location.reload();
+                        })
+                    }
+                })
+        }
+    </script>
 
     <script src="/public/assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/public/assets/js/vendors/bootstrap.bundle.min.js"></script>
