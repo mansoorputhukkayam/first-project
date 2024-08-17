@@ -16,7 +16,7 @@ let instance = new Razorpay({
 const loadCheckout = async (req, res) => {
     try {
         const userId = req.session.user_id;
-        // console.log('session',userId)
+        console.log('session',userId)
         const userCartData = await Cart.find({ userId });
         // console.log('usercardDAta',userCartData)
         const addressData = await Address.find({ userId });

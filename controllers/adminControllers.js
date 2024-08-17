@@ -239,7 +239,7 @@ const sortReport = async (req, res) => {
                     $lte: endOfDay
                 }
             }).sort({ createdAt: -1 }).populate('deliveryAddress').exec();;
-            
+
 
             res.render('salesReport', { report });
 
@@ -265,6 +265,197 @@ const sortReport = async (req, res) => {
     }
 }
 
+const loadDashBoard = async (req, res) => {
+    try {
+
+        const OrdersCount = await Order.find({}).count();
+        const productsCount = await Product.find({}).count();
+        const CategoryCount = await Category.find({}).count();
+
+        const overallData = await Order.aggregate([
+            {
+                $group: {
+                    _id: "",
+                    totalSalesCount: { $sum: 1 },
+                    totalRevenue: { $sum: '$orderAmount' }
+                }
+
+            }
+        ])
+        // console.log('entered in dashboard',overallData);
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1;
+        // console.log('currentMonth',currentMonth);
+
+        //monthly data section
+        const monthlyData = await Order.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: new Date(currentDate.getFullYear(), currentMonth - 1, 1),
+                        $lt: new Date(currentDate.getFullYear(), currentMonth, 1)
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: { $month: '$createdAt' },
+                    totalSalesCount: { $sum: 1 },
+                    totalRevenue: { $sum: '$orderAmount' }
+                }
+            }
+        ]);
+        console.log('monthData', monthlyData);
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        const monthId = monthlyData[0]._id;
+        const monthName = monthNames[monthId - 1];
+        console.log('monthName', monthName);
+
+        //best selling product
+        const bestSoldProducts = await Order.aggregate([
+            { $unwind: '$orderedItems' },
+            {
+                $lookup: {
+                    from: 'orderedItems',
+                    localField: 'product.productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            { $unwind: '$productDetails' },
+            {
+                $group: {
+                    _id: '$product.productId',
+                    count: { $sum: '$product.quantity' },
+                    name: { $first: '$productDetails.name' }
+                }
+            },
+            { $sort: { count: -1 } },
+            { $limit: 5 }
+        ]);
+        console.log('bestSorledProdcts', bestSoldProducts);
+
+        // const bestSoldProducts=await Promise.all(bestSellingProducts.map(async (product)=>{
+        //     const count=product.count;
+        //     const productDetails=await Products.findOne({_id:product._id});
+        //     return {count,productDetails};
+        // }))
+
+        //best selling Category
+        const bestSoldCategory = await Order.aggregate([
+            { $unwind: '$products' },
+            {
+                $lookup:
+                {
+                    from: 'products',
+                    localField: 'products.productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            { $unwind: '$productDetails' },
+            {
+                $lookup:
+                {
+                    from: 'categories',
+                    localField: 'productDetails.categoryId',
+                    foreignField: '_id',
+                    as: 'categoryDetails'
+                }
+            },
+            { $unwind: '$categoryDetails' },
+            { $group: { _id: '$categoryDetails.name', count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 5 }
+        ])
+
+        res.render('adminDashboard', {
+            OrdersCount,
+            productsCount,
+            CategoryCount,
+            overallData,
+            monthlyData,
+            monthName,
+            bestSoldProducts,
+            bestSoldCategory
+        });
+
+    } catch (error) {
+        console.log('error for rendering adminDashborad:', error);
+
+    }
+}
+
+const chartData = async (req, res) => {
+    try {
+        console.log('chart started');
+        const { chartType } = req.body;
+        console.log('chartType:', chartType);
+
+        let barData;
+
+        if (chartType == 'monthly') {
+            await monthlyData();
+        } else {
+            await yearlyData();
+        }
+
+
+        async function monthlyData() {
+
+            const salesData = await Order.aggregate([
+                { $match: { orderStatus: { $ne: "pending" } } },
+                {
+                    $group: {
+                        _id: { $month: "$createdAt" },
+                        monthlySalesCount: { $sum: 1 },
+                        monthlyRevenue: { $sum: '$orderAmount' },
+                    }
+                }
+            ]);
+
+           
+            barData = new Array(12).fill(0);
+
+            salesData.forEach((item) => {
+                const monthIndex = item._id - 1;
+                barData[monthIndex] = item.monthlyRevenue;
+            })
+        }
+
+        async function yearlyData() {
+
+            const salesData = await Order.aggregate([
+                { $match: { orderStatus: { $ne: "pending" } } },
+                {
+                    $group: {
+                        _id: { $year: "$orderDate" },
+                        yearlySalesCount: { $sum: 1 },
+                        yearlyRevenue: { $sum: '$subTotal' },
+                    }
+                }
+            ]);
+            console.log('salesData:', salesData);
+
+            barData = new Array(10).fill(0);
+            salesData.forEach((item) => {
+                const yearIndex = item._id - 2018
+                console.log('yearIndex:', yearIndex);
+                barData[yearIndex] = item.yearlyRevenue;
+            })
+        }
+
+        res.json({ barData })
+
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
+
 module.exports = {
     loadLogin,
     verifyLogin,
@@ -276,5 +467,7 @@ module.exports = {
     changeOrderStatus,
     getSalesReport,
     searchWithDate,
-    sortReport
+    sortReport,
+    loadDashBoard,
+    chartData
 }

@@ -174,10 +174,23 @@
 								<h3 class="product-title">
 									<%= product.name %>
 								</h3>
-								<strong class="product-price">$<%= product.price %></strong>
-								<span class="icon-cross">
-									<img src="/public/images/cross.svg" class="img-fluid">
-								</span>
+								<% if(product.productDiscount || product.categoryDiscount){ %>
+									<strong class="product-price">
+										₹<%= product.price %><br>
+											<% if(product.orgPrice){ %>
+												<span class="original-price" style="font-size: small;">₹<strike>
+														<%= product.orgPrice %>
+													</strike></span>
+												<% } %>
+									</strong>
+									<% }else{ %>
+										<strong class="product-price">
+											₹<%= product.price %>
+										</strong>
+										<% } %>
+											<span class="icon-cross">
+												<img src="/public/images/cross.svg" class="img-fluid">
+											</span>
 							</a>
 						</div>
 						<!-- End Column 1 -->

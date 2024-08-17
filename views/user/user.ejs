@@ -233,9 +233,9 @@
                                                   <br>
                                                   <button class="btn btn-sm btn-success"
                                                     onclick="returnclick('<%= item._id %>','<%= item.productId %>','<%= order._id %>')">Return</button>
-                                                    <a href="/downloadInvoice/?id=<%=order._id%>"
-                                                      class="btn btn-success btn-sm" id="invoice">
-                                                      Invoice
+                                                  <a href="/downloadInvoice/?id=<%=order._id%>"
+                                                    class="btn btn-success btn-sm" id="invoice">
+                                                    Invoice
                                                   </a>
                                                   <% } else { %>
                                               <td class="text-success">
@@ -295,9 +295,9 @@
                           <th>Amount</th>
                         </tr>
                       </thead>
-                      <% if(wallet){ %>
-                        <% wallet.history.forEach((data)=>{ %>
-                          <tbody>
+                      <tbody>
+                        <% if (wallet && wallet.history && wallet.history.length> 0) { %>
+                          <% wallet.history.forEach((data)=>{ %>
                             <tr>
                               <td>
                                 <%= data.Date %>
@@ -309,9 +309,13 @@
                                 <%= data.Amount %>
                               </td>
                             </tr>
-                          </tbody>
-                          <% }) %>
-                            <% } %>
+                            <% }) %>
+                              <% }else{ %>
+                                <tr>
+                                  <td colspan="3" class="text-center">No history available</td>
+                                </tr>
+                                <% } %>
+                      </tbody>
                     </table>
 
 

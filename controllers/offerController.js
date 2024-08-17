@@ -33,7 +33,7 @@ const addOffer = async (req, res) => {
             discountPercentage: discountPercentage,
             offerType: offerType,
             expiryDate: expiryDate
-        })
+        })                     
         let offerData = await newOffer.save();
         console.log('offerData', offerData);
 
@@ -102,7 +102,7 @@ const removeOffer = async (req, res) => {
                 );
             });
         } else if (updatedOffer.offerType === 'category') {
-            const offerApplied = await Product.find({ categoryOfferId: offerId });
+            const offerApplied = await Product.find({ categoryOfferId: offerId });             
 
             await Promise.all(offerApplied.map(async (product) => {
                 await Product.findOneAndUpdate(

@@ -37,11 +37,14 @@ adminRouter.get('/editcategory',auth.isLogin,categoryController.editCategory);
 adminRouter.get('/customers',auth.isLogin,adminController.loadCustomers);
 adminRouter.get('/blockUnblock',auth.isLogin,adminController.userBlock);
 adminRouter.get('/home',auth.isLogin,adminController.loadHome);
+adminRouter.get('/dashboard',auth.isLogin,adminController.loadDashBoard);
 adminRouter.get('/add-product',auth.isLogin,productController.loadAddProduct);
 adminRouter.get('/catBlockUnblock',auth.isLogin,categoryController.catBlock);
 adminRouter.get('/productUnlistAndList',auth.isLogin,productController.productUnlistAndList);
 adminRouter.get('/editProduct/:productId',auth.isLogin,productController.editProduct);
 adminRouter.get('/adminOrders',auth.isLogin,adminController.loadAdminOrders);
+
+adminRouter.post('/getChartData',auth.isLogin,adminController.chartData);
 
 adminRouter.get('/getSalesReport',auth.isLogin,adminController.getSalesReport);
 adminRouter.post('/searchWithDate',auth.isLogin,adminController.searchWithDate);

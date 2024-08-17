@@ -56,8 +56,21 @@
                 <h2>
                     <%= product.name %>
                 </h2>
-                <p class="price text-success" style="font-size: large; font-weight: 500;">$<%= product.price %>
+
+                <% if (product.productDiscount && product.productOfferId) { %>
+                    <p class="text-danger" style="font-size: medium; font-weight: bold;">
+                        Offer: <%= product.productDiscount %>% off
+                    </p>
+                    <p class="price text-danger" style="font-size: large; font-weight: bold;">
+                        Discounted Price: ₹<%= (product.orgPrice - (product.orgPrice * product.productDiscount / 100)).toFixed(2) %>
+                    </p>
+                    <p class="original-price text-muted" style="text-decoration: line-through;">
+                        Original Price: ₹<%= product.orgPrice %>
+                    </p>
+                    <% }else{ %>
+                <p class="price text-success" style="font-size: large; font-weight: 500;">₹<%= product.price %>
                 </p>
+                <% } %>
                 <% if(product.quantity >= 1 ) { %>
                     <button class="btn border btn-success">Available</button>
                     <br><br>
