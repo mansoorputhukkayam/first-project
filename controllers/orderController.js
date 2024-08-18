@@ -29,7 +29,8 @@ const loadCheckout = async (req, res) => {
         console.log('usercartTotal', userCartTotal)
         res.render('checkout', { userCartData: userCartData, userCartTotal, addressData, wallet });
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -152,7 +153,7 @@ const placeOrder = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
-
+        res.status(500).render('Error-500');
     }
 }
 
@@ -254,7 +255,8 @@ const verifyPayment = async (req, res) => {
         // res.status(200).json({ Success: true })
 
     } catch (err) {
-        console.log(err);
+        console.log('error for verifying:',err);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -273,6 +275,7 @@ const thankyou = async (req, res) => {
         res.render('thankyou', { lastOrder, prdct });
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -287,6 +290,7 @@ const failed = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -315,6 +319,7 @@ const payAgain = async (req, res) => {
 
     } catch (error) {
         console.log('error paying money:', error);
+        res.status(500).render('Error-500');
     }
 }
 

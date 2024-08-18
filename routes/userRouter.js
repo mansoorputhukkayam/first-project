@@ -26,8 +26,6 @@ userRouter.get('/shop',userController.loadShop)
 userRouter.get('/signin',isBlocked,userController.loadSignin)
 userRouter.get('/about',isLogin,isBlocked,userController.loadAbout);
 userRouter.get('/product',isLogin,isBlocked,productController.loadProducts);
-userRouter.get('/services',isLogin,isBlocked,userController.loadServices);
-userRouter.get('/blog',isLogin,isBlocked,userController.loadBlog);
 userRouter.get('/contact',isLogin,isBlocked,userController.loadContact);
 userRouter.get('/shop/:id',isLogin,isBlocked,userController.loadShop);
 userRouter.get('/forgotPassword',userController.forgotPassword);

@@ -23,15 +23,15 @@ const addCart = async (req, res) => {
          return res.redirect('/');
       }
 
-      if(!productId || !productName || !image || !price || !quantity){
-         return res.status(400).json({error:'All fields are required.'});
+      if (!productId || !productName || !image || !price || !quantity) {
+         return res.status(400).json({ error: 'All fields are required.' });
       }
 
       const quantityNum = parseInt(quantity);
       const priceNum = parseInt(price);
 
-      if(isNaN(quantityNum) || isNaN(priceNum)){
-         return res.status(400).json({error:"Quantity and price must be valid numbers"});
+      if (isNaN(quantityNum) || isNaN(priceNum)) {
+         return res.status(400).json({ error: "Quantity and price must be valid numbers" });
       }
       const total = priceNum * quantityNum;
 
@@ -60,14 +60,14 @@ const addCart = async (req, res) => {
       res.status(201).json({ success: true });
    } catch (error) {
       console.log(error.message);
-      res.status(500).json('error');
+      res.status(500).render('Error-500');
    }
 }
 
 const loadCart = async (req, res) => {
    try {
       const userId = req.session.user_id;
-      const cartData = await Cart.find({ userId }).sort({_id:-1}).populate('couponDiscount').exec();
+      const cartData = await Cart.find({ userId }).sort({ _id: -1 }).populate('couponDiscount').exec();
       const cartTotal = cartData.reduce((total, cart) => total + cart.total, 0);
       const couponData = await Coupon.find({});
       const couponDiscountAmount = req.session.couponAmount;
@@ -75,6 +75,7 @@ const loadCart = async (req, res) => {
       res.render('cart', { cartData: cartData, cartTotal, couponData, couponDiscountAmount });
    } catch (error) {
       console.log(error.message);
+      res.status(500).render('Error-500');
    }
 }
 
@@ -93,7 +94,8 @@ const checkCart = async (req, res) => {
          res.json({ exists: false });
       }
    } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.log('error for checking:',error);
+      res.status(500).render('Error-500');
    }
 };
 
@@ -113,7 +115,7 @@ const updateCart = async (req, res) => {
       res.redirect('/cart');
    } catch (error) {
       console.log(error.message);
-      res.status(500).json('error');
+      res.status(500).render('Error-500');
    }
 }
 
@@ -127,7 +129,7 @@ const removeCartItem = async (req, res) => {
 
    } catch (error) {
       console.log(error.message);
-      res.status(500).json('error')
+      res.status(500).render('Error-500');
    }
 }
 
@@ -139,7 +141,8 @@ const quantityIncrease = async (req, res) => {
       const updatedCartItem = await increaseCartItemQuantity(cartItemId);
       res.json(updatedCartItem);
    } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.log('error for quantity adding:',error);
+      res.status(500).render('Error-500');
    }
 }
 
@@ -178,7 +181,8 @@ const quantityDecrease = async (req, res) => {
       const updatedCartItem = await decreaseCartItemQuantity(cartItemId);
       res.json(updatedCartItem);
    } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.log('error for quantity decreasing:',error);
+      res.status(500).render('Error-500');
    }
 }
 
@@ -344,7 +348,7 @@ module.exports = {
    updateCart,
    quantityDecrease,
    checkCart,
-   
+
    // loadWishlist,
    // loadCheckout,
    // postCheckOut,

@@ -62,6 +62,7 @@ const loginLoad = async (req, res) => {
         res.render('login')
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -71,6 +72,7 @@ const loadSignin = async (req, res) => {
         res.render('signin');
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 const loadOtp = async (req, res) => {
@@ -115,7 +117,8 @@ const insertUser = async (req, res) => {
         }
     }
     catch (error) {
-        console.log(error.message);
+        console.log('inserting user failed:',error);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -172,8 +175,7 @@ const verifyMail = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        // Optionally, send a generic error message to the client
-        res.status(500).send('An error occurred while verifying the OTP.');
+        res.status(500).render('Error-500');
     }
 };
 
@@ -204,6 +206,7 @@ const loadHome = async (req, res) => {
         res.render('home', { products: products, userId });
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -223,7 +226,7 @@ const loadProfile = async (req, res) => {
         res.render('user', { userProfile: userProfile, viewAddress, orderData, wallet: walletData});
     } catch (error) {
         console.log(error.message);
-        res.redirect('/login');
+        res.status(500).render('Error-500');
     }
 }                   
 
@@ -235,7 +238,7 @@ const updateProfile = async (req, res) => {
         res.redirect('/user');
     } catch (error) {
         console.log(error.message);
-        res.json('error');
+        res.status(500).render('Error-500');
     }
 }
 
@@ -267,7 +270,8 @@ const verifyLogin = async (req, res) => {
             res.render('login', { message: "User not found.." });
         }
     } catch (error) {
-        console.log(error.message);
+        console.log('verify login failed:',error);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -276,23 +280,8 @@ const loadAbout = async (req, res) => {
         res.render('about');
     }
     catch (error) {
-        console.log(error.message)
-    }
-}
-
-const loadServices = async (req, res) => {
-    try {
-        res.render('services')
-    } catch (error) {
         console.log(error.message);
-    }
-}
-
-const loadBlog = async (req, res) => {
-    try {
-        res.render('blog');
-    } catch (error) {
-        console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -301,6 +290,7 @@ const loadContact = async (req, res) => {
         res.render('contact');
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -309,8 +299,8 @@ const loadLogout = async (req, res) => {
         req.session.user_id = null;
         res.status(200).send({ message: 'Sign out Successfully...' });
     } catch (error) {
-        console.log(error.message);
-        res.status(500).send({ message: 'Error signout' });
+        console.log('error for logingout:',error);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -380,6 +370,7 @@ const changeUserPassword = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -389,7 +380,7 @@ const forgotPassword = async (req, res) => {
         res.render('forgotPassword', { messge });
     } catch (error) {
         console.log(error.message);
-        res.json('error');
+        res.status(500).render('Error-500');
     }
 }
 
@@ -416,7 +407,8 @@ const updateForgotPassword = async (req, res) => {
         // console.log('forgot pwd otp', otp);
         // console.log(userData._id,'ooooootttttppppp');
     } catch (error) {
-        console.log(error.message);
+        console.log('error updating password:',error);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -442,8 +434,8 @@ const verifyForgotPassword = async (req, res) => {
         }
         // console.log(typeof(enteredOtp));
     } catch (error) {
-        console.log(error.message);
-        res.json('error');
+        console.log('verify password failed:',error);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -467,8 +459,8 @@ const updateForgotNewPassword = async (req, res) => {
             res.redirect('/forgotPassword');
         }
     } catch (error) {
-        console.log(error.message);
-        res.json('error');
+        console.log('update forgot password error:',error);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -492,6 +484,7 @@ const loadShop = async (req, res) => {
         res.render('shop', { display: displayProducts, categories: categories, currentPage, pages });
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -517,7 +510,8 @@ const loadSearch = async (req, res) => {
             res.render('shop', { display: [], categories: categories, searchData: searchData, message: `NO Products Found For ${searchData}`, pages, currentPage });
         }
     } catch (error) {
-        res.status(500).json({ message: 'Error searching for products', error });
+        console.log('error searching data',error);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -576,7 +570,7 @@ const cancelProducts = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ success: false, error: error.message })
+        res.status(500).render('Error-500');
     }
 }
 
@@ -623,7 +617,7 @@ const returnProducts = async (req, res) => {
 
     } catch (error) {
         console.log('error rendering returnProduct:', error)
-        res.status(500).render('error', { error: 'An error occurred while rendering the returnProduct' })
+        res.status(500).render('Error-500');
     }
 }
 
@@ -643,6 +637,7 @@ const downloadInvoice = async (req, res) => {
         res.render('invoice',{orderData});
     } catch (error) {
         console.log('error downloading invoice:', error);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -657,8 +652,6 @@ module.exports = {
     loadShop,
     verifyLogin,
     loadAbout,
-    loadServices,
-    loadBlog,
     loadContact,
     loadProfile,
     loadLogout,

@@ -9,6 +9,7 @@ const viewOffer = async (req, res) => {
         res.status(200).render('offer', { offer });
     } catch (error) {
         console.log('viewing offer is error:', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -21,6 +22,7 @@ const getAddOffer = async (req, res) => {
         res.render('addOffer', { products, categories });
     } catch (error) {
         console.log('error for load addOffer:', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -75,7 +77,7 @@ const addOffer = async (req, res) => {
 
     } catch (error) {
         console.log('adding offer error:', error);
-        res.status(500).json({ offerSuccess: false });
+        res.status(500).render('error-500');
     }
 }
 
@@ -121,6 +123,7 @@ const removeOffer = async (req, res) => {
 
     } catch (error) {
         console.log('romoving offer error:', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -160,6 +163,7 @@ const reactivateOffer = async (req, res) => {
                 })
         }
         res.json({ updated: true, updatedOffer });
+        res.status(500).render('error-500');
 
     } catch (error) {
         console.log('error for activate offer:', error);
@@ -201,7 +205,7 @@ const deleteOffer = async (req, res) => {
         res.status(200).json({ deleteOffer: true });
     } catch (error) {
         console.log('offer deleting error:', error);
-        res.status(500).json({ deleteOffer: false });
+        res.status(500).render('error-500');
     }
 }
 

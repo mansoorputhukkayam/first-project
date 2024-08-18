@@ -10,6 +10,7 @@ const loadCategory = async (req, res) => {
         res.render('categories', { catego: category })
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('error-500');
     }
 }
 
@@ -35,7 +36,7 @@ const addCategory = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ error: error.message });
+        res.status(500).render('error-500');
     }
 }
 
@@ -95,7 +96,7 @@ const updateCategory = async (req, res) => {
         res.json({ success: true, message: 'Category updated successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'Server Error' });
+        res.status(500).render('error-500');
     }
 };
 
@@ -120,7 +121,7 @@ const catBlock = async (req, res) => {
     } catch (error) {
         console.log('error changing blocking status');
         console.log(error);
-        res.status(500).json({ res: false, error: 'Internal server error' });
+        res.status(500).render('error-500');
     }
 }
 

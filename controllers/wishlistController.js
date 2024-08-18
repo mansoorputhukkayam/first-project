@@ -22,6 +22,7 @@ const loadWishlist = async (req, res) => {
         res.render('wishlist', { wishlist, userId ,productCount});
     } catch (error) {
         console.log('its an error ', error);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -43,7 +44,7 @@ const checkWishlist = async (req, res) => {
 
     } catch (error) {
         console.log('Error checking wishlist', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).render('Error-500');
     }
 }
 
@@ -76,7 +77,7 @@ const addToWishlist = async (req, res) => {
 
     } catch (error) {
         console.log('error adding to wishlist', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).render('Error-500');
     }
 };
 
@@ -92,9 +93,10 @@ const removeWishlist = async (req, res) => {
         res.json({ removed: true });
     } catch (error) {
         console.log('error for removing item', error);
-        res.json({ removed: false });
+        res.status(500).render('Error-500');
     }
 }
+
 
 module.exports = {
     loadWishlist,

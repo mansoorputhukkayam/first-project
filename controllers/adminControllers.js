@@ -26,6 +26,7 @@ const loadLogin = async (req, res) => {
         res.render('login', { message });
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('error-500');
     }
 }
 
@@ -57,6 +58,7 @@ const verifyLogin = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('error-500');
     }
 }
 
@@ -65,6 +67,7 @@ const loadHome = async (req, res) => {
         res.render('home');
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('error-500');
     }
 }
 
@@ -91,6 +94,7 @@ const loadCustomers = async (req, res) => {
         res.render('customers', { users: users, currentPage, pages });
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('error-500');
     }
 }
 
@@ -115,7 +119,7 @@ const userBlock = async (req, res) => {
     } catch (error) {
         console.log('error changing blocking status');
         console.log(error);
-        res.status(500).json({ res: false, error: 'Internal server error' });
+        res.status(500).render('error-500');
     }
 }
 
@@ -126,7 +130,7 @@ const loadLogout = async (req, res) => {
         res.status(200).send({ message: 'Logged out Successfully...' })
     } catch (error) {
         console.log(error.message);
-        res.status(500).send({ message: 'Error in Logout' });
+        res.status(500).render('error-500');
     }
 }
 
@@ -146,6 +150,7 @@ const loadAdminOrders = async (req, res) => {
         res.render('orders', { orderData: orderData, orderDetails, pages, currentPage });
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('error-500');
 
     }
 }
@@ -170,7 +175,7 @@ const changeOrderStatus = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
-        res.status(500).json('error')
+        res.status(500).render('error-500');
     }
 }
 
@@ -184,6 +189,7 @@ const getSalesReport = async (req, res) => {
         res.render('salesReport', { report });
     } catch (error) {
         console.log('error getting sales report', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -216,7 +222,8 @@ let searchWithDate = async (req, res) => {
 
     } catch (error) {
 
-        console.log('error rendering searchWithDate', error)
+        console.log('error rendering searchWithDate', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -262,6 +269,7 @@ const sortReport = async (req, res) => {
         }
     } catch (error) {
         console.log('sorting error', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -319,23 +327,26 @@ const loadDashBoard = async (req, res) => {
             { $unwind: '$orderedItems' },
             {
                 $lookup: {
-                    from: 'Product',
+                    from: 'products',
                     localField: 'orderedItems.productId',
                     foreignField: '_id',
                     as: 'productDetails'
                 }
             },
-            // { $unwind: '$productDetails' }
+            { $unwind: '$productDetails' },
             {
                 $group: {
                     _id: '$orderedItems.productId',
                     count: { $sum: '$orderedItems.quantity' },
-                    name: { $first: '$orderedItems.productName' }
+                    name: { $first: '$productDetails.name' }
                 }
             },
             { $sort: { count: -1 } },
             { $limit: 10 }
         ]);
+
+        console.log('bestSelled products', bestSoldProducts);
+
 
         // const bestSoldProducts=await Promise.all(bestSellingProducts.map(async (product)=>{
         //     const count=product.count;
@@ -379,7 +390,7 @@ const loadDashBoard = async (req, res) => {
             {$limit:5}
         ]);
         
-        console.log('bestSelled cate3gorires', bestSoldCategory);
+        // console.log('bestSelled cate3gorires', bestSoldCategory);
             
 
         res.render('adminDashboard', {
@@ -395,6 +406,7 @@ const loadDashBoard = async (req, res) => {
 
     } catch (error) {
         console.log('error for rendering adminDashborad:', error);
+        res.status(500).render('error-500');
 
     }
 }
@@ -463,7 +475,7 @@ const chartData = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('Error-500');
+        res.status(500).render('error-500');
     }
 }
 
@@ -480,5 +492,5 @@ module.exports = {
     searchWithDate,
     sortReport,
     loadDashBoard,
-    chartData
+    chartData,
 }

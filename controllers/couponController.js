@@ -10,6 +10,7 @@ const viewCoupon = async (req, res) => {
 
     } catch (error) {
         console.log('error', error);
+        res.status(500).render('error-500');
     }
 
 }
@@ -21,6 +22,7 @@ const loadAddCoupon = async (req, res) => {
         res.render('addCoupon', { coupons });
     } catch (error) {
         console.log('error adding coupon', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -52,7 +54,8 @@ const addCoupon = async (req, res) => {
         }
 
     } catch (error) {
-        console.log('error addcoupon', error)
+        console.log('error addcoupon', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -66,6 +69,7 @@ const editCoupon = async (req, res) => {
         res.render('editCoupon', { couponData });
     } catch (error) {
         console.log('error editcoupon:', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -96,6 +100,7 @@ const updateCoupon = async (req, res) => {
         }
     } catch (error) {
         console.log('error updating coupon', error);
+        res.status(500).render('error-500');
     }
 }
 
@@ -108,7 +113,7 @@ const deleteCoupon = async (req, res) => {
         res.status(200).json({ deleteSuccess: true });
     } catch (error) {
         console.log('error deleting', error);
-        res.status(500).json({ deleteSuccess: false });
+        res.status(500).render('error-500');
     }
 }
 
@@ -170,7 +175,7 @@ const applyCoupon = async (req, res) => {
 
     } catch (error) {
         console.log('error applying coupon:', error);
-        res.status(500).json({ success: false, message: 'error applying coupon' });
+        res.status(500).render('Error-500');
     }
 }
 
@@ -189,6 +194,7 @@ const removeCoupon = async (req, res) => {
         res.status(200).json({ success: true });
     } catch (error) {
         console.log('remove coupon error:', error);
+        res.status(500).render('Error-500');
     }
 }
 

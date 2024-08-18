@@ -16,6 +16,7 @@ const loadProductList = async (req, res) => {
         res.render('products', { savedProducts: savedProducts,currentPage,pages });
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('error-500');
     }
 }
 
@@ -32,6 +33,7 @@ const loadProducts = async (req, res) => {
         res.render('product', { product: product,msg ,offers,userId})
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500');
     }
 }
 
@@ -67,7 +69,7 @@ const insertProduct = async (req, res) => {
         res.json({ success: true, message: 'Product added Successfully' });
     } catch (error) {
         console.error('Error adding product:', error);
-        res.status(500).json({ success: false, message: 'Error adding product' });
+        res.status(500).render('error-500');
     }
 };
 
@@ -77,6 +79,7 @@ const loadAddProduct = async (req, res) => {
         res.render('addProduct', { categories });
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('error-500');
     }
 }
 
@@ -101,7 +104,7 @@ const productUnlistAndList = async (req, res) => {
     } catch (error) {
         console.log('error changing blocking status');
         console.log(error);
-        res.status(500).json({ res: false, error: 'Internal server error' });
+        res.status(500).render('error-500');
     }
 }
 
@@ -119,7 +122,7 @@ const editProduct = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).send('server error');
+        res.status(500).render('error-500');
     }
 }
 
@@ -172,7 +175,7 @@ const updateProduct = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(500).render('error-500');
     }
 };
 
@@ -229,7 +232,7 @@ const lowHigh = async (req, res) => {
         res.render('filter', { categories, display });
     } catch (error) {
         console.log(error.message);
-        res.json('error')
+        res.status(500).render('Error-500');
     }
 }
 
@@ -240,7 +243,7 @@ const highLow = async (req, res) => {
         res.render('filter', { categories, display });
     } catch (error) {
         console.log(error.message);
-        res.json('error')
+        res.status(500).render('Error-500');
     }
 }
 
@@ -251,7 +254,7 @@ const nameAscending = async (req, res) => {
         res.render('filter', { categories, display });
     } catch (error) {
         console.log(error.message);
-        res.json('error');
+        res.status(500).render('Error-500');
     }
 }
 
@@ -262,7 +265,7 @@ const nameDescending = async (req, res) => {
         res.render('filter', { categories, display });
     } catch (error) {
         console.log(error.message);
-        res.json('error')
+        res.status(500).render('Error-500');
     }
 }
 module.exports = {
