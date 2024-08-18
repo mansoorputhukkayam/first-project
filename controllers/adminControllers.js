@@ -336,7 +336,6 @@ const loadDashBoard = async (req, res) => {
             { $sort: { count: -1 } },
             { $limit: 10 }
         ]);
-        console.log('bestSorledProdcts', bestSoldProducts);
 
         // const bestSoldProducts=await Promise.all(bestSellingProducts.map(async (product)=>{
         //     const count=product.count;
@@ -346,31 +345,42 @@ const loadDashBoard = async (req, res) => {
 
         //best selling Category
         const bestSoldCategory = await Order.aggregate([
-            { $unwind: '$products' },
+            { $unwind: '$orderedItems' },
             {
                 $lookup:
                 {
                     from: 'products',
-                    localField: 'products.productId',
+                    localField: 'orderedItems.productId',
                     foreignField: '_id',
-                    as: 'productDetails'
+                    as: 'product'
                 }
             },
-            { $unwind: '$productDetails' },
+            { $unwind: '$product' },
+
             {
-                $lookup:
-                {
-                    from: 'categories',
-                    localField: 'productDetails.categoryId',
-                    foreignField: '_id',
-                    as: 'categoryDetails'
+                $group: {
+                    _id: '$product.categoryId', // Correctly reference the product category
+                    totalCategoryCount: { $sum: 1 } // Summing the quantities
                 }
             },
-            { $unwind: '$categoryDetails' },
-            { $group: { _id: '$categoryDetails.name', count: { $sum: 1 } } },
-            { $sort: { count: -1 } },
-            { $limit: 5 }
-        ])
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'category'
+                }
+            },
+
+            { $unwind: '$category' },
+          
+            {$group:{_id:'$category.categoryName',count:{$sum:'$totalCategoryCount'}}},
+            {$sort:{count:-1}},
+            {$limit:5}
+        ]);
+        
+        console.log('bestSelled cate3gorires', bestSoldCategory);
+            
 
         res.render('adminDashboard', {
             OrdersCount,
@@ -391,9 +401,9 @@ const loadDashBoard = async (req, res) => {
 
 const chartData = async (req, res) => {
     try {
-        console.log('chart started');
+        // console.log('chart started');
         const { chartType } = req.body;
-        console.log('chartType:', chartType);
+        // console.log('chartType:', chartType);
 
         let barData;
 
@@ -443,7 +453,7 @@ const chartData = async (req, res) => {
             barData = new Array(10).fill(0);
             salesData.forEach((item) => {
                 const yearIndex = item._id - 2018
-                console.log('yearIndex:', yearIndex);
+                // console.log('yearIndex:', yearIndex);
                 barData[yearIndex] = item.yearlyRevenue;
             })
         }
