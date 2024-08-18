@@ -314,26 +314,27 @@ const loadDashBoard = async (req, res) => {
         console.log('monthName', monthName);
 
         //best selling product
+
         const bestSoldProducts = await Order.aggregate([
             { $unwind: '$orderedItems' },
             {
                 $lookup: {
-                    from: 'orderedItems',
-                    localField: 'product.productId',
+                    from: 'Product',
+                    localField: 'orderedItems.productId',
                     foreignField: '_id',
                     as: 'productDetails'
                 }
             },
-            { $unwind: '$productDetails' },
+            // { $unwind: '$productDetails' }
             {
                 $group: {
-                    _id: '$product.productId',
-                    count: { $sum: '$product.quantity' },
-                    name: { $first: '$productDetails.name' }
+                    _id: '$orderedItems.productId',
+                    count: { $sum: '$orderedItems.quantity' },
+                    name: { $first: '$orderedItems.productName' }
                 }
             },
             { $sort: { count: -1 } },
-            { $limit: 5 }
+            { $limit: 10 }
         ]);
         console.log('bestSorledProdcts', bestSoldProducts);
 
@@ -431,13 +432,13 @@ const chartData = async (req, res) => {
                 { $match: { orderStatus: { $ne: "pending" } } },
                 {
                     $group: {
-                        _id: { $year: "$orderDate" },
+                        _id: { $year: "$createdAt" },
                         yearlySalesCount: { $sum: 1 },
-                        yearlyRevenue: { $sum: '$subTotal' },
+                        yearlyRevenue: { $sum: '$orderAmount' },
                     }
                 }
             ]);
-            console.log('salesData:', salesData);
+            // console.log('salesData:', salesData);
 
             barData = new Array(10).fill(0);
             salesData.forEach((item) => {
