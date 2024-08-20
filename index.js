@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/ecommerce');
-
 require('dotenv').config();
+mongoose.connect(process.env.MONGODB_URI );
+
 const express = require('express');
 const cors = require('cors');
 const passport = require('passport');
 const authRoute = require('./routes/auth');
-// const cookieSession = require('cookie-session');
-const passportStrategy = require('./passport');
 const session = require('express-session');
 const flash = require('express-flash');
 const config = require('./config/config');
@@ -27,7 +25,9 @@ function setDynamicViews(req, res, next) {
         app.set('views', path.join(__dirname, 'views/user'));
     }
     next();
-}   
+}
+
+// app.use(morgan('dev'));
 
 app.use(setDynamicViews);
 
@@ -42,7 +42,6 @@ app.use(session({
     cookie: {
         secure: false,
         httpOnly: true,
-        // expires : new Date( Date.now() + 300000 )
     }
 }));
 
@@ -50,20 +49,20 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(flash())
-app.use("/auth,", authRoute);
-
 app.use(nocache());
-// app.use(morgan('dev'));
-app.use('/', userRouter);
 
+app.use("/auth,", authRoute);
+app.use('/', userRouter);
 app.use('/admin', adminRouter);
 app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use('/productImages', express.static('public/productImages'));
 
-app.get('*',(req,res)=>{
+app.get('*', (req, res) => {
     res.render('../error');
-})
+});
 // app.locals.formData = {};
+// const cookieSession = require('cookie-session');
+const passportStrategy = require('./passport');
 
 app.listen(PORT, () => {
     console.log(`server is running..on port : ${PORT}`);

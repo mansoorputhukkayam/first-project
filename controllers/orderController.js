@@ -9,8 +9,8 @@ const crypto = require('crypto');
 const Wallet = require('../models/walletModel');
 
 let instance = new Razorpay({
-    key_id: 'rzp_test_4AB1dm0KvAE5MR',
-    key_secret: '8EUhYfAmGN3B5Grn0fGrnUGa'
+    key_id: process.env.KEY_ID,
+    key_secret: process.env.KEY_SECRET
 });
 
 const loadCheckout = async (req, res) => {
@@ -173,7 +173,7 @@ const verifyPayment = async (req, res) => {
         // console.log('razorpay-signatiorue', razorpay_signature);
 
 
-        const hmac = crypto.createHmac('sha256', '8EUhYfAmGN3B5Grn0fGrnUGa');
+        const hmac = crypto.createHmac('sha256', process.env.KEY_SECRET);
         hmac.update(razorpay_order_id + '|' + razorpay_payment_id);
         const generated_signature = hmac.digest('hex');
 
@@ -330,5 +330,4 @@ module.exports = {
     thankyou,
     failed,
     payAgain,
-
 }
