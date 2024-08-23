@@ -70,6 +70,7 @@ const loadCart = async (req, res) => {
       const cartData = await Cart.find({ userId }).sort({ _id: -1 }).populate('couponDiscount').exec();
       const cartTotal = cartData.reduce((total, cart) => total + cart.total, 0);
       const couponData = await Coupon.find({});
+      console.log('coupons',couponData);
       const couponDiscountAmount = req.session.couponAmount;
       // console.log('cccc',couponDiscountAmount);
       res.render('cart', { cartData: cartData, cartTotal, couponData, couponDiscountAmount });

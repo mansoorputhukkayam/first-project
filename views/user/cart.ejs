@@ -155,6 +155,7 @@
             <div class="row mb-5">
               <div class="col-md-8">
                 <h2 class="h3 mb-3 text-black">Available Coupons</h2>
+                <% if(couponData){ %>
                 <div class="p-3 border bg-white">
                   <% couponData.forEach((coupon, index)=> { %>
                     <div class="form-check mb-2">
@@ -165,7 +166,12 @@
                       </label>
                     </div>
                     <% }) %>
+                    
                 </div>
+                <% }else{ %>
+                      
+                  <h4>No coupons available</h4>
+                   <% } %>
               </div>
               <div class="col-md-4 mt-auto">
                 <button class="btn btn-danger">Remove Coupon</button>

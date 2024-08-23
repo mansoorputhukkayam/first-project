@@ -177,7 +177,7 @@ const applyCoupon = async (req, res) => {
         console.log('error applying coupon:', error);
         res.status(500).render('Error-500');
     }
-}
+}     
 
 const removeCoupon = async (req, res) => {
     try {

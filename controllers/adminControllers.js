@@ -64,7 +64,7 @@ const verifyLogin = async (req, res) => {
 
 const loadHome = async (req, res) => {
     try {
-        res.render('home');
+        res.render('adminDashboard');
     } catch (error) {
         console.log(error.message);
         res.status(500).render('error-500');
